@@ -65,45 +65,20 @@ const createCourse = async (req, res, next) => {
       return next(new ApiError("Gagal upload gambar dan video", 400));
     }
 
-    if (type !== "gratis" && type !== "premium") {
-      return next(new ApiError("Type harus 'gratis' atau 'premium'", 400));
-    }
-
-    if (type === "premium" && price <= 0) {
-      return next(new ApiError("Harga harus lebih dari 0", 400));
-    }
-
-    if (type === "gratis") {
-      price = 0;
-    }
-
-    if (
-      level !== "Beginner" &&
-      level !== "intermediate" &&
-      level !== "advanced"
-    ) {
-      return next(
-        new ApiError("Level harus 'basic', 'intermediate' atau 'advanced'", 400)
-      );
-    }
-
-    const category = await Category.findByPk(categoryId);
-
     const course = await Course.create({
       name,
-      courseBy,
-      category: category.name,
-      classCode,
-      type,
       level,
-      price,
+      categoryId,
       description,
+      type,
+      price,
+      courseBy,
       imageUrl: filesUrl.imageUrl,
-      videoUrl: filesUrl.videoUrl,
+      videoPreviewUrl: filesUrl.videoUrl,
     });
 
     if (!course) {
-      return next(new ApiError("Gagal membuat course", 400));
+      return next(new ApiError("Gagal membuat course", 500));
     }
 
     res.status(201).json({
@@ -235,6 +210,76 @@ const getCourseById = async (req, res, next) => {
   }
 };
 
+const updateCourse = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const { name, level, categoryId, description, type, price, courseBy } =
+      req.body;
+
+    const user = req.user;
+
+    const course = await Course.findByPk(id);
+    if (!course) {
+      return next(new ApiError("Course tidak ditemukan", 404));
+    }
+
+    const updateData = {};
+
+    if (name) {
+      updateData.name = name;
+    }
+
+    if (description) {
+      updateData.description = description;
+    }
+
+    if (type) {
+      if (type !== "free" && type !== "premium") {
+        return next(
+          new ApiError("Tipe course harus 'free' atau 'premium'", 400)
+        );
+      }
+      if (type === "free") {
+        updateData.price = 0;
+      }
+      if (type === "premium") {
+        if (!price || price <= 0) {
+          return next(new ApiError("Harga course harus lebih dari 0", 400));
+        }
+        updateData.price = price;
+      }
+      updateData.type = type;
+    }
+    if (req.files || Object.keys(req.files).length > 0) {
+      const uploadedFiles = await uploadImageAndVideo(req.files, next);
+      if (!uploadedFiles || Object.keys(uploadedFiles).length === 0) {
+        next(new ApiError("Gagal upload file", 500));
+      }
+      updateData.imageUrl = uploadedFiles.imageUrl;
+      updateData.videoUrl = uploadedFiles.videoUrl;
+    }
+
+    const [rowCount, [updatedCourse]] = await Course.update(updateData, {
+      where: {
+        id,
+      },
+      returning: true,
+    });
+
+    if (rowCount === 0 && !updatedCourse) {
+      return next(new ApiError("Gagal update course", 500));
+    }
+
+    res.status(200).json({
+      status: "success",
+      message: `Berhasil mengupdate data course id: ${id}`,
+      data: updatedCourse,
+    });
+  } catch (error) {
+    next(new ApiError(error, 500));
+  }
+};
+
 const deleteCourse = async (req, res, next) => {
   try {
     const { id } = req.params;
@@ -268,4 +313,5 @@ module.exports = {
   getAllCourse,
   getCourseById,
   deleteCourse,
+  updateCourse,
 };
