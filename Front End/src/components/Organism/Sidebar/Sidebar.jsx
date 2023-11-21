@@ -62,7 +62,7 @@ export default function Sidebar() {
           </a>
         </div>
       </nav>
-      <nav className="sticky top-0 bg-darkblue-05 h-screen md:hidden text-center">
+      <nav className="sticky top-0 bg-darkblue-05 h-screen md:hidden text-center flex flex-col">
         <a
           href="/dashboard"
           className="inline-block cursor-pointer w-[50px] relative group mb-7"
