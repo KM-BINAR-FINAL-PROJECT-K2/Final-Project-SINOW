@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 export default function Header({ name }) {
   return (
-    <header className="bg-lightblue-05 pt-[46px] pb-[40px] pl-10 pr-[87px] flex justify-between drop-shadow-sm mb-[79px]">
+    <header className="bg-lightblue-05 pt-[46px] pb-[40px] pl-10 pr-[87px] flex justify-between drop-shadow-sm mb-[79px] sticky top-0">
       <h1 className="font-bold text-[24px] text-darkblue-05 flex-1">
         Hi, {name}
       </h1>

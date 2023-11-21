@@ -1,6 +1,6 @@
-import Card from "../Molecule/Card/Card";
-import Navigation from "../Template/Navigation/Navigation";
-export default function Page() {
+import Card from "../../Molecule/Card/Card";
+import Navigation from "../../Template/Navigation/Navigation";
+export default function CRUD() {
   return (
     <>
       <Navigation>
