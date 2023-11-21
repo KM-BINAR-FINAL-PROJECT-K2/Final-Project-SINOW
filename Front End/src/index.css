@@ -1,8 +1,8 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-/* 
-* {
+
+/* * {
   border: 1px solid black;
 } */
 
@@ -10,5 +10,5 @@ nav {
   position: -webkit-sticky;
   position: sticky;
   top: 0;
-  z-index: 1000; /* Nilai z-index yang besar agar tetap di depan konten lain */
+  z-index: 1000;
 }
