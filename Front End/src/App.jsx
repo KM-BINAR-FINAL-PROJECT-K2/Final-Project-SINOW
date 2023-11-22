@@ -1,7 +1,7 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import CRUD from "./components/Page/CRUD/CRUD";
 import DashboadAdmin from "./components/Page/DashboardAdmin/DashboardAdmin";
-import Login from "./components/Login/Login";
+import Login from "./components/Page/Login/Login";
 
 export default function App() {
   return (
