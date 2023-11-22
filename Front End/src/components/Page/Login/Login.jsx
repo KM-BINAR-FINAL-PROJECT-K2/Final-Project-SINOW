@@ -1,11 +1,6 @@
-import React, { useState } from "react";
-import Logo from "";
+import Logo from "/images/logo.png";
 
-// code 1
-
-function App() {
-  // const [isPswVisible, setIsVisiblePsw] = useState(false);
-
+export default function Login() {
   return (
     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 h-screen w-full">
       <div className="logo-app bg-purple hidden sm:block">
@@ -60,5 +55,3 @@ function App() {
     </div>
   );
 }
-
-export default App;
