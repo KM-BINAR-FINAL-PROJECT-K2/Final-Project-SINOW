@@ -10,15 +10,15 @@ export default function Sidebar() {
 
   useEffect(() => {
     // Atur nilai background berdasarkan path saat ini
-    if (location.pathname === "/kelola-kelas") {
-      setBackground({
-        dashboard: false,
-        kelolaKelas: true,
-      });
-    } else if (location.pathname === "/dashboard") {
+    if (location.pathname === "/") {
       setBackground({
         dashboard: true,
         kelolaKelas: false,
+      });
+    } else if (location.pathname === "/kelola-kelas") {
+      setBackground({
+        dashboard: false,
+        kelolaKelas: true,
       });
     }
   }, [location.pathname]);
@@ -26,9 +26,9 @@ export default function Sidebar() {
     <>
       <nav className="sticky top-0 bg-darkblue-05 h-screen  md:flex flex-col justify-center items-center flex-wrap w-auto lg:w-[300px] hidden">
         <img
-          src="/images/logo.png"
+          src="/images/logo-n-maskot/Logo-png.png"
           alt="logo"
-          className="w-[120px] lg:w-[134.13px] lg:h-[150px] mb-4"
+          className=" w-[100px] h-[100px] lg:w-[100px] lg:h-[100px] m-4"
         />
         <div className="flex-1 w-full">
           <a
@@ -64,7 +64,7 @@ export default function Sidebar() {
       </nav>
       <nav className="sticky top-0 bg-darkblue-05 h-screen md:hidden text-center flex flex-col">
         <a
-          href="/dashboard"
+          href="/"
           className="inline-block cursor-pointer w-[50px] relative group mb-7"
         >
           <img
