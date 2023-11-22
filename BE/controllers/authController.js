@@ -3,7 +3,10 @@ const jwt = require("jsonwebtoken");
 const { User, Auth, OTP } = require("../models");
 const ApiError = require("../utils/ApiError");
 const validator = require("validator");
-const { sendVerificationEmail } = require("../utils/OtpUtils");
+const {
+  sendOTPVerificationEmail,
+  sendResetPasswordEmail,
+} = require("../utils/OtpUtils");
 
 const login = async (req, res, next) => {
   try {
@@ -133,7 +136,7 @@ const register = async (req, res, next) => {
       });
     }
 
-    const otpCode = await sendVerificationEmail(email);
+    const otpCode = await sendOTPVerificationEmail(email);
 
     const otp = await OTP.create({
       userEmail: email,
@@ -158,7 +161,7 @@ const resendOtp = async (req, res, next) => {
     const { email } = req.body;
 
     if (!email) {
-      return next(new ApiError("Tidak ada email", 400));
+      return next(new ApiError("Email tidak boleh kosong", 400));
     }
 
     if (!validator.isEmail(email)) {
@@ -168,6 +171,10 @@ const resendOtp = async (req, res, next) => {
     const isEmailExist = await Auth.findOne({ where: { email } });
     if (!isEmailExist) {
       return next(new ApiError("Email tidak terdaftar", 400));
+    }
+
+    if (isEmailExist.isEmailVerified) {
+      return next(new ApiError("Email tidak memerlukan autentikasi OTP", 400));
     }
 
     const checkOtp = await OTP.findOne({
@@ -184,7 +191,7 @@ const resendOtp = async (req, res, next) => {
       });
     }
 
-    const otpCode = await sendVerificationEmail(email);
+    const otpCode = await sendOTPVerificationEmail(email);
 
     const otp = await OTP.create({
       userEmail: email,
@@ -302,84 +309,33 @@ const verifyEmail = async (req, res, next) => {
   }
 };
 
-const forgotPassword = async (req, res, next) => {
+const reqResetPassword = async (req, res, next) => {
   try {
     const { email } = req.body;
 
+    if (!email) {
+      return next(new ApiError("Email harus diisi", 400));
+    }
     if (!validator.isEmail(email)) {
       return next(new ApiError("Email tidak valid", 400));
     }
 
-    const user = await Auth.findOne({
+    const auth = await Auth.findOne({
       where: {
         email,
       },
+      include: ["User"],
     });
 
-    if (!user) {
+    if (!auth) {
       return next(new ApiError("Email tidak terdaftar", 400));
     }
 
-    const checkOtp = await OTP.findOne({
-      where: {
-        userEmail: email,
-      },
-    });
-
-    if (checkOtp) {
-      await OTP.destroy({
-        where: {
-          userEmail: email,
-        },
-      });
-    }
-
-    const otpCode = await sendVerificationEmail(email);
-
-    const otp = await OTP.create({
-      userEmail: email,
-      otpValue: otpCode,
-    });
-
-    if (!otp) {
-      return next(new ApiError("Gagal membuat OTP", 500));
-    }
+    await sendResetPasswordEmail(auth);
 
     res.status(200).json({
       status: "success",
-      message: "OTP berhasil dikirim",
-    });
-  } catch (error) {
-    return next(new ApiError(error.message, 500));
-  }
-};
-
-const verifyResetPassword = async (req, res, next) => {
-  try {
-    const { email, otpCode } = req.body;
-
-    if (!validator.isEmail(email)) {
-      return next(new ApiError("Email tidak valid", 400));
-    }
-
-    if (!otpCode) {
-      return next(new ApiError("OTP harus diisi", 400));
-    }
-
-    const checkOtp = await OTP.findOne({
-      where: {
-        userEmail: email,
-        otpValue: otpCode,
-      },
-    });
-
-    if (!checkOtp) {
-      return next(new ApiError("OTP tidak valid", 400));
-    }
-
-    res.status(200).json({
-      status: "success",
-      message: "OTP valid",
+      message: "tautan reset password berhasil dikirim ke email",
     });
   } catch (error) {
     return next(new ApiError(error.message, 500));
@@ -388,41 +344,55 @@ const verifyResetPassword = async (req, res, next) => {
 
 const resetPassword = async (req, res, next) => {
   try {
-    const { email, password, confirmPassword } = req.body;
+    const { token } = req.params;
 
-    const user = await Auth.findOne({
-      where: {
-        email,
-      },
-    });
-
-    if (!user) {
-      return next(new ApiError("Email tidak terdaftar", 400));
+    if (!token) {
+      return next(new ApiError("Token harus diisi", 400));
     }
 
-    if (password.length < 8) {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    console.log("\n\n\n\n\ndecoded", decoded);
+
+    const { password, confirmPassword } = req.body;
+
+    if (!password) {
+      return next(new ApiError("Password harus diisi", 400));
+    }
+
+    if (!confirmPassword) {
+      return next(new ApiError("Konfirmasi password harus diisi", 400));
+    } else if (password.length < 8) {
       return next(new ApiError("Password min 8 karakter!", 400));
-    }
-
-    if (password.length > 12) {
+    } else if (password.length > 12) {
       return next(new ApiError("Password max 12 karakter!", 400));
-    }
-
-    if (password !== confirmPassword) {
+    } else if (password !== confirmPassword) {
       return next(new ApiError("Password tidak cocok!", 400));
     }
 
-    const [countRowUpdated, [authUpdated]] = await Auth.update(
+    const auth = await Auth.findOne({
+      where: {
+        id: decoded.id,
+      },
+    });
+
+    if (!auth) {
+      return next(new ApiError("Token tidak valid", 400));
+    }
+
+    const passwordHash = await bcrypt.hash(password, 10);
+
+    console.log("\n\n\ndecoded id", decoded.id);
+    const [countRowUpdated] = await Auth.update(
       {
-        password,
+        password: passwordHash,
       },
       {
         where: {
-          email,
+          id: decoded.id,
         },
       }
     );
-
     if (countRowUpdated === 0) {
       return next(new ApiError("Gagal mengganti password", 500));
     }
@@ -432,7 +402,8 @@ const resetPassword = async (req, res, next) => {
       message: "Password berhasil diubah",
     });
   } catch (error) {
-    return next(new ApiError(error.message, 500));
+    console.log(error);
+    return next(new ApiError(error, 500));
   }
 };
 
@@ -460,7 +431,6 @@ module.exports = {
   checkToken,
   verifyEmail,
   resendOtp,
-  forgotPassword,
-  verifyResetPassword,
+  reqResetPassword,
   resetPassword,
 };
