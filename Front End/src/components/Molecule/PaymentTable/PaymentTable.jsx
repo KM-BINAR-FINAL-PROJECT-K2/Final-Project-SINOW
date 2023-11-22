@@ -1,4 +1,4 @@
-export default function TableBody({
+export default function PaymentTable({
   id,
   category,
   premiumClass,

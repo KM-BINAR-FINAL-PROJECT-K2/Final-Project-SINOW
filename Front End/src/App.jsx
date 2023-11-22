@@ -6,13 +6,10 @@ export default function App() {
   return (
     <BrowserRouter>
       <Routes>
+        <Route path="/" element={<DashboadAdmin location={"/"} />} />
         <Route
           path="/kelola-kelas"
           element={<CRUD location={"/kelola-kelas"} />}
-        />
-        <Route
-          path="/dashboard"
-          element={<DashboadAdmin location={"/dashboard"} />}
         />
       </Routes>
     </BrowserRouter>
