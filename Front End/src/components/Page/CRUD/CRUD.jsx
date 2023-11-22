@@ -23,7 +23,7 @@ export default function CRUD() {
           />
         </section>
 
-        <section className="mx-8 lg:mx-16">
+        <section className="mx-4 lg:mx-16">
           <div className="py-[10px] flex flex-wrap">
             <h2 className="my-[10px] font-semibold text-[20px] flex-wrap flex-1 min-w-[200px]">
               Kelola Kelas
@@ -64,7 +64,7 @@ export default function CRUD() {
           </div>
         </section>
 
-        <section className="border-red-500 mx-8 n lg:mx-[64px] mb-64 ">
+        <section className="border-red-500 mx-4 n lg:mx-[64px] mb-64 ">
           <div className="border-blue-500 ">
             <section className="border-yellow-300 overflow-auto">
               <ClassTable />{" "}
