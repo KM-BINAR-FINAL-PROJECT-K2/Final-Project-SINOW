@@ -4,7 +4,7 @@ export default function CRUD() {
   return (
     <>
       <Navigation>
-        <section className="mx-16 flex justify-around gap-6 flex-wrap mb-[54px]">
+        <section className="mx-8 lg:mx-16 flex justify-around gap-6 flex-wrap mb-[54px]">
           <Card
             color={"bg-darkblue-03"}
             quantity={"450"}
@@ -22,42 +22,44 @@ export default function CRUD() {
           />
         </section>
 
-        <section className="mx-16">
-          <div className="py-[10px] flex">
-            <h2 className="my-[10px] font-semibold text-[20px] flex-1">
+        <section className="mx-8 lg:mx-16">
+          <div className="py-[10px] flex flex-wrap">
+            <h2 className="my-[10px] font-semibold text-[20px] flex-wrap flex-1 min-w-[200px]">
               Kelola Kelas
             </h2>
-            <button className="bg-darkblue-05 inline-block rounded-[16px] py-[5px] px-[10px] w-[125px] h-[34px] mr-[16px] my-[10px]">
-              <div className="flex gap-[8px] items-center justify-center">
+            <div className="flex">
+              <button className="bg-darkblue-05 inline-block rounded-[16px] py-[5px] px-[10px] w-[125px] h-[34px] mr-[16px] my-[10px]">
+                <div className="flex gap-[8px] items-center justify-center">
+                  <img
+                    src="/images/gala-add.png"
+                    alt=""
+                    className="w-[24px] h-[24px]"
+                  />
+                  <span className="text-[16px] font-semibold text-neutral-01">
+                    Tambah
+                  </span>
+                </div>
+              </button>
+              <button className="bg-neutral-01 border-2 border-darkblue-05 inline-block rounded-[16px] py-[5px] px-[10px] w-[125px] h-[34px] mr-[16px] my-[10px]">
+                <div className="flex gap-[8px] items-center justify-center">
+                  <img
+                    src="/images/prefix-wrapper.png"
+                    alt=""
+                    className="w-[24px] h-[24px]"
+                  />
+                  <span className="text-[16px] font-semibold text-darkblue-05">
+                    Filter
+                  </span>
+                </div>
+              </button>
+              <button className="">
                 <img
-                  src="/images/gala-add.png"
+                  src="/images/search-icon-2.png"
                   alt=""
-                  className="w-[24px] h-[24px]"
+                  className=" w-[24px] h-[24px] inline-block"
                 />
-                <span className="text-[16px] font-semibold text-neutral-01">
-                  Tambah
-                </span>
-              </div>
-            </button>
-            <button className="bg-neutral-01 border-2 border-darkblue-05 inline-block rounded-[16px] py-[5px] px-[10px] w-[125px] h-[34px] mr-[16px] my-[10px]">
-              <div className="flex gap-[8px] items-center justify-center">
-                <img
-                  src="/images/prefix-wrapper.png"
-                  alt=""
-                  className="w-[24px] h-[24px]"
-                />
-                <span className="text-[16px] font-semibold text-darkblue-05">
-                  Filter
-                </span>
-              </div>
-            </button>
-            <button className="my-[10px]">
-              <img
-                src="/images/search-icon-2.png"
-                alt=""
-                className="w-[24px] h-[24px] inline-block"
-              />
-            </button>
+              </button>
+            </div>
           </div>
         </section>
 
