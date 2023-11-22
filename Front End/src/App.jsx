@@ -11,6 +11,7 @@ export default function App() {
           path="/kelola-kelas"
           element={<CRUD location={"/kelola-kelas"} />}
         />
+        <Route path="/login" element={<Login location={"/login"} />} />
       </Routes>
     </BrowserRouter>
   );
