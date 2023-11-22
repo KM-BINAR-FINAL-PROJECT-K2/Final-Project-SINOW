@@ -199,20 +199,4 @@ module.exports = [
     createdAt: new Date(),
     updatedAt: new Date(),
   },
-  {
-    id: 26,
-    no: 1,
-    name: "Pendahuluan",
-    courseId: 13,
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  },
-  {
-    id: 27,
-    no: 2,
-    name: "Memulai Product Management",
-    courseId: 13,
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  },
 ];

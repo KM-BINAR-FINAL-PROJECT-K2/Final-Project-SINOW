@@ -30,6 +30,7 @@ module.exports = {
           "https://images.unsplash.com/photo-1627398242454-45a1465c2479?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
         videoPreviewUrl: "https://youtu.be/ixOd42SEUF0",
         level: "beginner",
+        rating: 4.3,
         categoryId: 3,
         description: `Selamat datang di kursus yang akan membawa Anda melewati perjalanan menakjubkan dalam dunia pengembangan web! Apakah Anda belum memiliki latar belakang di dunia IT? Tidak masalah! Kursus ini dirancang khusus untuk para pemberani yang ingin menjelajahi keindahan pengembangan front-end menggunakan React JS tanpa harus menjadi ahli teknologi informasi.
             
@@ -53,6 +54,7 @@ module.exports = {
           "https://images.unsplash.com/photo-1587440871875-191322ee64b0?q=80&w=1471&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
         videoPreviewUrl: "https://youtu.be/DwTkyMJi890",
         level: "beginner",
+        rating: 4.7,
         categoryId: 1,
         description: `Selamat datang di course Menjadi Kreatif dengan UI/UX Design, di mana Anda akan diajak untuk meresapi keindahan dan kreativitas dalam dunia desain antarmuka pengguna (UI) dan pengalaman pengguna (UX)! Apakah Anda seorang pemula yang penasaran atau seorang desainer berpengalaman yang ingin mengeksplorasi lebih dalam, kursus ini dirancang untuk memperkaya wawasan Anda dalam seni desain.
       
@@ -76,6 +78,7 @@ module.exports = {
           "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
         videoPreviewUrl: "https://youtu.be/rd-590n3H6w",
         level: "advanced",
+        rating: 4.6,
         categoryId: 4,
         description: `Selamat datang di kursus Android Assembly Mastery: Membangun Aplikasi Android dengan Bahasa Tingkat Rendah Assembly x86 — petualangan kode yang melampaui batasan dan membawa Anda ke lapisan terdalam dari pemrograman. Apakah Anda siap untuk menjelajahi dunia yang penuh tantangan dan keunikan dalam menciptakan aplikasi Android menggunakan bahasa assembly x86?
       
@@ -99,6 +102,7 @@ module.exports = {
           "https://images.unsplash.com/photo-1537884944318-390069bb8665?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
         videoPreviewUrl: "https://youtu.be/HYfG_uCOlhc",
         level: "advanced",
+        rating: 4.5,
         categoryId: 3,
         description: `Selamat datang, para petualang kode! Apakah Anda siap untuk memasuki dunia yang penuh misteri, tantangan, dan keberanian dalam membuat Restful API menggunakan bahasa pemrograman C? Bersiaplah untuk mengembara melalui kode-kode piramida dan menavigasi lautan sintaksis!
             
@@ -122,6 +126,7 @@ module.exports = {
           "https://images.unsplash.com/photo-1594904351111-a072f80b1a71?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
         videoPreviewUrl: "https://youtu.be/DmxXl1k0X5g",
         level: "intermediate",
+        rating: 4.8,
         categoryId: 3,
         description: `Selamat datang di kursus akseleratif kami, di mana kami akan membawa Anda dari pemula menjadi ahli di dunia back-end development menggunakan bahasa pemrograman Golang dalam waktu hanya 24 jam! Apakah Anda siap untuk terjun ke dalam pelajaran intensif yang akan mempercepat pemahaman Anda tentang server-side development?
             
@@ -145,6 +150,7 @@ module.exports = {
           "https://images.unsplash.com/photo-1639507986194-48ef61205b61?q=80&w=1476&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
         videoPreviewUrl: "https://youtu.be/1eJzLj9OE0Q",
         level: "intermediate",
+        rating: 4.4,
         categoryId: 4,
         description: `Selamat datang di kursus akseleratif kami, di mana kami akan membawa Anda dari pemula menjadi ahli di dunia back-end development menggunakan bahasa pemrograman Golang dalam waktu hanya 24 jam! Apakah Anda siap untuk terjun ke dalam pelajaran intensif yang akan mempercepat pemahaman Anda tentang server-side development?
             
@@ -168,6 +174,7 @@ module.exports = {
           "https://images.unsplash.com/photo-1577760258779-e787a1733016?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
         videoPreviewUrl: "https://youtu.be/6hIUgd6WuFw",
         level: "advanced",
+        rating: 4.7,
         categoryId: 1,
         description: `Selamat datang di dunia kreativitas tanpa batas di dalam kategori UI/UX Design kami! Di sini, kami mengajak Anda untuk menggali lebih dalam daripada sekadar warna dan bentuk, melainkan merangkul seni dan ilmu di balik antarmuka pengguna (UI) dan pengalaman pengguna (UX).
             
@@ -191,6 +198,7 @@ module.exports = {
           "https://images.unsplash.com/photo-1542626991-cbc4e32524cc?q=80&w=1469&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
         videoPreviewUrl: "https://youtu.be/6hXoBeIQd-o",
         level: "beginner",
+        rating: 4.3,
         categoryId: 2,
         description: `Selamat datang di course Melaju di Dunia iOS dengan Swift, di mana kita akan mempercepat laju pengembangan aplikasi iOS dengan menggunakan alat utama, yaitu Swift! Bersiaplah untuk menjelajahi segala yang Swift tawarkan dalam pembuatan aplikasi yang memikat dan inovatif.
             
@@ -214,6 +222,7 @@ module.exports = {
           "https://images.unsplash.com/photo-1526925539332-aa3b66e35444?q=80&w=1530&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
         videoPreviewUrl: "https://youtu.be/HVmmrTBdiFY",
         level: "advanced",
+        rating: 4.6,
         categoryId: 5,
         description: `Selamat datang di course Melaju di Dunia iOS dengan Swift, di mana kita akan mempercepat laju pengembangan aplikasi iOS dengan menggunakan alat utama, yaitu Swift! Bersiaplah untuk menjelajahi segala yang Swift tawarkan dalam pembuatan aplikasi yang memikat dan inovatif.
             
@@ -237,6 +246,7 @@ module.exports = {
           "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?q=80&w=1472&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
         videoPreviewUrl: "https://youtu.be/eSrXU5vrgaI",
         level: "beginner",
+        rating: 4.6,
         categoryId: 6,
         description: `Selamat datang di course Mengeksplorasi Dunia Data, di mana Anda akan diajak untuk meresapi petualangan data science yang mendalam dan menarik! Apakah Anda seorang pemula yang ingin memahami dasar-dasar atau seorang praktisi data yang ingin mengasah keterampilan, course ini dirancang untuk Anda.
       
@@ -260,6 +270,7 @@ module.exports = {
           "https://plus.unsplash.com/premium_photo-1682145730713-34bba6d3d14a?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
         videoPreviewUrl: "https://youtu.be/JVJc4k6xjTM",
         level: "intermediate",
+        rating: 4.9,
         categoryId: 4,
         description: `Selamat datang di course Merajut Mimpi di Dunia Android, di mana Anda akan menjelajahi keindahan dan kreativitas dalam pengembangan aplikasi Android! Apakah Anda seorang pemula yang penasaran atau seorang pengembang berpengalaman yang ingin mengeksplorasi lebih dalam, kategori ini menyajikan petualangan menyenangkan dalam dunia Android development.
       
@@ -283,6 +294,7 @@ module.exports = {
           "https://images.unsplash.com/photo-1512758017271-d7b84c2113f1?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
         videoPreviewUrl: "https://youtu.be/Sl0YBFJuvSU",
         level: "beginner",
+        rating: 5,
         categoryId: 2,
         description: `Selamat datang di course Mengelola Produk dengan Bijak, di mana Anda akan mendapatkan panduan komprehensif untuk menjadi seorang Product Manager yang sukses. Dalam dunia yang terus berkembang ini, mengelola produk dengan bijak adalah keterampilan kunci yang membutuhkan kombinasi antara keahlian bisnis, pemahaman pelanggan, dan ketangkasan teknologi.
       

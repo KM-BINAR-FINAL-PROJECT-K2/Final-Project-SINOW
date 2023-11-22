@@ -72,6 +72,30 @@ const uploadVideo = async (file, next) => {
     return next(new ApiError(error.message, 500));
   }
 };
+
+const uploadImage = async (file, next) => {
+  try {
+    if (!isImageFile(file)) {
+      return next(new ApiError("Harus mengirim file image", 400));
+    }
+    const extension = getExtension(file);
+
+    const uploadedImage = await imagekit.upload({
+      file: file.buffer,
+      fileName: `Image-${Date.now()}.${extension}`,
+    });
+
+    if (!uploadedImage) {
+      return next(new ApiError("Gagal upload image", 400));
+    }
+
+    return {
+      imageUrl: uploadedImage.url,
+    };
+  } catch {
+    return next(new ApiError(error.message, 500));
+  }
+};
 const isVideoFile = (file) => {
   return file.mimetype.startsWith("video/");
 };
@@ -88,4 +112,5 @@ const getExtension = (file) => {
 module.exports = {
   uploadImageAndVideo,
   uploadVideo,
+  uploadImage,
 };
