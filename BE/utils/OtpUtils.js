@@ -1,55 +1,73 @@
 const randomString = require("randomstring");
 const nodemailer = require("nodemailer");
 const ApiError = require("../utils/ApiError");
+const jwt = require("jsonwebtoken");
 
-const sendVerificationEmail = async (email) => {
+const transporter = nodemailer.createTransport({
+  service: "gmail",
+  host: "smtp.gmail.com",
+  port: 587,
+  secure: false,
+  auth: {
+    user: process.env.EMAIL,
+    pass: process.env.APP_PASSWORD,
+  },
+});
+
+const generateOTP = () =>
+  randomString.generate({ length: 6, charset: "numeric" });
+
+const sendMail = async (mailOptions) => {
   try {
-    const otpCode = generateOtp();
-
-    const transporter = nodemailer.createTransport({
-      service: "gmail",
-      host: "smtp.gmail.com",
-      port: 587,
-      secure: false,
-      auth: {
-        user: process.env.EMAIL,
-        pass: process.env.APP_PASSWORD,
-      },
-    });
-
-    const mailOptions = {
-      from: {
-        name: "SiNow",
-        address: process.env.EMAIL,
-      },
-      to: email,
-      subject: "SiNow - Verifikasi OTP",
-      text: `Verifikasi OTP anda adalah: ${otpCode}`,
-    };
-
-    const sendMail = async (transporter, mailOptions) => {
-      try {
-        await transporter.sendMail(mailOptions);
-      } catch (error) {
-        return next(new ApiError("Gagal mengirim email", 500));
-      }
-    };
-
-    await sendMail(transporter, mailOptions);
-
-    return otpCode;
+    await transporter.sendMail(mailOptions);
   } catch (error) {
-    return next(new ApiError(error, 500));
+    throw new ApiError("Gagal mengirim email", 500);
   }
 };
 
-const generateOtp = () => {
-  return randomString.generate({
-    length: 6,
-    charset: "numeric",
-  });
+const sendOTPVerificationEmail = async (email) => {
+  try {
+    const otpCode = generateOTP();
+
+    const mailOptions = {
+      from: { name: "SiNow", address: process.env.EMAIL },
+      to: email,
+      subject: "SiNow - Verifikasi OTP",
+      text: `Kode verifikasi OTP Anda adalah:\n${otpCode}\n\nGunakan kode ini untuk verifikasi akun Anda. Jangan berikan kode ini kepada siapa pun.\n\nTerima kasih,\nSiNow Team`,
+    };
+
+    await sendMail(mailOptions);
+
+    return otpCode;
+  } catch (error) {
+    throw new ApiError(error, 500);
+  }
 };
 
-module.exports = {
-  sendVerificationEmail,
+const sendResetPasswordEmail = async (auth) => {
+  try {
+    const generateToken = jwt.sign(
+      { id: auth.id, email: auth.email },
+      process.env.JWT_SECRET,
+      { expiresIn: 1800 }
+    );
+
+    const mailOptions = {
+      from: { name: "SiNow", address: process.env.EMAIL },
+      to: auth.email,
+      subject: "SiNow - Reset Password",
+      // text: `Dear ${auth.User.name},\n\nKami menerima permintaan untuk mereset kata sandi akun SiNow Anda. Silakan klik tautan berikut:\n\n${process.env.CLIENT_URL}/reset-password/${generateToken}\n\nJika Anda tidak membuat permintaan ini, harap abaikan email ini.\n\nTerima kasih,\nSiNow Team`,
+      html: `<p>Dear ${auth.User.name},</p>
+      <p>Kami menerima permintaan untuk mereset kata sandi akun SiNow Anda. Silakan klik tautan berikut:</p>
+      <p><a href="http://${process.env.CLIENT_URL}/reset-password/${generateToken}">Reset Password</a></p>
+      <p>Jika Anda tidak membuat permintaan ini, harap abaikan email ini.</p>
+      <p>Terima kasih,<br>SiNow Team</p>`,
+    };
+
+    await sendMail(mailOptions);
+  } catch (error) {
+    throw new ApiError(error, 500);
+  }
 };
+
+module.exports = { sendOTPVerificationEmail, sendResetPasswordEmail };

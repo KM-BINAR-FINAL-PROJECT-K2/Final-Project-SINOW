@@ -9,8 +9,7 @@ router.get("/check-token", authenticate, Auth.checkToken);
 router.post("/verify-email", Auth.verifyEmail);
 router.post("/resend-otp", Auth.resendOtp);
 
-router.post("/forgot-password", Auth.forgotPassword);
-router.post("/verify-reset-password", Auth.verifyResetPassword);
-router.post("/reset-password", Auth.resetPassword);
+router.post("/reset-password", Auth.reqResetPassword);
+router.post("/reset-password/:token", Auth.resetPassword);
 
 module.exports = router;
