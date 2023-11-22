@@ -77,7 +77,7 @@ export default function Sidebar() {
           </span>
         </a>
         <a
-          href="/dashboard"
+          href="/kelola-kelas"
           className="inline-block cursor-pointer w-[50px] relative group mb-7"
         >
           <img
@@ -90,7 +90,7 @@ export default function Sidebar() {
           </span>
         </a>
         <a
-          href="/dashboard"
+          href="/#"
           className="inline-block cursor-pointer w-[50px] relative group"
         >
           <img
