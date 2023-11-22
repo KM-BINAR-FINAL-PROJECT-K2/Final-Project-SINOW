@@ -1,6 +1,6 @@
 import Navigation from "../../Template/Navigation/Navigation";
 import Card from "../../Molecule/Card/Card";
-import TableBody from "../../Molecule/Card/TablePayment";
+import TableBody from "../../Molecule/TablePayment/TablePayment";
 
 export default function DashboadAdmin() {
   return (
