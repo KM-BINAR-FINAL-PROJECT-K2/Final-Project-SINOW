@@ -32,6 +32,7 @@ module.exports = (sequelize, DataTypes) => {
   User.init(
     {
       name: DataTypes.STRING,
+      photoProfileUrl: DataTypes.STRING,
       country: DataTypes.STRING,
       city: DataTypes.STRING,
       role: DataTypes.STRING,

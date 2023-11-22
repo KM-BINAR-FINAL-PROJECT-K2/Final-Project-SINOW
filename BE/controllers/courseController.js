@@ -1,12 +1,23 @@
-const { Course, User, Category, Chapter, Module } = require("../models");
+const {
+  Course,
+  User,
+  Category,
+  Chapter,
+  Module,
+  Benefit,
+} = require("../models");
 const { Op } = require("sequelize");
 const ApiError = require("../utils/ApiError");
 
-const { uploadImageAndVideo } = require("../lib/imagekitUploader");
+const {
+  uploadImageAndVideo,
+  uploadImage,
+  uploadVideo,
+} = require("../lib/imagekitUploader");
 
 const createCourse = async (req, res, next) => {
   try {
-    const { name, level, categoryId, description, type, price, courseBy } =
+    let { name, level, categoryId, description, type, price, courseBy } =
       req.body;
 
     if (
@@ -40,6 +51,10 @@ const createCourse = async (req, res, next) => {
 
     if (type !== "gratis" && type !== "premium") {
       return next(new ApiError("Type harus 'gratis' atau 'premium'", 400));
+    }
+
+    if (isNaN(price)) {
+      return next(new ApiError("Harga yang dimasukkan bukan angka", 400));
     }
 
     if (type === "premium" && price <= 0) {
@@ -95,6 +110,32 @@ const getAllCourse = async (req, res, next) => {
   try {
     const { search, category, level } = req.query;
 
+    if (category) {
+      if (category < 1 && category > 6) {
+        return next(
+          new ApiError(
+            "Category tidak tersedia, yang tersedia: 1: UI/UX Design, 2: Product Management, 3: Web Development, 4: Android Development, 5: iOS Development, 6: Data Science",
+            400
+          )
+        );
+      }
+    }
+
+    if (level) {
+      if (
+        level !== "beginner" &&
+        level !== "intermediate" &&
+        level !== "advance"
+      ) {
+        return next(
+          new ApiError(
+            "Level harus 'beginner', 'intermediate' atau 'advance', perhatikan juga huruf kecil besarnya",
+            400
+          )
+        );
+      }
+    }
+
     const where = {};
 
     if (search) {
@@ -103,7 +144,7 @@ const getAllCourse = async (req, res, next) => {
       };
     }
     if (category) {
-      where.category = {
+      where.categoryId = {
         [Op.in]: Array.isArray(category) ? category : [category],
       };
     }
@@ -124,6 +165,11 @@ const getAllCourse = async (req, res, next) => {
           model: User,
           as: "courseCreator",
           attributes: ["id", "name"],
+        },
+        {
+          model: Benefit,
+          as: "benefits",
+          attributes: ["id", "description"],
         },
         {
           model: Chapter,
@@ -177,6 +223,11 @@ const getCourseById = async (req, res, next) => {
           attributes: ["id", "name"],
         },
         {
+          model: Benefit,
+          as: "benefits",
+          attributes: ["id", "description"],
+        },
+        {
           model: Chapter,
           as: "chapters",
           attributes: ["no", "name"],
@@ -213,10 +264,8 @@ const getCourseById = async (req, res, next) => {
 const updateCourse = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const { name, level, categoryId, description, type, price, courseBy } =
+    let { name, level, categoryId, description, type, price, courseBy } =
       req.body;
-
-    const user = req.user;
 
     const course = await Course.findByPk(id);
     if (!course) {
@@ -227,6 +276,35 @@ const updateCourse = async (req, res, next) => {
 
     if (name) {
       updateData.name = name;
+    }
+
+    if (level) {
+      if (
+        level !== "beginner" &&
+        level !== "intermediate" &&
+        level !== "advanced"
+      ) {
+        return next(
+          new ApiError("Level harus beginner, intermediate, atau advanced", 400)
+        );
+      }
+      updateData.level = level;
+    }
+
+    if (categoryId) {
+      if (categoryId < 1 || categoryId > 6) {
+        return next(
+          new ApiError(
+            "Kategori category harus antara 1-6: 1. UI/UX Design, 2. Product Management, 3. Web Development, 4. Android Development, 5. iOS Development, 6. Data Science",
+            400
+          )
+        );
+      }
+      updateData.categoryId = categoryId;
+    }
+
+    if (courseBy) {
+      updateData.courseBy = courseBy;
     }
 
     if (description) {
@@ -246,17 +324,29 @@ const updateCourse = async (req, res, next) => {
         if (!price || price <= 0) {
           return next(new ApiError("Harga course harus lebih dari 0", 400));
         }
+        if (isNaN(price)) {
+          return next(new ApiError("Harga yang dimasukkan bukan angka", 400));
+        }
         updateData.price = price;
       }
       updateData.type = type;
     }
     if (req.files || Object.keys(req.files).length > 0) {
-      const uploadedFiles = await uploadImageAndVideo(req.files, next);
-      if (!uploadedFiles || Object.keys(uploadedFiles).length === 0) {
-        next(new ApiError("Gagal upload file", 500));
+      if (req.files.image[0]) {
+        const { imageUrl } = await uploadImage(req.files.image[0]);
+        if (!imageUrl) {
+          next(new ApiError("Gagal upload image", 400));
+        }
+        updateData.imageUrl = imageUrl;
       }
-      updateData.imageUrl = uploadedFiles.imageUrl;
-      updateData.videoUrl = uploadedFiles.videoUrl;
+
+      if (req.files.video[0]) {
+        const { videoUrl } = await uploadVideo(req.files.video[0]);
+        if (!videoUrl) {
+          next(new ApiError("Gagal upload video", 400));
+        }
+        updateData.videoUrl = videoUrl;
+      }
     }
 
     const [rowCount, [updatedCourse]] = await Course.update(updateData, {
