@@ -1,17 +1,15 @@
 const { Module, Chapter, User } = require("../models");
 const ApiError = require("../utils/ApiError");
 
-const { uploadVideo } = require("../lib/imagekitUploader");
+const { uploadVideo, uploadImageAndVideo } = require("../lib/imagekitUploader");
 
 const createModule = async (req, res, next) => {
   try {
-    const { name, no, chapterId, duration } = req.body;
+    let { name, no, chapterId, duration } = req.body;
 
     if (!name || !no || !chapterId || !duration) {
       return next(new ApiError("Semua field harus di isi", 400));
     }
-    console.log(req.body);
-    console.log(req.file);
 
     if (!req.file || Object.keys(req.file).length === 0) {
       return next(new ApiError("Harus menyertakan video", 400));
@@ -65,7 +63,12 @@ const getAllModule = async (req, res, next) => {
           as: "moduleCreator",
           attributes: ["id", "name"],
         },
+        {
+          model: User,
+          as: "users",
+        },
       ],
+      order: [["id", "ASC"]],
     });
 
     if (!modules || modules.length === 0) {
@@ -116,6 +119,71 @@ const getModuleById = async (req, res, next) => {
     return next(new ApiError(error.message, 500));
   }
 };
+
+const updateModule = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    let { name, no, chapterId, duration } = req.body;
+
+    const module = await Module.findByPk(id);
+    if (!module) {
+      return next(new ApiError("Module tidak ditemukan", 404));
+    }
+
+    const updateData = {};
+
+    if (name) {
+      updateData.name = name;
+    }
+
+    if (no) {
+      updateData.no = no;
+    }
+    if (chapterId) {
+      const chapter = await Chapter.findByPk(chapterId);
+      if (!chapter) {
+        return next(new ApiError("Chapter tidak ditemukan", 404));
+      }
+      updateData.chapterId = chapterId;
+    }
+    if (duration) {
+      updateData.duration = duration;
+    }
+
+    if (req.file && Object.keys(req.file).length > 0) {
+      if (req.file) {
+        const { videoUrl } = await uploadVideo(req.file);
+        if (!videoUrl || Object.keys(videoUrl).length === 0) {
+          next(new ApiError("Gagal upload file", 500));
+        }
+        updateData.videoUrl = videoUrl;
+      }
+    } else {
+      updateData.videoUrl = module.videoUrl;
+    }
+
+    const [rowCount, [updatedModule]] = await Module.update(updateData, {
+      where: {
+        id,
+      },
+      returning: true,
+    });
+
+    if (rowCount === 0 && !updatedModule) {
+      return next(new ApiError("Gagal update module", 500));
+    }
+
+    res.status(200).json({
+      status: "success",
+      message: `Berhasil mengupdate data course id: ${id}`,
+      data: updatedModule,
+    });
+
+    console.log("data setelah update", updatedModule);
+  } catch (error) {
+    next(new ApiError(error, 500));
+  }
+};
 const deleteModule = async (req, res, next) => {
   try {
     const { id } = req.params;
@@ -149,4 +217,5 @@ module.exports = {
   getAllModule,
   getModuleById,
   deleteModule,
+  updateModule,
 };
