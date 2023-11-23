@@ -15,8 +15,8 @@ const createModule = async (req, res, next) => {
       return next(new ApiError("Harus menyertakan video", 400));
     }
 
-    const chapter = await Chapter.findByPk(chapterId);
-    if (!chapter) {
+    const checkChapter = await Chapter.findByPk(chapterId);
+    if (!checkChapter) {
       return next(new ApiError("Chapter tidak ada", 404));
     }
 
@@ -140,8 +140,8 @@ const updateModule = async (req, res, next) => {
       updateData.no = no;
     }
     if (chapterId) {
-      const chapter = await Chapter.findByPk(chapterId);
-      if (!chapter) {
+      const checkChapter = await Chapter.findByPk(chapterId);
+      if (!checkChapter) {
         return next(new ApiError("Chapter tidak ditemukan", 404));
       }
       updateData.chapterId = chapterId;
@@ -175,11 +175,9 @@ const updateModule = async (req, res, next) => {
 
     res.status(200).json({
       status: "success",
-      message: `Berhasil mengupdate data course id: ${id}`,
+      message: `Berhasil mengupdate data module id: ${id}`,
       data: updatedModule,
     });
-
-    console.log("data setelah update", updatedModule);
   } catch (error) {
     next(new ApiError(error, 500));
   }
