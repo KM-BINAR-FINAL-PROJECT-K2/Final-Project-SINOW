@@ -174,25 +174,9 @@ const getAllCourse = async (req, res, next) => {
           as: "benefits",
           attributes: ["id", "description"],
         },
-        {
-          model: Chapter,
-          as: "chapters",
-          attributes: ["no", "name"],
-          include: [
-            {
-              model: Module,
-              as: "modules",
-              attributes: ["no", "name", "videoUrl", "duration"],
-            },
-          ],
-        },
       ],
       where,
-      order: [
-        ["id", "ASC"],
-        ["chapters", "no", "ASC"],
-        ["chapters", "modules", "no", "ASC"],
-      ],
+      order: [["id", "ASC"]],
     });
 
     if (!courses || courses.length === 0) {

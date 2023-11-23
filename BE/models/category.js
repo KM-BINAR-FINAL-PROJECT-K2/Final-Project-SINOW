@@ -19,6 +19,7 @@ module.exports = (sequelize, DataTypes) => {
         autoIncrement: true,
       },
       name: DataTypes.STRING,
+      imageUrl: DataTypes.STRING,
     },
     {
       sequelize,

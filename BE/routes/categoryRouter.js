@@ -15,3 +15,5 @@ router.post(
 );
 router.put("/:id", authenticate, checkRole("admin"), Category.updateCategory);
 router.delete(":id", authenticate, checkRole("admin"), Category.deleteCategory);
+
+module.exports = router;

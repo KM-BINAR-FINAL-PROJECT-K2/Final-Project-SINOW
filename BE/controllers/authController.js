@@ -1,6 +1,6 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const { User, Auth, OTP } = require("../models");
+const { User, Auth, OTP, Notification, sequelize } = require("../models");
 const ApiError = require("../utils/ApiError");
 const validator = require("validator");
 const {
@@ -215,8 +215,14 @@ const verifyEmail = async (req, res, next) => {
   try {
     const { email, otpCode } = req.body;
 
-    if (!email) {
-      return next(new ApiError("Email harus diisi", 400));
+    if (!email || !validator.isEmail(email)) {
+      return next(new ApiError("Email harus diisi dengan format email", 400));
+    }
+
+    if (!otpCode || !validator.isNumeric(otpCode) || otpCode.length !== 6) {
+      return next(
+        new ApiError("Kode OTP harus terdiri dari 6 digit numerik", 400)
+      );
     }
 
     const checkAuth = await Auth.findOne({
@@ -227,18 +233,6 @@ const verifyEmail = async (req, res, next) => {
 
     if (!checkAuth) {
       return next(new ApiError("Email tidak terdaftar", 400));
-    }
-
-    if (!otpCode) {
-      return next(new ApiError("Kode OTP harus diisi", 400));
-    }
-
-    if (!validator.isNumeric(otpCode)) {
-      return next(new ApiError("OTP harus berupa angka", 400));
-    }
-
-    if (otpCode.length !== 6) {
-      return next(new ApiError("OTP harus 6 digit", 400));
     }
 
     const otp = await OTP.findOne({ where: { userEmail: email } });
@@ -256,31 +250,39 @@ const verifyEmail = async (req, res, next) => {
       return next(new ApiError("OTP tidak valid", 400));
     }
 
-    await Auth.update(
-      {
-        isEmailVerified: true,
-      },
-      {
+    await sequelize.transaction(async (t) => {
+      await Auth.update(
+        {
+          isEmailVerified: true,
+        },
+        {
+          where: {
+            email,
+          },
+          transaction: t,
+        }
+      );
+
+      const updatedUser = await Auth.findOne({
         where: {
           email,
         },
-      },
-      {
-        returning: true,
-      }
-    );
+        transaction: t,
+      });
+      await Notification.create({
+        type: "Notifikasi",
+        title: "Yeay! Akun mu berhasil dibuat",
+        content: `Selamat Bergabung di SiNow!\n\nKami dengan senang hati menyambut Anda di SiNow, tempat terbaik untuk belajar melalui kursus daring. Sekarang Anda memiliki akses penuh ke ribuan kursus berkualitas dari berbagai bidang IT.\n\nDengan SiNow, belajar menjadi lebih fleksibel dan mudah. Temukan kursus yang sesuai dengan minat dan tujuan karir Anda, ikuti perkembangan terbaru dalam industri IT, dan tingkatkan keterampilan Anda dengan materi pembelajaran terkini.\n\nJangan lewatkan kesempatan untuk:\n\n📚 Menjelajahi kursus-kursus unggulan dari instruktur terbaik.\n🎓 Mendapatkan\n🌐 Bergabung dengan komunitas pembelajar aktif dan berbagi pengetahuan.\n🚀 Memulai perjalanan pendidikan online Anda menuju kesuksesan.\n\nSelamat belajar,\nTim SiNow 🫡`,
+        userId: updatedUser.userId,
+        isRead: false,
+      });
 
-    const updatedUser = await Auth.findOne({
-      where: {
-        email,
-      },
-      include: ["User"],
-    });
-
-    await OTP.destroy({
-      where: {
-        userEmail: email,
-      },
+      await OTP.destroy({
+        where: {
+          userEmail: email,
+        },
+        transaction: t,
+      });
     });
 
     const token = jwt.sign(
@@ -352,8 +354,6 @@ const resetPassword = async (req, res, next) => {
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-    console.log("\n\n\n\n\ndecoded", decoded);
-
     const { password, confirmPassword } = req.body;
 
     if (!password) {
@@ -396,6 +396,14 @@ const resetPassword = async (req, res, next) => {
     if (countRowUpdated === 0) {
       return next(new ApiError("Gagal mengganti password", 500));
     }
+
+    await Notification.create({
+      type: "Notifikasi",
+      title: "Password Berhasil Diubah",
+      content: `Halo,\n\nPassword akun Anda telah berhasil diubah. Jika Anda merasa tidak melakukan perubahan ini, segera hubungi dukungan pelanggan kami.\n\nTerima kasih,\nTim SiNow 🫡`,
+      userId: decoded.id,
+      isRead: false,
+    });
 
     res.status(200).json({
       status: "success",
