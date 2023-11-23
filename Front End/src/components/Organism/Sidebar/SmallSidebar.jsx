@@ -1,5 +1,4 @@
 import { useState } from "react";
-
 export default function SmallSidebar() {
   const [showNav, setShowNav] = useState(false);
 
@@ -15,7 +14,6 @@ export default function SmallSidebar() {
           className="fixed top-0 right-0 left-0 bottom-0 bg-black opacity-50"
         ></div>
       )}
-
       <button
         onClick={toggleNav}
         className="absolute top-0 z-10 p-0 -ml-1 mt-2"
