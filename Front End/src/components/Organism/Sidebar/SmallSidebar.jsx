@@ -8,12 +8,15 @@ export default function SmallSidebar() {
 
   return (
     <div className="sticky top-0 z-20">
+<<<<<<< HEAD
       {showNav && (
         <div
           onClick={toggleNav}
           className="fixed top-0 right-0 left-0 bottom-0 bg-black opacity-50"
         ></div>
       )}
+=======
+>>>>>>> 6a20ef9 (membuat sidebar responsive design - final)
       <button
         onClick={toggleNav}
         className="absolute top-0 z-10 p-0 -ml-1 mt-2"
