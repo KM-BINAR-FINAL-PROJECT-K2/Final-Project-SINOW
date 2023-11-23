@@ -6,7 +6,7 @@ const validator = require("validator");
 const {
   sendOTPVerificationEmail,
   sendResetPasswordEmail,
-} = require("../utils/OtpUtils");
+} = require("../utils/sendMailUtils");
 
 const login = async (req, res, next) => {
   try {

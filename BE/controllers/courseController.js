@@ -65,10 +65,12 @@ const createCourse = async (req, res, next) => {
       price = 0;
     }
 
-    if (categoryId < 1 || categoryId > 6) {
+    const checkCategory = await Category.findByPk(categoryId);
+
+    if (!checkCategory) {
       return next(
         new ApiError(
-          "Category tidak tersedia, yang tersedia: 1: UI/UX Design, 2: Product Management, 3: Web Development, 4: Android Development, 5: iOS Development, 6: Data Science",
+          "Category tidak tersedia, cek 'localhost:3000/api/v1/category' untuk melihat daftar kategori yang tersedia",
           400
         )
       );
@@ -111,10 +113,11 @@ const getAllCourse = async (req, res, next) => {
     const { search, category, level } = req.query;
 
     if (category) {
-      if (category < 1 && category > 6) {
+      const checkCategory = await Category.findByPk(category);
+      if (!checkCategory) {
         return next(
           new ApiError(
-            "Category tidak tersedia, yang tersedia: 1: UI/UX Design, 2: Product Management, 3: Web Development, 4: Android Development, 5: iOS Development, 6: Data Science",
+            "Category tidak tersedia, cek 'localhost:3000/api/v1/category' untuk melihat daftar kategori yang tersedia",
             400
           )
         );
@@ -295,7 +298,7 @@ const updateCourse = async (req, res, next) => {
       if (categoryId < 1 || categoryId > 6) {
         return next(
           new ApiError(
-            "Kategori category harus antara 1-6: 1. UI/UX Design, 2. Product Management, 3. Web Development, 4. Android Development, 5. iOS Development, 6. Data Science",
+            "Kategori course yang dimasukkan harus antara 1-6: 1. UI/UX Design, 2. Product Management, 3. Web Development, 4. Android Development, 5. iOS Development, 6. Data Science",
             400
           )
         );
