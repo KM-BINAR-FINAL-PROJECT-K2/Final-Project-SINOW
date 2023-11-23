@@ -27,6 +27,13 @@ module.exports = (sequelize, DataTypes) => {
         otherKey: "moduleId",
         as: "modules",
       });
+      User.hasMany(models.Notification, {
+        foreignKey: {
+          name: "userId",
+          allowNull: false,
+        },
+        as: "notifications",
+      });
     }
   }
   User.init(
