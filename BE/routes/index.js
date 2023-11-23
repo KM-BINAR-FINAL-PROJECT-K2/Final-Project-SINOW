@@ -6,7 +6,6 @@ const Module = require("./moduleRoutes");
 const Category = require("./categoryRouter");
 const Notification = require("./notificationRouter");
 const User = require("./userRouter");
-const Module = require("./moduleRouter");
 const Notification = require("./notificationRouter");
 const Chapter = require("./chapterRouter");
 
