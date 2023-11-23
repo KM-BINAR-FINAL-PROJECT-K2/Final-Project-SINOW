@@ -1,6 +1,6 @@
 const randomString = require("randomstring");
 const nodemailer = require("nodemailer");
-const ApiError = require("../utils/ApiError");
+const ApiError = require("./ApiError");
 const jwt = require("jsonwebtoken");
 
 const transporter = nodemailer.createTransport({
@@ -56,12 +56,11 @@ const sendResetPasswordEmail = async (auth) => {
       from: { name: "SiNow", address: process.env.EMAIL },
       to: auth.email,
       subject: "SiNow - Reset Password",
-      // text: `Dear ${auth.User.name},\n\nKami menerima permintaan untuk mereset kata sandi akun SiNow Anda. Silakan klik tautan berikut:\n\n${process.env.CLIENT_URL}/reset-password/${generateToken}\n\nJika Anda tidak membuat permintaan ini, harap abaikan email ini.\n\nTerima kasih,\nSiNow Team`,
       html: `<p>Dear ${auth.User.name},</p>
       <p>Kami menerima permintaan untuk mereset kata sandi akun SiNow Anda. Silakan klik tautan berikut:</p>
       <p><a href="http://${process.env.CLIENT_URL}/reset-password/${generateToken}">Reset Password</a></p>
       <p>Jika Anda tidak membuat permintaan ini, harap abaikan email ini.</p>
-      <p>Terima kasih,<br>SiNow Team</p>`,
+      <p>Terima kasih,</br>SiNow Team</p>`,
     };
 
     await sendMail(mailOptions);
