@@ -7,8 +7,8 @@ for (let i = 11; i < 20; i++) {
     content: "Segera dapatkan potongan sebelum kehabisan",
     userId: i,
     isRead: false,
-    createdAt: new Date().now,
-    updatedAt: new Date().now,
+    createdAt: new Date(),
+    updatedAt: new Date(),
   });
 
   data.push({
@@ -18,8 +18,8 @@ for (let i = 11; i < 20; i++) {
       "Versi 1.1.2 kini sudah tersedia, update aplikasi untuk menikmati fitur baru",
     userId: i,
     isRead: false,
-    createdAt: new Date().now,
-    updatedAt: new Date().now,
+    createdAt: new Date(),
+    updatedAt: new Date(),
   });
 
   data.push({
@@ -29,8 +29,8 @@ for (let i = 11; i < 20; i++) {
     content: "Segera dapatkan potongan sebelum kehabisan",
     userId: i,
     isRead: false,
-    createdAt: new Date().now,
-    updatedAt: new Date().now,
+    createdAt: new Date(),
+    updatedAt: new Date(),
   });
 
   data.push({
@@ -39,8 +39,8 @@ for (let i = 11; i < 20; i++) {
     content: "Ngabuburit bersama SiNow nikmati potongan harga hingga 35%",
     userId: i,
     isRead: false,
-    createdAt: new Date().now,
-    updatedAt: new Date().now,
+    createdAt: new Date(),
+    updatedAt: new Date(),
   });
 }
 
@@ -48,10 +48,10 @@ data.push({
   type: "Notifikasi",
   title: "Data profil berhasil diperbarui",
   content: "Data profil diperbarui pada tanggal 21/11/2023 12:00",
-  userId: i,
+  userId: 11,
   isRead: false,
-  createdAt: new Date().now,
-  updatedAt: new Date().now,
+  createdAt: new Date(),
+  updatedAt: new Date(),
 });
 
 data.push({
@@ -60,8 +60,8 @@ data.push({
   content: "passwsord berhasil diubah pada tanggal 23/11/2023 12:00",
   userId: 11,
   isRead: false,
-  createdAt: new Date().now,
-  updatedAt: new Date().now,
+  createdAt: new Date(),
+  updatedAt: new Date(),
 });
 
 data.push({
@@ -70,8 +70,8 @@ data.push({
   content: 'Sukses membeli course "Belajar Android Dasar"',
   userId: 12,
   isRead: false,
-  createdAt: new Date().now,
-  updatedAt: new Date().now,
+  createdAt: new Date(),
+  updatedAt: new Date(),
 });
 
 module.exports = data;
