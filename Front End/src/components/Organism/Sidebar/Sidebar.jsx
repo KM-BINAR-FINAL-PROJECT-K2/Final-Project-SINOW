@@ -8,8 +8,13 @@ export default function Sidebar() {
     kelolaKelas: false,
   });
 
+  const [showNav, setShowNav] = useState(false);
+
+  const toggleNav = () => {
+    setShowNav(!showNav);
+  };
+
   useEffect(() => {
-    // Atur nilai background berdasarkan path saat ini
     if (location.pathname === "/") {
       setBackground({
         dashboard: true,
@@ -22,13 +27,23 @@ export default function Sidebar() {
       });
     }
   }, [location.pathname]);
+
+  console.log(showNav);
   return (
     <>
+      <button onClick={toggleNav} className="absolute z-10 p-0 -ml-1 mt-2">
+        <img
+          src="/images/slide.png"
+          alt=""
+          className={`w-[24px] h-[34px] ${showNav ? "ml-[50px]" : ""}`}
+        />
+      </button>
+
       <nav className="sticky top-0 bg-darkblue-05 h-screen  md:flex flex-col justify-center items-center flex-wrap w-auto lg:w-[300px] hidden">
         <img
           src="/images/logo-n-maskot/Logo-png.png"
           alt="logo"
-          className=" w-[100px] h-[100px] lg:w-[100px] lg:h-[100px] m-4"
+          className=" w-[100px] h-[100px] lg:w-[100px] lg:h-[100px] lg:m-4"
         />
         <div className="flex-1 w-full">
           <a
@@ -62,7 +77,12 @@ export default function Sidebar() {
           </a>
         </div>
       </nav>
-      <nav className="sticky top-0 bg-darkblue-05 h-screen md:hidden text-center flex flex-col">
+
+      <nav
+        className={`sticky top-0 bg-darkblue-05 h-screen md:hidden text-center flex flex-col ${
+          showNav ? "" : "hidden"
+        }`}
+      >
         <a
           href="/"
           className="inline-block cursor-pointer w-[50px] relative group mb-7"
