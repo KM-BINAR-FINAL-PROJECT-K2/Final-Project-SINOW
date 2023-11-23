@@ -18,6 +18,11 @@ module.exports = (sequelize, DataTypes) => {
         as: "chapters",
         onDelete: "cascade",
       });
+      Course.hasMany(models.Benefit, {
+        foreignKey: "courseId",
+        as: "benefits",
+        onDelete: "cascade",
+      });
     }
   }
   Course.init(
@@ -26,6 +31,7 @@ module.exports = (sequelize, DataTypes) => {
       imageUrl: DataTypes.STRING,
       videoPreviewUrl: DataTypes.STRING,
       level: DataTypes.STRING,
+      rating: DataTypes.FLOAT,
       categoryId: DataTypes.INTEGER,
       description: DataTypes.TEXT,
       classCode: DataTypes.STRING,

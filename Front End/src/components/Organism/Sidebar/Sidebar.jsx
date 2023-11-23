@@ -41,7 +41,7 @@ export default function Sidebar() {
 
       <nav className="sticky top-0 bg-darkblue-05 h-screen  md:flex flex-col justify-center items-center flex-wrap w-auto lg:w-[300px] hidden">
         <img
-          src="/images/logo.png"
+          src="/images/logo-n-maskot/Logo-png.png"
           alt="logo"
           className=" w-[100px] h-[100px] lg:w-[100px] lg:h-[100px] lg:m-4"
         />

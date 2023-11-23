@@ -97,6 +97,7 @@ module.exports = {
       email: `${user.name}@admin.binar.com`.toLowerCase(),
       phoneNumber: `81234567${lastThreeDigit++}`,
       password: password,
+      isEmailVerified: true,
       userId: user.id,
       createdAt: new Date(),
       updatedAt: new Date(),

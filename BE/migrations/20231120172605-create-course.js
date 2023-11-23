@@ -21,6 +21,9 @@ module.exports = {
       level: {
         type: Sequelize.STRING,
       },
+      rating: {
+        type: Sequelize.FLOAT(3, 1),
+      },
       categoryId: {
         type: Sequelize.INTEGER,
       },

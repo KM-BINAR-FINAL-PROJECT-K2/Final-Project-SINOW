@@ -2,15 +2,21 @@
 export default function Card({ color, quantity, description }) {
   return (
     <div
-      className={`flex-1 ${color} p-8 rounded-[15px] w-full md:w-auto xl:h-[118px]`}
+      className={`flex-3 md:flex-1 ${color} p-8 rounded-[15px] w-full xl:h-[118px] `}
     >
-      <div className="flex gap-4  items-center flex-wrap">
+      <div className="flex gap-4 items-center flex-wrap">
         <span className="bg-neutral-01 p-4 rounded-full">
           <img src="/images/users.png" alt="" className="w-8 h-8" />
         </span>
         <span className="text-neutral-01">
-          <p className="text-24">{quantity}</p>
-          <p className="font-bold text-20">{description}</p>
+          <p className="text-[18px] md:text-[24px]">{quantity}</p>
+          <p
+            className={`text-[16px] font-bold ${
+              description.length >= 13 ? "md:text-[18px]" : "md:text-[20px]"
+            }`}
+          >
+            {description}
+          </p>
         </span>
       </div>
     </div>

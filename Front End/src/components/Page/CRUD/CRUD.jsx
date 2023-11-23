@@ -1,10 +1,11 @@
 import Card from "../../Molecule/Card/Card";
 import Navigation from "../../Template/Navigation/Navigation";
+import ClassTable from "../../Molecule/ClassTable/ClassTable";
 export default function CRUD() {
   return (
     <>
       <Navigation>
-        <section className="mx-16 flex justify-around gap-6 flex-wrap mb-[54px]">
+        <section className="mx-8 lg:mx-16 flex justify-around gap-6 flex-wrap mb-[54px]">
           <Card
             color={"bg-darkblue-03"}
             quantity={"450"}
@@ -22,131 +23,51 @@ export default function CRUD() {
           />
         </section>
 
-        <section className="mx-16">
-          <div className="py-[10px] flex">
-            <h2 className="my-[10px] font-semibold text-[20px] flex-1">
+        <section className="mx-4 lg:mx-16">
+          <div className="py-[10px] flex flex-wrap">
+            <h2 className="my-[10px] font-semibold text-[20px] flex-wrap flex-1 min-w-[200px]">
               Kelola Kelas
             </h2>
-            <button className="bg-darkblue-05 inline-block rounded-[16px] py-[5px] px-[10px] w-[125px] h-[34px] mr-[16px] my-[10px]">
-              <div className="flex gap-[8px] items-center justify-center">
+            <div className="flex">
+              <button className="bg-darkblue-05 inline-block rounded-[16px] py-[5px] px-[10px] w-[125px] h-[34px] mr-[16px] my-[10px]">
+                <div className="flex gap-[8px] items-center justify-center">
+                  <img
+                    src="/images/gala-add.png"
+                    alt=""
+                    className="w-[24px] h-[24px]"
+                  />
+                  <span className="text-[16px] font-semibold text-neutral-01">
+                    Tambah
+                  </span>
+                </div>
+              </button>
+              <button className="bg-neutral-01 border-2 border-darkblue-05 inline-block rounded-[16px] py-[5px] px-[10px] w-[125px] h-[34px] mr-[16px] my-[10px]">
+                <div className="flex gap-[8px] items-center justify-center">
+                  <img
+                    src="/images/prefix-wrapper.png"
+                    alt=""
+                    className="w-[24px] h-[24px]"
+                  />
+                  <span className="text-[16px] font-semibold text-darkblue-05">
+                    Filter
+                  </span>
+                </div>
+              </button>
+              <button className="">
                 <img
-                  src="/images/gala-add.png"
+                  src="/images/search-icon-2.png"
                   alt=""
-                  className="w-[24px] h-[24px]"
+                  className=" w-[24px] h-[24px] inline-block"
                 />
-                <span className="text-[16px] font-semibold text-neutral-01">
-                  Tambah
-                </span>
-              </div>
-            </button>
-            <button className="bg-neutral-01 border-2 border-darkblue-05 inline-block rounded-[16px] py-[5px] px-[10px] w-[125px] h-[34px] mr-[16px] my-[10px]">
-              <div className="flex gap-[8px] items-center justify-center">
-                <img
-                  src="/images/prefix-wrapper.png"
-                  alt=""
-                  className="w-[24px] h-[24px]"
-                />
-                <span className="text-[16px] font-semibold text-darkblue-05">
-                  Filter
-                </span>
-              </div>
-            </button>
-            <button className="my-[10px]">
-              <img
-                src="/images/search-icon-2.png"
-                alt=""
-                className="w-[24px] h-[24px] inline-block"
-              />
-            </button>
+              </button>
+            </div>
           </div>
         </section>
 
-        <section className="w-full px-[63px]">
-          <div>
-            <section className="w-full">
-              <table className="w-full table-auto">
-                <thead>
-                  <tr className="bg-lightblue-05 text-left">
-                    <th className="py-2 text-[12px] px-4 font-semibold w-1/7">
-                      Kode Kelas
-                    </th>
-                    <th className="px-4 py-2 text-[12px] font-semibold w-1/7">
-                      Kategori
-                    </th>
-                    <th className="px-4 py-2 text-[12px] font-semibold w-2/7">
-                      Nama Kelas
-                    </th>
-                    <th className="px-4 py-2 text-[12px] font-semibold w-1/7">
-                      Tipe Kelas
-                    </th>
-                    <th className="px-4 py-2 text-[12px] font-semibold w-1/7">
-                      Level
-                    </th>
-                    <th className="px-4 py-2 text-[12px] font-semibold w-1/7">
-                      Harga Kelas
-                    </th>
-                    <th className="px-4 py-2 text-[12px] font-semibold w-1/7">
-                      Aksi
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td className="py-2 px-4 text-[10px] font-bold text-gray-600">
-                      UIUX0123
-                    </td>
-                    <td className="px-4 py-2 text-[10px] font-bold text-gray-600">
-                      UI/UX Design
-                    </td>
-                    <td className="px-4 py-2 text-[10px] font-bold">
-                      Belajar Web Designer dengan Figma
-                    </td>
-                    <td className="px-4 py-2 text-[12px] font-bold text-alert-success">
-                      GRATIS
-                    </td>
-                    <td className="px-4 py-2 text-[10px] font-bold">
-                      Beginner
-                    </td>
-                    <td className="px-4 py-2 text-[10px] font-bold">Rp 0</td>
-                    <td className="px-4 text-[10px] font-bold">
-                      <span className="mr-2 py-[3px] font-bold text-neutral-01 inline-block rounded-[10px] w-[50px] bg-darkblue-05 text-center leading-[14px]">
-                        Ubah
-                      </span>
-                      <span className="py-[3px] font-bold text-neutral-01 inline-block rounded-[10px] bg-alert-danger w-[50px] text-center leading-[14px]">
-                        Hapus
-                      </span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td className="py-2 px-4 text-[10px] font-bold text-gray-600">
-                      DS0323
-                    </td>
-                    <td className="px-4 py-2 text-[10px] font-bold text-gray-600">
-                      Data Science
-                    </td>
-                    <td className="px-4 py-2 text-[10px] font-bold">
-                      Data Cleaning untuk Professional
-                    </td>
-                    <td className="px-4 py-2 text-[12px] font-bold text-darkblue-05">
-                      PREMIUM
-                    </td>
-                    <td className="px-4 py-2 text-[10px] font-bold">
-                      Advanced
-                    </td>
-                    <td className="px-4 py-2 text-[10px] font-bold">
-                      Rp 199,000
-                    </td>
-                    <td className="px-4 text-[10px] font-bold">
-                      <span className="mr-2 py-[3px] font-bold text-neutral-01 inline-block rounded-[10px] w-[50px] bg-darkblue-05 text-center leading-[14px]">
-                        Ubah
-                      </span>
-                      <span className="py-[3px] font-bold text-neutral-01 inline-block rounded-[10px] bg-alert-danger w-[50px] text-center leading-[14px]">
-                        Hapus
-                      </span>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
+        <section className="border-red-500 mx-4 n lg:mx-[64px] mb-64 ">
+          <div className="border-blue-500 ">
+            <section className="border-yellow-300 overflow-auto">
+              <ClassTable />{" "}
             </section>
           </div>
         </section>

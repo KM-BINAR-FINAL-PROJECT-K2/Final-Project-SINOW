@@ -21,6 +21,10 @@ module.exports = {
       userId: {
         type: Sequelize.INTEGER,
       },
+      isEmailVerified: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: false,
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,
