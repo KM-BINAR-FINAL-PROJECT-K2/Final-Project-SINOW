@@ -3,6 +3,7 @@ const { User, Auth } = require("../models");
 const ApiError = require("../utils/ApiError");
 const validator = require("validator");
 const bcrypt = require("bcrypt");
+const { createNotification } = require("../utils/notificationUtils");
 
 const { uploadImage } = require("../lib/imagekitUploader");
 
@@ -131,6 +132,12 @@ const updateMyDetails = async (req, res, next) => {
       return next(new ApiError("Gagal update auth", 500));
     }
 
+    await createNotification(
+      "Notifikasi",
+      "Berhasil memperbarui data akun",
+      id
+    );
+
     res.status(200).json({
       status: "success",
       message: `Berhasil mengupdate data user id: ${id}`,
@@ -176,6 +183,13 @@ const changeMyPassword = async (req, res, next) => {
     if (rowCountAuth === 0 && !updatedAuth) {
       return next(new ApiError("Gagal update auth", 500));
     }
+
+    await createNotification(
+      "Notifikasi",
+      "Password Berhasil Diubah",
+      id,
+      `Halo ${user.name},\n\nPassword akun Anda telah diubah. Jika Anda merasa tidak melakukan perubahan ini, segera hubungi dukungan pelanggan kami.\n\nTerima kasih,\nTim SiNow 🫡`
+    );
     res.status(200).json({
       status: "success",
       message: `Berhasil mengupdate password user: ${user.name}`,
