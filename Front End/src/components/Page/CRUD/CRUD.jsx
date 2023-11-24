@@ -1,7 +1,14 @@
+import { useState } from "react";
 import Card from "../../Molecule/Card/Card";
 import Navigation from "../../Template/Navigation/Navigation";
 import ClassTable from "../../Molecule/ClassTable/ClassTable";
+import AddClass from "../../Organism/AddClass/AddClass";
 export default function CRUD() {
+  const [showAddClass, setShowAddClass] = useState(false);
+
+  const toggleShowContainer = () => {
+    setShowAddClass(!showAddClass);
+  };
   return (
     <>
       <Navigation>
@@ -29,7 +36,10 @@ export default function CRUD() {
               Kelola Kelas
             </h2>
             <div className="flex">
-              <button className="bg-darkblue-05 inline-block rounded-[16px] py-[5px] px-[10px] w-[125px] h-[34px] mr-[16px] my-[10px]">
+              <button
+                className="bg-darkblue-05 inline-block rounded-[16px] py-[5px] px-[10px] w-[125px] h-[34px] mr-[16px] my-[10px]"
+                onClick={toggleShowContainer}
+              >
                 <div className="flex gap-[8px] items-center justify-center">
                   <img
                     src="/images/gala-add.png"
@@ -72,6 +82,7 @@ export default function CRUD() {
           </div>
         </section>
       </Navigation>
+      {showAddClass && <AddClass toggleShowContainer={toggleShowContainer} />}
     </>
   );
 }
