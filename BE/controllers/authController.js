@@ -3,6 +3,7 @@ const jwt = require("jsonwebtoken");
 const { User, Auth, OTP, Notification, sequelize } = require("../models");
 const ApiError = require("../utils/ApiError");
 const validator = require("validator");
+const { createNotification } = require("../utils/notificationUtils");
 const {
   sendOTPVerificationEmail,
   sendResetPasswordEmail,
@@ -271,13 +272,12 @@ const verifyEmail = async (req, res, next) => {
         include: ["User"],
       });
 
-      await Notification.create({
-        type: "Notifikasi",
-        title: "Yeay! Akun mu berhasil dibuat",
-        content: `Selamat Bergabung di SiNow!\n\nKami dengan senang hati menyambut Anda di SiNow, tempat terbaik untuk belajar melalui kursus daring. Sekarang Anda memiliki akses penuh ke ribuan kursus berkualitas dari berbagai bidang IT.\n\nDengan SiNow, belajar menjadi lebih fleksibel dan mudah. Temukan kursus yang sesuai dengan minat dan tujuan karir Anda, ikuti perkembangan terbaru dalam industri IT, dan tingkatkan keterampilan Anda dengan materi pembelajaran terkini.\n\nJangan lewatkan kesempatan untuk:\n\n📚 Menjelajahi kursus-kursus unggulan dari instruktur terbaik.\n🎓 Mendapatkan\n🌐 Bergabung dengan komunitas pembelajar aktif dan berbagi pengetahuan.\n🚀 Memulai perjalanan pendidikan online Anda menuju kesuksesan.\n\nSelamat belajar,\nTim SiNow 🫡`,
-        userId: updatedUser.userId,
-        isRead: false,
-      });
+      await createNotification(
+        "Notifikasi",
+        "Yeay! Akun mu berhasil dibuat",
+        updatedUser.userId,
+        `Selamat Bergabung di SiNow!\n\nKami dengan senang hati menyambut Anda di SiNow, tempat terbaik untuk belajar melalui kursus daring. Sekarang Anda memiliki akses penuh ke ribuan kursus berkualitas dari berbagai bidang IT.\n\nDengan SiNow, belajar menjadi lebih fleksibel dan mudah. Temukan kursus yang sesuai dengan minat dan tujuan karir Anda, ikuti perkembangan terbaru dalam industri IT, dan tingkatkan keterampilan Anda dengan materi pembelajaran terkini.\n\nJangan lewatkan kesempatan untuk:\n\n📚 Menjelajahi kursus-kursus unggulan dari instruktur terbaik.\n🎓 Mendapatkan\n🌐 Bergabung dengan komunitas pembelajar aktif dan berbagi pengetahuan.\n🚀 Memulai perjalanan pendidikan online Anda menuju kesuksesan.\n\nSelamat belajar,\nTim SiNow 🫡`
+      );
 
       await OTP.destroy({
         where: {
@@ -389,7 +389,6 @@ const resetPassword = async (req, res, next) => {
 
     const passwordHash = await bcrypt.hash(password, 10);
 
-    console.log("\n\n\ndecoded id", decoded.id);
     const [countRowUpdated] = await Auth.update(
       {
         password: passwordHash,
@@ -404,13 +403,12 @@ const resetPassword = async (req, res, next) => {
       return next(new ApiError("Gagal mengganti password", 500));
     }
 
-    await Notification.create({
-      type: "Notifikasi",
-      title: "Password Berhasil Diubah",
-      content: `Halo,\n\nPassword akun Anda telah berhasil diubah. Jika Anda merasa tidak melakukan perubahan ini, segera hubungi dukungan pelanggan kami.\n\nTerima kasih,\nTim SiNow 🫡`,
-      userId: decoded.id,
-      isRead: false,
-    });
+    await createNotification(
+      "Notifikasi",
+      "Password Berhasil Diubah",
+      decoded.id,
+      `Halo,\n\nPassword akun Anda telah berhasil diubah. Jika Anda merasa tidak melakukan perubahan ini, segera hubungi dukungan pelanggan kami.\n\nTerima kasih,\nTim SiNow 🫡`
+    );
 
     res.status(200).json({
       status: "success",

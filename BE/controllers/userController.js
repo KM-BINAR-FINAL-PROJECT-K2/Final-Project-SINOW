@@ -3,14 +3,13 @@ const { User, Auth } = require("../models");
 const ApiError = require("../utils/ApiError");
 const validator = require("validator");
 const bcrypt = require("bcrypt");
+const { createNotification } = require("../utils/notificationUtils");
 
 const { uploadImage } = require("../lib/imagekitUploader");
 
 const myDetails = async (req, res, next) => {
   try {
     const { id } = req.user;
-
-    console.log(req.user);
 
     const user = await User.findByPk(id, {
       include: ["Auth"],
@@ -131,6 +130,13 @@ const updateMyDetails = async (req, res, next) => {
       return next(new ApiError("Gagal update auth", 500));
     }
 
+    await createNotification(
+      "Notifikasi",
+      "Berhasil memperbarui detail akun",
+      id,
+      "Detail akun Anda berhasil diperbarui"
+    );
+
     res.status(200).json({
       status: "success",
       message: `Berhasil mengupdate data user id: ${id}`,
@@ -150,8 +156,6 @@ const changeMyPassword = async (req, res, next) => {
     if (!user) {
       return next(new ApiError("User tidak ditemukan", 404));
     }
-    console.log("\n\n\n\n\n\n\n\n\n");
-    console.log(user.Auth.password);
     const isMatch = await bcrypt.compare(oldPassword, user.Auth.password);
     if (!isMatch) {
       return next(new ApiError("Password lama tidak sesuai", 400));
@@ -176,6 +180,13 @@ const changeMyPassword = async (req, res, next) => {
     if (rowCountAuth === 0 && !updatedAuth) {
       return next(new ApiError("Gagal update auth", 500));
     }
+
+    await createNotification(
+      "Notifikasi",
+      "Password Berhasil Diubah",
+      id,
+      `Halo ${user.name},\n\nPassword akun Anda telah diubah. Jika Anda merasa tidak melakukan perubahan ini, segera hubungi dukungan pelanggan kami.\n\nTerima kasih,\nTim SiNow 🫡`
+    );
     res.status(200).json({
       status: "success",
       message: `Berhasil mengupdate password user: ${user.name}`,
