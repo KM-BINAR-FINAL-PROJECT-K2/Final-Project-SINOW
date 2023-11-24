@@ -7,7 +7,7 @@ export default function SmallSidebar() {
   };
 
   return (
-    <div className="sticky top-0 z-20">
+    <div className="sticky top-0 z-[700]">
       {showNav && (
         <div
           onClick={toggleNav}

@@ -1,8 +1,8 @@
 /* eslint-disable react/prop-types */
 export default function Header({ name }) {
   return (
-    <header className="bg-lightblue-05 pt-[26px] pb-[20px] md:pt-[46px] md:pb-[40px] pl-10 pr-[35px] lg:pr-[87px] flex justify-between drop-shadow-sm mb-[79px] sticky top-0 gap-5 flex-wrap">
-      <h1 className=" font-bold text-[24px] text-darkblue-05 flex-1">
+    <header className="bg-lightblue-05 pt-[26px] pb-[20px] md:pt-[46px] md:pb-[40px] pl-10 pr-[35px] lg:pr-[87px] flex justify-between drop-shadow-sm mb-[79px] sticky top-0 gap-5 flex-wrap z-[600]">
+      <h1 className=" font-bold text-[24px] text-darkblue-05 flex-1 ">
         Hi, {name}
       </h1>
       <div className="border-alert-danger flex items-center flex-wrap">
