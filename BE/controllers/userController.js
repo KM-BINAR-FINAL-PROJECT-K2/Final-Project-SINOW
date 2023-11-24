@@ -5,7 +5,7 @@ const validator = require("validator");
 const bcrypt = require("bcrypt");
 const { createNotification } = require("../utils/notificationUtils");
 
-const { uploadImage } = require("../lib/imagekitUploader");
+const { uploadImage } = require("../utils/imagekitUploader");
 
 const myDetails = async (req, res, next) => {
   try {

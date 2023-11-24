@@ -2,15 +2,17 @@ const { Category, Course } = require("../models");
 const { Op } = require("sequelize");
 const ApiError = require("../utils/ApiError");
 
-const { uploadImage } = require("../lib/imagekitUploader");
+const { uploadImage } = require("../utils/imagekitUploader");
 
 const createCategory = async (req, res, next) => {
   try {
-    let { name, imageUrl } = req.body;
+    let { name } = req.body;
 
-    if (!name || !imageUrl) {
-      return next(new ApiError("Harus ada name dan imageUrl harus diisi", 400));
+    if (!name) {
+      return next(new ApiError("Name harus diisi", 400));
     }
+
+    const { imageUrl } = await uploadImage(req.files.image);
 
     const category = await Category.create({
       name,
@@ -31,12 +33,15 @@ const getAllCategory = async (req, res, next) => {
   try {
     const { name } = req.query;
 
+    const where = {};
+    if (name) {
+      where.name = {
+        [Op.iLike]: `%${name}%`,
+      };
+    }
+
     const categories = await Category.findAll({
-      where: {
-        name: {
-          [Op.iLike]: `%${name}%`,
-        },
-      },
+      where,
     });
 
     if (!categories) {

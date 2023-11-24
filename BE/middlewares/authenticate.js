@@ -24,7 +24,6 @@ module.exports = async (req, res, next) => {
     });
 
     req.user = user;
-    req.payload = decoded;
 
     next();
   } catch (error) {
