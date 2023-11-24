@@ -5,6 +5,12 @@ const ApiError = require("../utils/ApiError");
 const createNotificationForAllUsers = async (req, res, next) => {
   try {
     const { type, title, content } = req.body;
+
+    if (!type || !title || !content) {
+      return next(
+        new ApiError("type, title, content tidak boleh kosong!", 400)
+      );
+    }
     const users = await User.findAll({
       where: {
         role: "user",
@@ -83,7 +89,7 @@ const getUserNotification = async (req, res, next) => {
 
     res.status(200).json({
       status: "success",
-      data: notifications,
+      data: userNotifications,
     });
   } catch (err) {
     return next(new ApiError(err.message, 500));
@@ -93,18 +99,18 @@ const getUserNotification = async (req, res, next) => {
 const openNotification = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const { userId } = req.user;
+    const userId = req.user.id;
 
     const notification = await Notification.findByPk(id);
     if (!notification) {
       return next(new ApiError("Notifikasi tidak ditemukan", 404));
     }
-
+    console.log("\n\n\n\n\n\n\n\n", notification.userId, userId);
     if (notification.userId !== userId) {
       return next(new ApiError("Akses ditolak", 403));
     }
 
-    await Notification.update(
+    const [rowCount, [updatedNotification]] = await Notification.update(
       {
         isRead: true,
       },
@@ -113,13 +119,18 @@ const openNotification = async (req, res, next) => {
           id,
           userId,
         },
+        returning: true,
       }
     );
+
+    if (rowCount === 0 && !updatedNotification) {
+      return next(new ApiError("Gagal mengupdate notifikasi"));
+    }
 
     res.status(200).json({
       status: "success",
       message: "Berhasil membuka notifikasi",
-      data: notification,
+      data: updatedNotification,
     });
   } catch (error) {
     return next(new ApiError(error.message, 500));
@@ -176,11 +187,11 @@ const updateNotification = async (req, res, next) => {
   }
 };
 
-const deleteNotification = async (req, res, next) => {
+const deleteNotificationById = async (req, res, next) => {
   try {
     const { id } = req.params;
 
-    const deletedNotification = await notification.destroy({
+    const deletedNotification = await Notification.destroy({
       where: {
         id,
       },
@@ -198,6 +209,28 @@ const deleteNotification = async (req, res, next) => {
     next(new ApiError(err.message, 500));
   }
 };
+const deleteNotificationByTitle = async (req, res, next) => {
+  try {
+    const { title } = req.params;
+
+    const deletedNotification = await Notification.destroy({
+      where: {
+        title,
+      },
+    });
+
+    if (!deletedNotification) {
+      return next(new ApiError("Notifikasi tidak ditemukan", 404));
+    }
+
+    res.status(200).json({
+      status: "success",
+      message: `Berhasil menghapus notifikasi dengan id: ${title}`,
+    });
+  } catch (err) {
+    next(new ApiError(err.message, 500));
+  }
+};
 
 module.exports = {
   createNotificationForAllUsers,
@@ -205,5 +238,6 @@ module.exports = {
   getUserNotification,
   openNotification,
   updateNotification,
-  deleteNotification,
+  deleteNotificationById,
+  deleteNotificationByTitle,
 };

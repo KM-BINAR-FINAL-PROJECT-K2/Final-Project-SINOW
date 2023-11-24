@@ -59,7 +59,6 @@ const login = async (req, res, next) => {
       message: "Berhasil login",
       data: {
         token,
-        user,
       },
     });
   } catch (error) {
@@ -174,7 +173,12 @@ const resendOtp = async (req, res, next) => {
     }
 
     if (isEmailExist.isEmailVerified) {
-      return next(new ApiError("Email tidak memerlukan autentikasi OTP", 400));
+      return next(
+        new ApiError(
+          "Email tidak memerlukan autentikasi OTP, silahkan login",
+          400
+        )
+      );
     }
 
     const checkOtp = await OTP.findOne({
@@ -238,17 +242,14 @@ const verifyEmail = async (req, res, next) => {
     const otp = await OTP.findOne({ where: { userEmail: email } });
 
     if (!otp) {
-      return next(
-        new ApiError(
-          "OTP tidak ada OTP yang terhubung dengan email tersebut",
-          400
-        )
-      );
+      return next(new ApiError("Email tersebut tidak memiliki OTP", 400));
     }
 
     if (otp.otpValue !== otpCode) {
       return next(new ApiError("OTP tidak valid", 400));
     }
+
+    let updatedUser;
 
     await sequelize.transaction(async (t) => {
       await Auth.update(
@@ -263,12 +264,13 @@ const verifyEmail = async (req, res, next) => {
         }
       );
 
-      const updatedUser = await Auth.findOne({
+      updatedUser = await Auth.findOne({
         where: {
           email,
         },
-        transaction: t,
+        include: ["User"],
       });
+
       await Notification.create({
         type: "Notifikasi",
         title: "Yeay! Akun mu berhasil dibuat",
@@ -284,6 +286,11 @@ const verifyEmail = async (req, res, next) => {
         transaction: t,
       });
     });
+    if (!updatedUser) {
+      return next(new ApiError("gagal memverifikasi OTP"));
+    }
+
+    console.log(updatedUser);
 
     const token = jwt.sign(
       {

@@ -2,6 +2,7 @@ const jwt = require("jsonwebtoken");
 const { User, Auth } = require("../models");
 const ApiError = require("../utils/ApiError");
 const validator = require("validator");
+const bcrypt = require("bcrypt");
 
 const { uploadImage } = require("../lib/imagekitUploader");
 
@@ -41,7 +42,6 @@ const updateMyDetails = async (req, res, next) => {
     if (!user) {
       return next(new ApiError("User tidak ditemukan", 404));
     }
-
     if (!name || !email || !phoneNumber) {
       return next(
         new ApiError("Nama, email, dan nomor telepon harus diisi", 400)
@@ -85,12 +85,12 @@ const updateMyDetails = async (req, res, next) => {
     }
     updateDataAuth.email = email;
 
-    if (`${phoneNumber}`.startsWith("0")) {
-      phoneNumber = `${phoneNumber.slice(1)}`;
+    if (!validator.isMobilePhone(phoneNumber, "id-ID")) {
+      return next(new ApiError("Nomor telepon tidak valid", 400));
     }
 
-    if (!validator.isMobilePhone(phoneNumber)) {
-      return next(new ApiError("Nomor telepon tidak valid", 400));
+    if (`${phoneNumber}`.startsWith("0")) {
+      phoneNumber = `${phoneNumber.slice(1)}`;
     }
 
     if (phoneNumber !== user.Auth.phoneNumber) {
@@ -150,7 +150,10 @@ const changeMyPassword = async (req, res, next) => {
     if (!user) {
       return next(new ApiError("User tidak ditemukan", 404));
     }
-    if (oldPassword !== user.Auth.password) {
+    console.log("\n\n\n\n\n\n\n\n\n");
+    console.log(user.Auth.password);
+    const isMatch = await bcrypt.compare(oldPassword, user.Auth.password);
+    if (!isMatch) {
       return next(new ApiError("Password lama tidak sesuai", 400));
     }
     if (newPassword !== confirmNewPassword) {

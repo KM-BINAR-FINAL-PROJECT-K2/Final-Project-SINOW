@@ -2,7 +2,7 @@ const router = require("express").Router();
 
 const Course = require("./courseRouter");
 const Auth = require("./authRouter");
-const Module = require("./moduleRoutes");
+const Module = require("./moduleRouter");
 const Category = require("./categoryRouter");
 const Notification = require("./notificationRouter");
 const User = require("./userRouter");
