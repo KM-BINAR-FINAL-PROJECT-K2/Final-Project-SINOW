@@ -1,13 +1,14 @@
 const { Module, Chapter, User } = require("../models");
+const ffmpeg = require("fluent-ffmpeg");
 const ApiError = require("../utils/ApiError");
 
-const { uploadVideo, uploadImageAndVideo } = require("../lib/imagekitUploader");
+const { uploadVideo } = require("../lib/imagekitUploader");
 
 const createModule = async (req, res, next) => {
   try {
     let { name, no, chapterId, duration } = req.body;
 
-    if (!name || !no || !chapterId || !duration) {
+    if (!name || !no || !chapterId) {
       return next(new ApiError("Semua field harus di isi", 400));
     }
 
@@ -25,6 +26,13 @@ const createModule = async (req, res, next) => {
     if (!filesUrl) {
       return next(new ApiError("Gagal upload video", 400));
     }
+
+    duration = ffmpeg.ffprobe(filesUrl, (err, metaData) => {
+      if (err) {
+        return next(new ApiError("Error mendapatkan metadata", 500));
+      }
+      return Math.ceil(metaData.format.duration);
+    });
 
     const module = await Module.create({
       name,

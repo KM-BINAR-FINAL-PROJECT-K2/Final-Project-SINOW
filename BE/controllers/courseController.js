@@ -9,13 +9,11 @@ const {
 const { Op } = require("sequelize");
 const ApiError = require("../utils/ApiError");
 
-const {
-  uploadImageAndVideo,
-  uploadImage,
-  uploadVideo,
-} = require("../lib/imagekitUploader");
+const { uploadImage, uploadVideo } = require("../lib/imagekitUploader");
+const ffmpeg = require("fluent-ffmpeg");
 
 const createCourse = async (req, res, next) => {
+  const user = req.user;
   try {
     let { name, level, categoryId, description, type, price, courseBy } =
       req.body;
@@ -32,7 +30,7 @@ const createCourse = async (req, res, next) => {
       return next(new ApiError("Semua field harus diisi", 400));
     }
 
-    if (!req.files || Object.keys(req.files).length === 0) {
+    if (!req.files || Object.keys(req.files).length !== 2) {
       return next(new ApiError("Harus menyertakan gambar dan video", 400));
     }
 
@@ -76,11 +74,8 @@ const createCourse = async (req, res, next) => {
       );
     }
 
-    const filesUrl = await uploadImageAndVideo(req.files);
-
-    if (!filesUrl) {
-      return next(new ApiError("Gagal upload gambar dan video", 400));
-    }
+    const { imageUrl } = await uploadImage(req.files.image[0], next);
+    const { videoUrl } = await uploadVideo(req.files.video[0], next);
 
     const course = await Course.create({
       name,
@@ -89,9 +84,12 @@ const createCourse = async (req, res, next) => {
       description,
       type,
       price,
+      totalDuration: 0,
+      totalModule: 0,
       courseBy,
-      imageUrl: filesUrl.imageUrl,
-      videoPreviewUrl: filesUrl.videoUrl,
+      imageUrl: imageUrl,
+      videoPreviewUrl: videoUrl,
+      createdBy: user.name,
     });
 
     if (!course) {
@@ -217,12 +215,12 @@ const getCourseById = async (req, res, next) => {
         {
           model: Chapter,
           as: "chapters",
-          attributes: ["no", "name"],
+          attributes: ["id", "no", "name"],
           include: [
             {
               model: Module,
               as: "modules",
-              attributes: ["no", "name", "videoUrl", "duration"],
+              attributes: ["id", "no", "name", "videoUrl", "duration"],
             },
           ],
         },

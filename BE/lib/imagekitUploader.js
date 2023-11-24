@@ -52,7 +52,7 @@ const uploadImageAndVideo = async (files, next) => {
 const uploadVideo = async (file, next) => {
   try {
     if (!isVideoFile(file)) {
-      return next(new ApiError("Harus mengirim file video", 400));
+      return next(new ApiError("Harus mengisi file video di kolom video", 400));
     }
     const extension = getExtension(file);
 
@@ -76,7 +76,7 @@ const uploadVideo = async (file, next) => {
 const uploadImage = async (file, next) => {
   try {
     if (!isImageFile(file)) {
-      return next(new ApiError("Harus mengirim file image", 400));
+      return next(new ApiError("Harus mengisi file image di kolom image", 400));
     }
     const extension = getExtension(file);
 

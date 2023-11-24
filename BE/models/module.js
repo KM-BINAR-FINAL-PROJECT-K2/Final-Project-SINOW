@@ -2,11 +2,6 @@
 const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class Module extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
     static associate(models) {
       // define association here
       Module.belongsToMany(models.User, {
@@ -42,6 +37,62 @@ module.exports = (sequelize, DataTypes) => {
       createdBy: DataTypes.INTEGER,
     },
     {
+      hooks: {
+        afterCreate: async (module, options) => {
+          const chapter = await module.getChapter();
+          const course = await chapter.getCourse();
+
+          await course.update({
+            totalModule: course.totalModule + 1,
+            totalDuration: course.totalDuration + module.duration,
+          });
+        },
+        afterBulkCreate: async (modules, options) => {
+          for (const module of modules) {
+            const chapter = await module.getChapter();
+            const course = await chapter.getCourse();
+
+            await course.update({
+              totalModule: course.totalModule + 1,
+              totalDuration: course.totalDuration + module.duration,
+            });
+          }
+        },
+        afterUpdate: async (module, options) => {
+          const chapter = await module.getChapter();
+          const course = await chapter.getCourse();
+
+          const totalDuration = await Module.sum("duration", {
+            where: {
+              chapterId: module.chapterId,
+            },
+          });
+
+          await course.update({
+            totalDuration: totalDuration,
+          });
+        },
+        beforeDestroy: async (module, options) => {
+          const chapter = await module.getChapter();
+          const course = await chapter.getCourse();
+
+          await course.update({
+            totalModule: course.totalModule - 1,
+            totalDuration: course.totalDuration - module.duration,
+          });
+        },
+        beforeBulkDestroy: async (modules, options) => {
+          for (const module of modules) {
+            const chapter = await module.getChapter();
+            const course = await chapter.getCourse();
+
+            await course.update({
+              totalModule: course.totalModule - 1,
+              totalDuration: course.totalDuration - module.duration,
+            });
+          }
+        },
+      },
       sequelize,
       modelName: "Module",
     }

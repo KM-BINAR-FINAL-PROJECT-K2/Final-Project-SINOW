@@ -1,9 +1,10 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const { User, Auth, OTP, Notification, sequelize } = require("../models");
+const { User, Auth, OTP, sequelize } = require("../models");
 const ApiError = require("../utils/ApiError");
 const validator = require("validator");
 const { createNotification } = require("../utils/notificationUtils");
+const { createToken } = require("../utils/jwtUtils");
 const {
   sendOTPVerificationEmail,
   sendResetPasswordEmail,
@@ -42,19 +43,12 @@ const login = async (req, res, next) => {
       return next(new ApiError("Password salah", 400));
     }
 
-    const token = jwt.sign(
-      {
-        id: user.userId,
-        email: user.email,
-        phoneNumber: user.phoneNumber,
-        name: user.User.name,
-        role: user.User.role,
-      },
-      process.env.JWT_SECRET,
-      {
-        expiresIn: "24h",
-      }
-    );
+    const token = createToken({
+      id: user.userId,
+      name: user.User.name,
+      role: user.User.role,
+    });
+
     res.status(200).json({
       status: "success",
       message: "Berhasil login",
@@ -292,19 +286,11 @@ const verifyEmail = async (req, res, next) => {
 
     console.log(updatedUser);
 
-    const token = jwt.sign(
-      {
-        id: updatedUser.userId,
-        email: updatedUser.email,
-        phoneNumber: updatedUser.phoneNumber,
-        name: updatedUser.User.name,
-        role: updatedUser.User.role,
-      },
-      process.env.JWT_SECRET,
-      {
-        expiresIn: "24h",
-      }
-    );
+    const token = createToken({
+      id: updatedUser.id,
+      name: updatedUser.name,
+      role: updatedUser.role,
+    });
 
     res.status(201).json({
       status: "success",
