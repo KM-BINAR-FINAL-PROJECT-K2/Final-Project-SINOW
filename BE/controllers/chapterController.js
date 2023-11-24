@@ -11,7 +11,7 @@ const createChapter = async (req, res, next) => {
 
     const checkCourse = await Course.findByPk(courseId);
     if (!checkCourse) {
-      return next(new ApiError("Course tidak ditemukan", 404));
+      return next(new ApiError("Kursus tidak tersedia, silahkan cek daftar kursus untuk melihat kursus yang tersedia ", 404));
     }
 
     const chapter = await Chapter.create({
@@ -20,12 +20,8 @@ const createChapter = async (req, res, next) => {
       courseId,
     });
 
-    if (!chapter) {
-      return next(new ApiError("Gagal membuat chapter", 500));
-    }
-
     res.status(201).json({
-      status: "succes",
+      status: "success",
       message: "Sukses membuat chapter",
       data: chapter,
     });
@@ -51,7 +47,7 @@ const getAllChapter = async (req, res, next) => {
     }
 
     res.status(200).json({
-      status: "succes",
+      status: "success",
       message: "Berhasil mendapatkan data chapter",
       data: chapters,
     });
@@ -76,7 +72,7 @@ const getChapterById = async (req, res, next) => {
     }
 
     res.status(200).json({
-      status: "succes",
+      status: "success",
       message: `Berhasil mendapatkan data Chapter id: ${id};`,
       data: chapter,
     });
@@ -108,7 +104,7 @@ const updateChapter = async (req, res, next) => {
     if (courseId) {
       const course = await Course.findByPk(courseId);
       if (!course) {
-        return next(new ApiError("Course tidak ditemukan", 404));
+        return next(new ApiError("Kursus tidak tersedia, silahkan cek daftar kursus untuk melihat kursus yang tersedia ", 404));
       }
       updateData.courseId = courseId;
     }
@@ -121,12 +117,12 @@ const updateChapter = async (req, res, next) => {
     });
 
     if (!updatedChapter) {
-      return next(new ApiError("Gagal update Chapter", 500));
+      return next(new ApiError("Gagal memperbarui data Chapter", 500));
     }
 
     res.status(200).json({
       status: "success",
-      message: `Berhasil mengupdate data chapter id: ${id}`,
+      message: `Berhasil memperbarui data chapter id: ${id}`,
       data: updatedChapter,
     });
   } catch (error) {
@@ -136,21 +132,10 @@ const updateChapter = async (req, res, next) => {
 const deleteChapter = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const chapter = await Chapter.findByPk(id, {
-      include: [
-        {
-          model: Module,
-          as: "modules",
-        },
-      ],
-    });
+    const chapter = await Chapter.findByPk(id);
 
     if (!chapter) {
       return next(new ApiError("Chapter tidak ditemukan", 404));
-    }
-
-    if (chapter.modules && chapter.modules.length > 0) {
-      return next(new ApiError("Tidak dapat menghapus chapter dengan modul terkait", 400));
     }
 
     const isChapterDeleted = await Chapter.destroy({
@@ -163,7 +148,7 @@ const deleteChapter = async (req, res, next) => {
     }
 
     res.status(200).json({
-      status: "succes",
+      status: "success",
       message: `Berhasil menghapus data Chapter id: ${id};`,
       data: Chapter,
     });
