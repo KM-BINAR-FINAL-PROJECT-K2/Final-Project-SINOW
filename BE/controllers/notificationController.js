@@ -1,5 +1,4 @@
 const { Notification, User } = require("../models");
-const { Op } = require("sequelize");
 const ApiError = require("../utils/ApiError");
 
 const createNotificationForAllUsers = async (req, res, next) => {
@@ -38,7 +37,7 @@ const createNotificationForAllUsers = async (req, res, next) => {
 
 const getAllNotifications = async (req, res, next) => {
   try {
-    const { limit = 50, userId } = req.query;
+    const { limit = 100, userId } = req.query;
 
     if (isNaN(limit) || limit <= 0 || limit > 100) {
       return next(new ApiError("Batas jumlah notifikasi tidak valid", 400));

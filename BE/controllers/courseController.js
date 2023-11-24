@@ -9,8 +9,7 @@ const {
 const { Op } = require("sequelize");
 const ApiError = require("../utils/ApiError");
 
-const { uploadImage, uploadVideo } = require("../lib/imagekitUploader");
-const ffmpeg = require("fluent-ffmpeg");
+const { uploadImage, uploadVideo } = require("../utils/imagekitUploader");
 
 const createCourse = async (req, res, next) => {
   const user = req.user;

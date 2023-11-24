@@ -30,7 +30,7 @@ const sendOTPVerificationEmail = async (email) => {
     const otpCode = generateOTP();
 
     const mailOptions = {
-      from: { name: "SiNow", address: process.env.EMAIL },
+      from: { name: process.env.APP_NAME, address: process.env.EMAIL },
       to: email,
       subject: "SiNow - Verifikasi OTP",
       text: `Kode verifikasi OTP Anda adalah:\n${otpCode}\n\nGunakan kode ini untuk verifikasi akun Anda. Jangan berikan kode ini kepada siapa pun.\n\nTerima kasih,\nSiNow Team`,
@@ -53,7 +53,7 @@ const sendResetPasswordEmail = async (auth) => {
     );
 
     const mailOptions = {
-      from: { name: "SiNow", address: process.env.EMAIL },
+      from: { name: process.env.APP_NAME, address: process.env.EMAIL },
       to: auth.email,
       subject: "SiNow - Reset Password",
       html: `<p>Dear ${auth.User.name},</p>

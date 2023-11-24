@@ -1,8 +1,7 @@
 const { Module, Chapter, User } = require("../models");
-const ffmpeg = require("fluent-ffmpeg");
 const ApiError = require("../utils/ApiError");
 
-const { uploadVideo } = require("../lib/imagekitUploader");
+const { uploadVideo } = require("../utils/imagekitUploader");
 
 const createModule = async (req, res, next) => {
   try {
@@ -27,19 +26,12 @@ const createModule = async (req, res, next) => {
       return next(new ApiError("Gagal upload video", 400));
     }
 
-    duration = ffmpeg.ffprobe(filesUrl, (err, metaData) => {
-      if (err) {
-        return next(new ApiError("Error mendapatkan metadata", 500));
-      }
-      return Math.ceil(metaData.format.duration);
-    });
-
     const module = await Module.create({
       name,
       no,
       videoUrl: filesUrl.videoUrl,
       chapterId,
-      duration,
+      duration: filesUrl.videoDuration,
       createdBy: req.user.id,
     });
 
