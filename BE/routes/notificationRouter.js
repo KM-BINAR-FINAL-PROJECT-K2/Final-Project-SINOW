@@ -18,12 +18,18 @@ router.get(
 );
 
 router.get("/user", authenticate, Notification.getUserNotification);
-router.get("/user/open", authenticate, Notification.openNotification);
+router.get("/user/:id", authenticate, Notification.openNotification);
 router.delete(
-  "/:id",
+  "/delete-by-id/:id",
   authenticate,
   checkRole("admin"),
-  Notification.deleteNotification
+  Notification.deleteNotificationById
+);
+router.delete(
+  "/delete-by-title/:title",
+  authenticate,
+  checkRole("admin"),
+  Notification.deleteNotificationByTitle
 );
 router.put(
   "/:id",

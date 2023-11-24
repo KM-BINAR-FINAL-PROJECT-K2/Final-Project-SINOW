@@ -100,6 +100,7 @@ module.exports = {
       userId: user.id,
       createdAt: new Date(),
       updatedAt: new Date(),
+      isEmailVerified: true,
     }));
 
     await queryInterface.bulkInsert("Auths", auths);
