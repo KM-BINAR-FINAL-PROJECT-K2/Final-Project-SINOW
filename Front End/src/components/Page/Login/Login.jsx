@@ -19,7 +19,7 @@ export default function Login() {
         />
       </div>
 
-      <div className="form-app flex flex-col justify-center md:h-screen lg:py-0">
+      <div className="p-[50px] orm-app flex flex-col justify-center md:h-screen lg:py-0">
         <form
           action=""
           className="space-y-4 md:space-y-6 max-w-[400px] w-full mx-auto"
@@ -51,24 +51,26 @@ export default function Login() {
                 Lupa Kata Sandi
               </a>
             </div>
-            <input
-              type={showPassword ? "text" : "password"}
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="border sm:text-sm rounded-lg block w-full p-3 text-lightgrey-05"
-              placeholder="Masukkan Password"
-              required=""
-            />
-            <span
-              className="absolute right-[135px] top-[357px] transform -translate-y-1/2 cursor-pointer"
-              onClick={handleTogglePassword}
-            >
-              {showPassword ? (
-                <FiEyeOff style={{ color: "#B0B0B0" }} />
-              ) : (
-                <FiEye style={{ color: "#B0B0B0" }} />
-              )}
-            </span>
+            <div className="flex">
+              <input
+                type={showPassword ? "text" : "password"}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="border sm:text-sm rounded-l-lg block w-full p-3 text-lightgrey-05 border-r-0"
+                placeholder="Masukkan Password"
+                required=""
+              />
+              <span
+                className="border p-[20px] sm:p-[20px] cursor-pointer rounded-r-lg border-l-0"
+                onClick={handleTogglePassword}
+              >
+                {showPassword ? (
+                  <FiEyeOff style={{ color: "#B0B0B0" }} />
+                ) : (
+                  <FiEye style={{ color: "#B0B0B0" }} />
+                )}
+              </span>
+            </div>
           </div>
           <button
             type="submit"

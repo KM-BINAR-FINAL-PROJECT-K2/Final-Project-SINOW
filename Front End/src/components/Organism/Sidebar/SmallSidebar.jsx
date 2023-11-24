@@ -31,7 +31,7 @@ export default function SmallSidebar() {
         }`}
       >
         <a
-          href="/"
+          href="/dashboard"
           className="inline-block cursor-pointer w-[50px] relative group mb-7"
         >
           <img
@@ -57,7 +57,7 @@ export default function SmallSidebar() {
           </span>
         </a>
         <a
-          href="/#"
+          href="/"
           className="inline-block cursor-pointer w-[50px] relative group"
         >
           <img
