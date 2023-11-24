@@ -35,14 +35,16 @@ module.exports = {
       },
       totalModule: {
         type: Sequelize.INTEGER,
+        defaultValue: 0,
+      },
+      totalDuration: {
+        type: Sequelize.INTEGER,
+        defaultValue: 0,
       },
       type: {
         type: Sequelize.STRING,
       },
       price: {
-        type: Sequelize.INTEGER,
-      },
-      totalDuration: {
         type: Sequelize.INTEGER,
       },
       courseBy: {

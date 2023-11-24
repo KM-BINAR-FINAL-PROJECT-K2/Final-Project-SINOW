@@ -35,10 +35,16 @@ module.exports = (sequelize, DataTypes) => {
       categoryId: DataTypes.INTEGER,
       description: DataTypes.TEXT,
       classCode: DataTypes.STRING,
-      totalModule: DataTypes.INTEGER,
+      totalModule: {
+        type: DataTypes.INTEGER,
+        defaultValue: 0,
+      },
+      totalDuration: {
+        type: DataTypes.INTEGER,
+        defaultValue: 0,
+      },
       type: DataTypes.STRING,
       price: DataTypes.INTEGER,
-      totalDuration: DataTypes.INTEGER,
       courseBy: DataTypes.STRING,
       createdBy: DataTypes.INTEGER,
     },
