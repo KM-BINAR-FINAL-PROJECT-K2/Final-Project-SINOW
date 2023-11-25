@@ -1,4 +1,20 @@
+/* eslint-disable react/prop-types */
+import { useRef, useState } from "react";
 export default function AddClass({ toggleShowContainer }) {
+  const [selectedFiles, setSelectedFiles] = useState(null);
+  const fileInputRef = useRef(null);
+
+  const handleButtonClick = (e) => {
+    e.preventDefault();
+    fileInputRef.current.click();
+  };
+
+  const handleFileChange = (event) => {
+    setSelectedFiles(event.target.files);
+    console.log(selectedFiles);
+    return selectedFiles;
+  };
+
   return (
     <div
       className={`
@@ -93,9 +109,23 @@ export default function AddClass({ toggleShowContainer }) {
               </div>
 
               <div className="flex justify-between flex-wrap gap-[15px]">
-                <button className="text-white text-[16px] font-semibold bg-alert-danger p-[12px] rounded-[25px] flex-1 lg:w-full">
-                  Upload Video
+                <button
+                  className="text-white text-[16px] font-semibold bg-alert-danger p-[12px] rounded-[25px] flex-1 lg:w-full"
+                  onClick={handleButtonClick}
+                >
+                  {selectedFiles.length > 0
+                    ? `Total Files: ${selectedFiles.length}`
+                    : "Upload Video"}
                 </button>
+                <input
+                  type="file"
+                  multiple
+                  id="videoUpload"
+                  ref={fileInputRef}
+                  style={{ display: "none" }}
+                  onChange={handleFileChange}
+                  accept="video/mp4,video/x-m4v,video/*"
+                />
                 <button className="text-white text-[16px] font-semibold bg-darkblue-05 p-[12px] rounded-[25px] w-[120px] md:w-[200px]">
                   Simpan
                 </button>
