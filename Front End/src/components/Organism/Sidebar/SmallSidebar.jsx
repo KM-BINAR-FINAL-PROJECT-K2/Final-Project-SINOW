@@ -7,7 +7,7 @@ export default function SmallSidebar() {
   };
 
   return (
-    <div className="sticky top-0 z-20">
+    <div className="sticky top-0 z-[700]">
       {showNav && (
         <div
           onClick={toggleNav}
@@ -31,7 +31,7 @@ export default function SmallSidebar() {
         }`}
       >
         <a
-          href="/"
+          href="/dashboard"
           className="inline-block cursor-pointer w-[50px] relative group mb-7"
         >
           <img
@@ -57,7 +57,7 @@ export default function SmallSidebar() {
           </span>
         </a>
         <a
-          href="/#"
+          href="/"
           className="inline-block cursor-pointer w-[50px] relative group"
         >
           <img

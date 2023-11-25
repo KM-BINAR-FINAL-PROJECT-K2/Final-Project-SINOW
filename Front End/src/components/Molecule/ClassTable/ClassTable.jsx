@@ -39,12 +39,12 @@ export default function ClassTable() {
           <td className="px-4 py-2 text-[10px] font-bold">Beginner</td>
           <td className="px-4 py-2 text-[10px] font-bold">Rp 0</td>
           <td className="px-4 text-[10px] font-bold ">
-            <span className="mr-2 py-[3px] font-bold text-neutral-01 inline-block rounded-[10px] w-[50px] bg-darkblue-05 text-center leading-[14px]">
+            <button className="mr-2 py-[3px] font-bold text-neutral-01 inline-block rounded-[10px] w-[50px] bg-darkblue-05 text-center leading-[14px]">
               Ubah
-            </span>
-            <span className="py-[3px] font-bold text-neutral-01 inline-block rounded-[10px] bg-alert-danger w-[50px] text-center leading-[14px]">
+            </button>
+            <button className="py-[3px] font-bold text-neutral-01 inline-block rounded-[10px] bg-alert-danger w-[50px] text-center leading-[14px]">
               Hapus
-            </span>
+            </button>
           </td>
         </tr>
         <tr>
@@ -63,12 +63,12 @@ export default function ClassTable() {
           <td className="px-4 py-2 text-[10px] font-bold">Advanced</td>
           <td className="px-4 py-2 text-[10px] font-bold">Rp 199,000</td>
           <td className="px-4 text-[10px] font-bold">
-            <span className="mr-2 py-[3px] font-bold text-neutral-01 inline-block rounded-[10px] w-[50px] bg-darkblue-05 text-center leading-[14px]">
+            <button className="mr-2 py-[3px] font-bold text-neutral-01 inline-block rounded-[10px] w-[50px] bg-darkblue-05 text-center leading-[14px]">
               Ubah
-            </span>
-            <span className="py-[3px] font-bold text-neutral-01 inline-block rounded-[10px] bg-alert-danger w-[50px] text-center leading-[14px]">
+            </button>
+            <button className="py-[3px] font-bold text-neutral-01 inline-block rounded-[10px] bg-alert-danger w-[50px] text-center leading-[14px]">
               Hapus
-            </span>
+            </button>
           </td>
         </tr>
       </tbody>
