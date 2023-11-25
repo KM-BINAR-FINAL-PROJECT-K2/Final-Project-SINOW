@@ -32,15 +32,12 @@ const updateMyDetails = async (req, res, next) => {
     if (!user) {
       return next(new ApiError("User tidak ditemukan", 404));
     }
-    if (!name || !email || !phoneNumber) {
-      return next(
-        new ApiError("Nama, email, dan nomor telepon harus diisi", 400)
-      );
-    }
 
-    const updateDataUser = {
-      name,
-    };
+    const updateDataUser = {};
+
+    if (name && name !== "") {
+      updateDataUser.name = name;
+    }
 
     if (country) {
       updateDataUser.country = country;
@@ -58,67 +55,66 @@ const updateMyDetails = async (req, res, next) => {
       updateDataUser.photoProfileUrl = imageUrl;
     }
 
-    const updateDataAuth = {
-      email,
-      phoneNumber,
-    };
+    const updateDataAuth = {};
 
-    email = email.toLowerCase();
-    if (!validator.isEmail(email)) {
-      return next(new ApiError("Email tidak valid", 400));
+    if (email) {
+      email = email.toLowerCase();
+      if (!validator.isEmail(email)) {
+        return next(new ApiError("Email tidak valid", 400));
+      }
+      if (email !== user.Auth.email) {
+        const isEmailExist = await Auth.findOne({ where: { email } });
+        if (isEmailExist) {
+          return next(new ApiError("Email sudah terdaftar di lain akun", 400));
+        }
+      }
+      updateDataAuth.email = email;
     }
-    if (email !== user.Auth.email) {
-      const isEmailExist = await Auth.findOne({ where: { email } });
-      if (isEmailExist) {
-        return next(new ApiError("Email sudah terdaftar di lain akun", 400));
+
+    if (phoneNumber) {
+      if (`${phoneNumber}`.startsWith("0")) {
+        phoneNumber = `${phoneNumber.slice(1)}`;
+      }
+      if (!validator.isMobilePhone(`0${phoneNumber}`, "id-ID")) {
+        return next(new ApiError("Nomor telepon tidak valid", 400));
+      }
+
+      if (phoneNumber !== user.Auth.phoneNumber) {
+        const isPhoneNumberExist = await Auth.findOne({
+          where: { phoneNumber },
+        });
+        if (isPhoneNumberExist) {
+          return next(
+            new ApiError("Nomor telepon sudah terdaftar di lain akun", 400)
+          );
+        }
+        updateDataAuth.phoneNumber = phoneNumber;
       }
     }
-    updateDataAuth.email = email;
 
-    if (!validator.isMobilePhone(phoneNumber, "id-ID")) {
-      return next(new ApiError("Nomor telepon tidak valid", 400));
-    }
-
-    if (`${phoneNumber}`.startsWith("0")) {
-      phoneNumber = `${phoneNumber.slice(1)}`;
-    }
-
-    if (phoneNumber !== user.Auth.phoneNumber) {
-      const isPhoneNumberExist = await Auth.findOne({ where: { phoneNumber } });
-      if (isPhoneNumberExist) {
-        return next(
-          new ApiError("Nomor telepon sudah terdaftar di lain akun", 400)
-        );
-      }
-      updateDataAuth.phoneNumber = phoneNumber;
-    }
-
-    const [rowCountUser, [updatedUser]] = await User.update(updateDataUser, {
-      where: {
-        id,
-      },
-      returning: true,
-    });
-
-    if (rowCountUser === 0 && !updatedUser) {
-      return next(new ApiError("Gagal update user", 500));
-    }
-
-    const [rowCountAuth, [updatedAuth]] = await Auth.update(
-      {
-        email,
-        phoneNumber,
-      },
-      {
+    if (Object.keys(updateDataUser).length !== 0) {
+      const [rowCountUser, [updatedUser]] = await User.update(updateDataUser, {
         where: {
-          userId: id,
+          id,
         },
         returning: true,
-      }
-    );
+      });
 
-    if (rowCountAuth === 0 && !updatedAuth) {
-      return next(new ApiError("Gagal update auth", 500));
+      if (rowCountUser === 0 && !updatedUser) {
+        return next(new ApiError("Gagal update user", 500));
+      }
+    }
+
+    if (updateDataAuth.email || updateDataAuth.phoneNumber) {
+      const [rowCountAuth, [updatedAuth]] = await Auth.update(updateDataAuth, {
+        where: {
+          id: user.Auth.id,
+        },
+        returning: true,
+      });
+      if (rowCountAuth === 0 && !updatedAuth) {
+        return next(new ApiError("Gagal update auth", 500));
+      }
     }
 
     await createNotification(
@@ -158,7 +154,7 @@ const changeMyPassword = async (req, res, next) => {
       },
       {
         where: {
-          userId: id,
+          userId: user.id,
         },
         returning: true,
       }
@@ -170,12 +166,12 @@ const changeMyPassword = async (req, res, next) => {
     await createNotification(
       "Notifikasi",
       "Password Berhasil Diubah",
-      id,
+      user.id,
       `Halo ${user.name},\n\nPassword akun Anda telah diubah. Jika Anda merasa tidak melakukan perubahan ini, segera hubungi dukungan pelanggan kami.\n\nTerima kasih,\nTim SiNow 🫡`
     );
     res.status(200).json({
       status: "Success",
-      message: `Berhasil mengubah password user: ${user.name}`,
+      message: `Password berhasil diubah `,
     });
   } catch (error) {
     return next(new ApiError(error.message, 500));

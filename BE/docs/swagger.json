@@ -971,89 +971,7 @@
             }
           }
         }
-      }
-    },
-    "/courses/{id}": {
-      "get": {
-        "tags": ["Courses"],
-        "summary": "API untuk mengecek course berdasarkan ID",
-        "description": "API ini digunakan untuk user mengecek course berdasarkan ID",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "id",
-            "required": true,
-            "schema": {
-              "type": "integer"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Data course sukses diambil",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "status": {
-                      "type": "string",
-                      "example": "Success"
-                    },
-                    "message": {
-                      "type": "string",
-                      "example": "Berhasil mengambil data course"
-                    },
-                    "data": {
-                      "type": "object",
-                      "properties": {
-                        "id": {
-                          "type": "integer",
-                          "example": 1
-                        },
-                        "name": {
-                          "type": "string",
-                          "example": "Belajar Fullstack Web"
-                        },
-                        "description": {
-                          "type": "string",
-                          "example": "Belajar Fullstack Web dari nol"
-                        },
-                        "level": {
-                          "type": "string",
-                          "example": "beginner"
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Data course tidak ditemukan",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "status": {
-                      "type": "string",
-                      "example": "Failed"
-                    },
-                    "message": {
-                      "type": "string",
-                      "example": "Data course tidak ditemukan"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/course": {
+      },
       "post": {
         "tags": ["Courses"],
         "summary": "API untuk menambahkan data course",
@@ -1197,7 +1115,85 @@
         }
       }
     },
-    "/course/{id}": {
+    "/courses/{id}": {
+      "get": {
+        "tags": ["Courses"],
+        "summary": "API untuk mengecek course berdasarkan ID",
+        "description": "API ini digunakan untuk user mengecek course berdasarkan ID",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Data course sukses diambil",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Success"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Berhasil mengambil data course"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "integer",
+                          "example": 1
+                        },
+                        "name": {
+                          "type": "string",
+                          "example": "Belajar Fullstack Web"
+                        },
+                        "description": {
+                          "type": "string",
+                          "example": "Belajar Fullstack Web dari nol"
+                        },
+                        "level": {
+                          "type": "string",
+                          "example": "beginner"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Data course tidak ditemukan",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Failed"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Data course tidak ditemukan"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
       "put": {
         "tags": ["Courses"],
         "summary": "API untuk mengupdate data course",

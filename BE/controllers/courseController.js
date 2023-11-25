@@ -133,23 +133,20 @@ const getAllCourse = async (req, res, next) => {
   try {
     const { search, category, level } = req.query;
 
-    const categoryList = (await Category.findAll()).map((cat) => cat.id);
-
-    console.log(categoryList);
-
     if (category) {
       if (Array.isArray(category)) {
-        if (
-          !category.every(
-            (cat) => Number.isInteger(cat) && categoryList.includes(cat)
-          )
-        ) {
-          return next(
-            new ApiError("Category harus berupa angka bilangan bulat", 400)
-          );
-        }
+        category.map((cat) => {
+          if (isNaN(cat)) {
+            return next(
+              new ApiError(
+                "Semua category harus berupa angka bilangan bulat",
+                400
+              )
+            );
+          }
+        });
       } else {
-        if (!Number.isInteger(category) && !categoryList.includes(category)) {
+        if (isNaN(category)) {
           return next(
             new ApiError("Category harus berupa angka bilangan bulat", 400)
           );
