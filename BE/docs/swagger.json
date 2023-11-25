@@ -1411,7 +1411,6 @@
         }
       }
     },
-
     "/modules": {
       "get": {
         "tags": ["Modules"],
@@ -1508,7 +1507,7 @@
             }
           },
           "404": {
-            "description": "Data course tidak ditemukan",
+            "description": "Data module tidak ditemukan",
             "content": {
               "application/json": {
                 "schema": {
@@ -1802,8 +1801,8 @@
       },
       "put": {
         "tags": ["Modules"],
-        "summary": "API untuk mengupdate data course",
-        "description": "API ini digunakan untuk admin mengupdate data course",
+        "summary": "API untuk mengupdate data module",
+        "description": "API ini digunakan untuk admin mengupdate data module",
         "security": [
           {
             "bearerToken": []
@@ -2049,6 +2048,1105 @@
                     "message": {
                       "type": "string",
                       "example": "module tidak ditemukan"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/chapters": {
+      "get": {
+        "tags": ["Chapters"],
+        "summary": "API untuk menampilkan semua chapter",
+        "description": "API ini digunakan untuk user mengecek chapter",
+        "responses": {
+          "200": {
+            "description": "Semua data chapter sukses diambil",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Success"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Berhasil mendapatkan data chapter"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "integer",
+                          "example": 1
+                        },
+                        "no": {
+                          "type": "integer",
+                          "example": "1"
+                        },
+                        "name": {
+                          "type": "string",
+                          "example": "Pendahuluan"
+                        },
+                        "courseId": {
+                          "type": "integer",
+                          "example": "1"
+                        },
+                        "modules": {
+                          "properties": {
+                            "id": {
+                              "type": "integer",
+                              "example": 1
+                            },
+                            "name": {
+                              "type": "string",
+                              "example": "Color Palette"
+                            },
+                            "no": {
+                              "type": "integer",
+                              "example": "1"
+                            },
+                            "videoUrl": {
+                              "type": "string",
+                              "example": "https://ik.imagekit.io/xh4e1rnhlx/Video-1700925166270_UrevQ_DxZ.mp4"
+                            },
+                            "chapterId": {
+                              "type": "integer",
+                              "example": "1"
+                            },
+                            "duration": {
+                              "type": "integer",
+                              "example": "10"
+                            },
+                            "createdBy": {
+                              "type": "integer",
+                              "example": "2"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Data chapter tidak ditemukan",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Failed"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Data chapter tidak ditemukan"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Chapters"],
+        "summary": "API untuk menambahkan data chapter",
+        "description": "API ini digunakan untuk admin menambahkan data chapter",
+        "security": [
+          {
+            "bearerToken": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "no": {
+                    "type": "integer",
+                    "example": "2",
+                    "description": "Urutan chapter di dalam course"
+                  },
+                  "name": {
+                    "type": "string",
+                    "example": "Memulai Desain",
+                    "description": "Judul chapter"
+                  },
+                  "courseId": {
+                    "type": "integer",
+                    "example": "4",
+                    "description": "Course terkait"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Sukses menambahkan data chapter",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Success"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Berhasil menambahkan data chapter"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Data chapter tidak valid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Failed"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Semua field harus terisi"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Token tidak valid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Failed"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Token tidak valid"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Bukan admin",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Failed"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Kamu tidak berkepentingan disini"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Course tidak tersedia",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Failed"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Kursus tidak tersedia, silahkan cek daftar kursus untuk melihat kursus yang tersedia"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/chapters/{id}": {
+      "get": {
+        "tags": ["Chapters"],
+        "summary": "API untuk mengecek chapter berdasarkan ID",
+        "description": "API ini digunakan untuk user mengecek chapter berdasarkan ID",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "ID chapter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Data chapter sukses diambil",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Success"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Berhasil mendapatkan data chapter id : 2"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "integer",
+                          "example": 1
+                        },
+                        "no": {
+                          "type": "integer",
+                          "example": "1"
+                        },
+                        "name": {
+                          "type": "string",
+                          "example": "Pendahuluan"
+                        },
+                        "courseId": {
+                          "type": "integer",
+                          "example": "1"
+                        },
+                        "modules": {
+                          "properties": {
+                            "id": {
+                              "type": "integer",
+                              "example": 1
+                            },
+                            "name": {
+                              "type": "string",
+                              "example": "Pengenalan design system"
+                            },
+                            "no": {
+                              "type": "integer",
+                              "example": "1"
+                            },
+                            "videoUrl": {
+                              "type": "string",
+                              "example": "https://ik.imagekit.io/xh4e1rnhlx/Video-1700925166270_UrevQ_DxZ.mp4"
+                            },
+                            "chapterId": {
+                              "type": "integer",
+                              "example": "1"
+                            },
+                            "duration": {
+                              "type": "integer",
+                              "example": "10"
+                            },
+                            "createdBy": {
+                              "type": "integer",
+                              "example": "2"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Data chapter tidak ditemukan",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Failed"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Data chapter tidak ditemukan"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": ["Chapters"],
+        "summary": "API untuk mengupdate data chapter",
+        "description": "API ini digunakan untuk admin mengupdate data chapter",
+        "security": [
+          {
+            "bearerToken": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "ID chapter"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "no": {
+                    "type": "integer",
+                    "example": "2",
+                    "description": "Urutan chapter di dalam course"
+                  },
+                  "name": {
+                    "type": "string",
+                    "example": "Memulai Golang",
+                    "description": "Judul chapter"
+                  },
+                  "courseId": {
+                    "type": "integer",
+                    "example": "6",
+                    "description": "Course terkait"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Sukses mengupdate data chapter",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Success"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Berhasil mengupdate data chapter"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Token tidak valid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Failed"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Token tidak valid"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Bukan admin",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Failed"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Kamu tidak berkepentingan disini"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Data chapter tidak ditemukan",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Failed"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "chapter tidak ditemukan"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Chapters"],
+        "summary": "API untuk menghapus chapter",
+        "description": "API ini digunakan untuk admin menghapus chapter",
+        "security": [
+          {
+            "bearerToken": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "ID chapter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Sukses menghapus chapter",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Success"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Berhasil menghapus data chapter"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Token tidak valid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Failed"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Token tidak valid"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Bukan admin",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Failed"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Kamu tidak berkepentingan disini"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Data chapter tidak ditemukan",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Failed"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "chapter tidak ditemukan"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/category": {
+      "get": {
+        "tags": ["Category"],
+        "summary": "API untuk menampilkan semua category",
+        "description": "API ini digunakan untuk user mengecek category",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "name",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Semua data category sukses diambil",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Success"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Berhasil mengambil data category"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "integer",
+                          "example": 1
+                        },
+                        "name": {
+                          "type": "string",
+                          "example": "UX / UI Design"
+                        },
+                        "imageUrl": {
+                          "type": "string",
+                          "example": "https://plus.unsplash.com/premium_photo-1678565202049-9e37b2da8060?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Data category tidak ditemukan",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Failed"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Data category tidak ditemukan"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Category"],
+        "summary": "API untuk menambahkan data category",
+        "description": "API ini digunakan untuk admin menambahkan data category",
+        "security": [
+          {
+            "bearerToken": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "example": "Software Development Engineer",
+                    "description": "Nama category"
+                  },
+                  "image": {
+                    "type": "file",
+                    "description": "Gambar category"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Sukses menambahkan data category",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Success"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Berhasil menambahkan data category"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Data category tidak valid, bisa disebabkan field kosong atau duplikat nama",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Failed"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "nama harus di isi / harus menyertakan gambar"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Token tidak valid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Failed"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Token tidak valid"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Bukan admin",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Failed"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Kamu tidak berkepentingan disini"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/category/{id}": {
+      "get": {
+        "tags": ["Category"],
+        "summary": "API untuk mengecek category berdasarkan ID",
+        "description": "API ini digunakan untuk user mengecek category berdasarkan ID",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "ID category"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Data category sukses diambil",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Success"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Berhasil mendapatkan data category"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "integer",
+                          "example": 2
+                        },
+                        "name": {
+                          "type": "string",
+                          "example": "Product Management"
+                        },
+                        "imageUrl": {
+                          "type": "string",
+                          "example": "https://plus.unsplash.com/premium_photo-1678565202049-9e37b2da8060?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Data category tidak ditemukan",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Failed"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Data category tidak ditemukan"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": ["Category"],
+        "summary": "API untuk mengupdate data category",
+        "description": "API ini digunakan untuk admin mengupdate data category",
+        "security": [
+          {
+            "bearerToken": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "ID category"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "example": "Machine Learning Engineer",
+                    "description": "Nama category"
+                  },
+                  "image": {
+                    "type": "file",
+                    "description": "Gambar category"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Sukses mengupdate data category",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Success"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Berhasil mengupdate data category"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Data category tidak valid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Failed"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Nama category sudah ada"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Token tidak valid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Failed"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Token tidak valid"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Bukan admin",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Failed"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Kamu tidak berkepentingan disini"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Data category tidak ditemukan",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Failed"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "category tidak ditemukan"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Category"],
+        "summary": "API untuk menghapus category",
+        "description": "API ini digunakan untuk admin menghapus category",
+        "security": [
+          {
+            "bearerToken": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "ID category"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Sukses menghapus category",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Success"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Berhasil menghapus data category"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Token tidak valid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Failed"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Token tidak valid"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Bukan admin",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Failed"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Kamu tidak berkepentingan disini"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Data category tidak ditemukan",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Failed"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "category tidak ditemukan"
                     }
                   }
                 }

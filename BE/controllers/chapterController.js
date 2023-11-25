@@ -11,7 +11,7 @@ const createChapter = async (req, res, next) => {
 
     const checkCourse = await Course.findByPk(courseId);
     if (!checkCourse) {
-      return next(new ApiError("Kursus tidak tersedia, silahkan cek daftar kursus untuk melihat kursus yang tersedia ", 404));
+      return next(new ApiError("Kursus tidak tersedia, silahkan cek daftar kursus untuk melihat kursus yang tersedia", 404));
     }
 
     const chapter = await Chapter.create({
@@ -104,7 +104,7 @@ const updateChapter = async (req, res, next) => {
     if (courseId) {
       const course = await Course.findByPk(courseId);
       if (!course) {
-        return next(new ApiError("Kursus tidak tersedia, silahkan cek daftar kursus untuk melihat kursus yang tersedia ", 404));
+        return next(new ApiError("Kursus tidak tersedia, silahkan cek daftar kursus untuk melihat kursus yang tersedia", 404));
       }
       updateData.courseId = courseId;
     }
@@ -117,13 +117,12 @@ const updateChapter = async (req, res, next) => {
     });
 
     if (!updatedChapter) {
-      return next(new ApiError("Gagal memperbarui data Chapter", 500));
+      return next(new ApiError("Gagal update data Chapter", 500));
     }
 
     res.status(200).json({
       status: "Success",
       message: `Berhasil mengupdate data chapter id: ${id}`,
-
       data: updatedChapter,
     });
   } catch (error) {

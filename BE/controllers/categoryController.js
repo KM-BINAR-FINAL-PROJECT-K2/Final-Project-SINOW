@@ -12,6 +12,16 @@ const createCategory = async (req, res, next) => {
       return next(new ApiError("Name harus diisi", 400));
     }
 
+    const existingCategory = await Category.findOne({
+      where: {
+        name,
+      },
+    });
+
+    if (existingCategory) {
+      return next(new ApiError("Nama category sudah ada", 400));
+    }
+
     if (!req.file) {
       return next(new ApiError("Harus menyertakan gambar", 400));
     }
@@ -86,6 +96,15 @@ const updateCategory = async (req, res, next) => {
     const updateData = {};
 
     if (name) {
+      const existingCategory = await Category.findOne({
+        where: {
+          name,
+        },
+      });
+
+      if (existingCategory) {
+        return next(new ApiError("nama category sudah ada", 400));
+      }
       updateData.name = name;
     }
 
@@ -124,12 +143,7 @@ const deleteCategory = async (req, res, next) => {
   });
 
   if (checkCourse) {
-    return next(
-      new ApiError(
-        "Gagal menghapus kategory karena sudah ada course dengan kategory ini",
-        400
-      )
-    );
+    return next(new ApiError("Gagal menghapus kategory karena sudah ada course dengan kategory ini", 400));
   }
 
   const isCategoryDeleted = await category.destroy({
