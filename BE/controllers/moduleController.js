@@ -18,10 +18,9 @@ const createModule = async (req, res, next) => {
 
     const checkChapter = await Chapter.findByPk(chapterId);
     if (!checkChapter) {
-      return next(new ApiError("Chapter tidak ada", 404));
+      return next(new ApiError("Chapter tidak ditemukan, silahkan cek daftar chapter untuk melihat chapter yang tersedia", 404));
     }
 
-    const uploadedFile = await uploadVideo(req.file);
     const existingModule = await Module.findOne({
       where: {
         name,
@@ -33,7 +32,7 @@ const createModule = async (req, res, next) => {
       return next(new ApiError("Nama modul sudah ada dalam chapter ini", 400));
     }
 
-    const filesUrl = await uploadVideo(req.file);
+    const uploadedFile = await uploadVideo(req.file);
 
     if (!uploadedFile) {
       return next(new ApiError("Gagal upload video", 400));
@@ -119,7 +118,7 @@ const getModuleById = async (req, res, next) => {
       ],
     });
 
-    if (!module || module.length === 0) {
+    if (!module) {
       return next(new ApiError("Module tidak ditemukan", 404));
     }
 
@@ -166,21 +165,18 @@ const updateModule = async (req, res, next) => {
     if (chapterId) {
       const checkChapter = await Chapter.findByPk(chapterId);
       if (!checkChapter) {
-        return next(new ApiError("Chapter tidak ditemukan", 404));
+        return next(new ApiError("Chapter tidak ditemukan, silahkan cek daftar chapter untuk melihat chapter yang tersedia", 404));
       }
       updateData.chapterId = chapterId;
     }
 
     if (req.file) {
       const uploadedVideo = await uploadVideo(req.file);
-      if (!uploadedVideo || Object.keys(videoUrl).length === 0) {
+      if (!uploadedVideo || Object.keys(uploadedVideo).length === 0) {
         return next(new ApiError("Gagal upload file", 500));
       }
-      updateData.videoUrl = videoUrl;
-      updateData.duration = videoDuration;
-    } else {
-      updateData.videoUrl = module.videoUrl;
-      updateData.duration = module.videoDuration;
+      updateData.videoUrl = uploadedVideo.videoUrl;
+      updateData.duration = uploadedVideo.videoDuration;
     }
 
     const [rowCount, [updatedModule]] = await Module.update(updateData, {
@@ -191,13 +187,12 @@ const updateModule = async (req, res, next) => {
     });
 
     if (rowCount === 0 && !updatedModule) {
-      return next(new ApiError("Gagal memperbarui module", 500));
+      return next(new ApiError("Gagal update module", 500));
     }
 
     res.status(200).json({
       status: "Success",
       message: `Berhasil mengupdate data module id: ${id}`,
-
       data: updatedModule,
     });
   } catch (error) {
