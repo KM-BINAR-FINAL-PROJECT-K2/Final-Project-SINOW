@@ -12,7 +12,11 @@ const createCategory = async (req, res, next) => {
       return next(new ApiError("Name harus diisi", 400));
     }
 
-    const { imageUrl } = await uploadImage(req.files.image);
+    if (!req.file) {
+      return next(new ApiError("Harus menyertakan gambar", 400));
+    }
+
+    const { imageUrl } = await uploadImage(req.file);
 
     const category = await Category.create({
       name,
@@ -20,7 +24,7 @@ const createCategory = async (req, res, next) => {
     });
 
     res.status(201).json({
-      status: "success",
+      status: "Success",
       message: "sukses membuat category",
       data: category,
     });
@@ -49,7 +53,7 @@ const getAllCategory = async (req, res, next) => {
     }
 
     res.status(200).json({
-      status: "success",
+      status: "Success",
       message: "sukses mengambil data category",
       data: categories,
     });
@@ -66,7 +70,7 @@ const getCategoryById = async (req, res, next) => {
     }
 
     res.status(200).json({
-      status: "success",
+      status: "Success",
       message: "sukses mengambil data category",
       data: category,
     });
@@ -96,7 +100,7 @@ const updateCategory = async (req, res, next) => {
     });
 
     res.status(200).json({
-      status: "success",
+      status: "Success",
       message: "sukses update category",
       data: category,
     });
@@ -139,7 +143,7 @@ const deleteCategory = async (req, res, next) => {
   }
 
   res.status(200).json({
-    status: "success",
+    status: "Success",
     message: `Berhasil menghapus data category dengan id: ${id}`,
   });
 };

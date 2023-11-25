@@ -1,9 +1,9 @@
 const jwt = require("jsonwebtoken");
 const ApiError = require("../utils/ApiError");
 
-const createToken = (payload) => {
+const createToken = (payload, next) => {
   if (!payload.id || !payload.name || !payload.role) {
-    return new ApiError("Payload tidak valid", 400);
+    return next(new ApiError("Payload tidak valid", 400));
   }
   try {
     const token = jwt.sign(
@@ -21,7 +21,7 @@ const createToken = (payload) => {
 
     return token;
   } catch (error) {
-    return new ApiError(error.message, 500);
+    return next(new ApiError(error.message, 500));
   }
 };
 

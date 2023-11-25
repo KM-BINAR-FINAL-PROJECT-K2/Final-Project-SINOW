@@ -14,14 +14,26 @@ const { uploadImage, uploadVideo } = require("../utils/imagekitUploader");
 const createCourse = async (req, res, next) => {
   const user = req.user;
   try {
-    let { name, level, categoryId, description, type, price, courseBy } =
-      req.body;
+    let {
+      name,
+      level,
+      rating,
+      categoryId,
+      description,
+      classCode,
+      type,
+      price,
+      discount,
+      courseBy,
+    } = req.body;
 
     if (
       !name ||
       !level ||
+      !rating ||
       !categoryId ||
       !description ||
+      !classCode ||
       !type ||
       !price ||
       !courseBy
@@ -46,12 +58,20 @@ const createCourse = async (req, res, next) => {
       );
     }
 
+    if (!isNaN(rating)) {
+      return next(new ApiError("Rating harus angka", 400));
+    }
+
     if (type !== "gratis" && type !== "premium") {
       return next(new ApiError("Type harus 'gratis' atau 'premium'", 400));
     }
 
     if (isNaN(price)) {
       return next(new ApiError("Harga yang dimasukkan bukan angka", 400));
+    }
+
+    if (isNaN(discount)) {
+      return next(new ApiError("Diskon harus angka", 400));
     }
 
     if (type === "premium" && price <= 0) {
@@ -79,15 +99,19 @@ const createCourse = async (req, res, next) => {
     const course = await Course.create({
       name,
       level,
+      rating,
       categoryId,
       description,
-      type,
-      price,
+      classCode,
       totalDuration: 0,
       totalModule: 0,
-      courseBy,
+      type,
+      price,
+      discount,
+      totalUser: 0,
       imageUrl: imageUrl,
       videoPreviewUrl: videoUrl,
+      courseBy,
       createdBy: user.name,
     });
 
@@ -96,8 +120,8 @@ const createCourse = async (req, res, next) => {
     }
 
     res.status(201).json({
-      status: "success",
-      message: "Sukses membuat course",
+      status: "Success",
+      message: "Berhasiil menambahkan data course",
       data: course,
     });
   } catch (error) {
@@ -109,30 +133,55 @@ const getAllCourse = async (req, res, next) => {
   try {
     const { search, category, level } = req.query;
 
+    const categoryList = (await Category.findAll()).map((cat) => cat.id);
+
+    console.log(categoryList);
+
     if (category) {
-      const checkCategory = await Category.findByPk(category);
-      if (!checkCategory) {
-        return next(
-          new ApiError(
-            "Category tidak tersedia, cek 'localhost:3000/api/v1/category' untuk melihat daftar kategori yang tersedia",
-            400
+      if (Array.isArray(category)) {
+        if (
+          !category.every(
+            (cat) => Number.isInteger(cat) && categoryList.includes(cat)
           )
-        );
+        ) {
+          return next(
+            new ApiError("Category harus berupa angka bilangan bulat", 400)
+          );
+        }
+      } else {
+        if (!Number.isInteger(category) && !categoryList.includes(category)) {
+          return next(
+            new ApiError("Category harus berupa angka bilangan bulat", 400)
+          );
+        }
       }
     }
 
+    const validLevels = ["beginner", "intermediate", "advanced"];
+
     if (level) {
-      if (
-        level !== "beginner" &&
-        level !== "intermediate" &&
-        level !== "advance"
-      ) {
-        return next(
-          new ApiError(
-            "Level harus 'beginner', 'intermediate' atau 'advance', perhatikan juga huruf kecil besarnya",
-            400
-          )
-        );
+      if (typeof level === "string") {
+        if (
+          level !== "beginner" &&
+          level !== "intermediate" &&
+          level !== "advanced"
+        ) {
+          return next(
+            new ApiError(
+              "Level harus antara 'beginner', 'intermediate' atau 'advanced', perhatikan juga huruf kecil besarnya",
+              400
+            )
+          );
+        }
+      } else if (Array.isArray(level)) {
+        if (!level.every((item) => validLevels.includes(item))) {
+          return next(
+            new ApiError(
+              "Level harus antara 'beginer', 'intermediate' atau 'advanced', perhatikan juga huruf kecil besarnya",
+              400
+            )
+          );
+        }
       }
     }
 
@@ -181,7 +230,7 @@ const getAllCourse = async (req, res, next) => {
     }
 
     res.status(200).json({
-      status: "success",
+      status: "Success",
       message: "Berhasil mendapatkan data course",
       data: courses,
     });
@@ -232,24 +281,33 @@ const getCourseById = async (req, res, next) => {
     });
 
     if (!course) {
-      return next(new ApiError("Course tidak ditemukan", 404));
+      return next(new ApiError("Data course tidak ditemukan", 404));
     }
 
     res.status(200).json({
-      status: "success",
+      status: "Success",
       message: `Berhasil mendapatkan data course id: ${id}`,
       data: course,
     });
   } catch (error) {
-    next(new ApiError(error, 500));
+    return next(new ApiError(error, 500));
   }
 };
 
 const updateCourse = async (req, res, next) => {
   try {
     const { id } = req.params;
-    let { name, level, categoryId, description, type, price, courseBy } =
-      req.body;
+    let {
+      name,
+      level,
+      rating,
+      categoryId,
+      description,
+      classCode,
+      type,
+      price,
+      courseBy,
+    } = req.body;
 
     const course = await Course.findByPk(id);
     if (!course) {
@@ -275,6 +333,13 @@ const updateCourse = async (req, res, next) => {
       updateData.level = level;
     }
 
+    if (rating) {
+      if (isNaN(rating)) {
+        return next(new ApiError("Rating harus berupa angka", 400));
+      }
+      updateData.rating = rating;
+    }
+
     if (categoryId) {
       if (categoryId < 1 || categoryId > 6) {
         return next(
@@ -293,6 +358,10 @@ const updateCourse = async (req, res, next) => {
 
     if (description) {
       updateData.description = description;
+    }
+
+    if (classCode) {
+      updateData.classCode = classCode;
     }
 
     if (type) {
@@ -319,7 +388,7 @@ const updateCourse = async (req, res, next) => {
       if (req.files.image[0]) {
         const { imageUrl } = await uploadImage(req.files.image[0]);
         if (!imageUrl) {
-          next(new ApiError("Gagal upload image", 400));
+          return next(new ApiError("Gagal upload image", 400));
         }
         updateData.imageUrl = imageUrl;
       }
@@ -327,7 +396,7 @@ const updateCourse = async (req, res, next) => {
       if (req.files.video[0]) {
         const { videoUrl } = await uploadVideo(req.files.video[0]);
         if (!videoUrl) {
-          next(new ApiError("Gagal upload video", 400));
+          return next(new ApiError("Gagal upload video", 400));
         }
         updateData.videoUrl = videoUrl;
       }
@@ -345,12 +414,12 @@ const updateCourse = async (req, res, next) => {
     }
 
     res.status(200).json({
-      status: "success",
+      status: "Success",
       message: `Berhasil mengupdate data course id: ${id}`,
       data: updatedCourse,
     });
   } catch (error) {
-    next(new ApiError(error, 500));
+    return next(new ApiError(error, 500));
   }
 };
 
@@ -374,11 +443,11 @@ const deleteCourse = async (req, res, next) => {
     }
 
     res.status(200).json({
-      status: "success",
+      status: "Success",
       message: `Berhasil menghapus data course dengan id: ${id}`,
     });
   } catch (error) {
-    next(new ApiError(error, 500));
+    return next(new ApiError(error, 500));
   }
 };
 

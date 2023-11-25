@@ -7,7 +7,7 @@ module.exports = async (req, res, next) => {
     const bearerToken = req.headers.authorization;
 
     if (!bearerToken) {
-      next(new ApiError("Tidak ada token", 401));
+      return next(new ApiError("Tidak ada token", 401));
     }
 
     const token = bearerToken.split(" ")[1];
@@ -16,7 +16,7 @@ module.exports = async (req, res, next) => {
     try {
       decoded = jwt.verify(token, process.env.JWT_SECRET);
     } catch {
-      next(new ApiError("Token tidak valid", 401));
+      return next(new ApiError("Token tidak valid", 401));
     }
 
     const user = await User.findByPk(decoded.id, {
@@ -27,6 +27,6 @@ module.exports = async (req, res, next) => {
 
     next();
   } catch (error) {
-    next(new ApiError(error.message, 401));
+    return next(new ApiError(error.message, 401));
   }
 };

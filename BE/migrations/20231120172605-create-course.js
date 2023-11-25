@@ -47,6 +47,14 @@ module.exports = {
       price: {
         type: Sequelize.INTEGER,
       },
+      discount: {
+        type: Sequelize.INTEGER,
+        defaultValue: 0,
+      },
+      totalUser: {
+        type: Sequelize.INTEGER,
+        defaultValue: 0,
+      },
       courseBy: {
         type: Sequelize.STRING,
       },

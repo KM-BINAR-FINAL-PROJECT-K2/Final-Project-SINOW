@@ -1,0 +1,1427 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "SiNow API Documentation",
+    "version": "1.0.0",
+    "description": "Halaman ini untuk mendokumentasi API dari applikasi SiNow"
+  },
+  "tags": [
+    {
+      "name": "Auths",
+      "description": "API ini untuk mengelola auth resources"
+    },
+    {
+      "name": "My Details",
+      "description": "API ini untuk mengelola data user resources"
+    },
+    {
+      "name": "Courses",
+      "description": "API ini untuk mengelola course resources"
+    },
+    {
+      "name": "Chapters",
+      "description": "API ini untuk mengelola chapter resources"
+    },
+    {
+      "name": "Modules",
+      "description": "API ini untuk mengelola module  resources"
+    },
+    {
+      "name": "Category",
+      "description": "API ini untuk mengelola category resources"
+    },
+    {
+      "name": "Notification",
+      "description": "API ini untuk mengelola notification resources"
+    }
+  ],
+  "servers": [
+    {
+      "url": "http://localhost:3000/api/v1"
+    }
+  ],
+  "paths": {
+    "/auth/login": {
+      "post": {
+        "tags": ["Auths"],
+        "summary": "API untuk login",
+        "description": "API ini digunakan ketika user ingin login",
+        "requestBody": {
+          "description": "request body ini ketika user sukses login",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "description": "Email user",
+                    "example": "johndoe@example.com"
+                  },
+                  "password": {
+                    "type": "string",
+                    "description": "Password user",
+                    "example": "password"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "User sukses login",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Success"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Berhasil login"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "token": {
+                          "type": "string",
+                          "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwibmFtZSI6IkZhZGhsYW4iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3MDA4NzY0NTksImV4cCI6MTcwMDk2Mjg1OSwiaXNzIjoiU2lOb3dfU2VjdXJpdHkifQ.eoFRELxyGri_tV4-ZltzZxHPGz6bcwwSq2zLPN61Mng"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Email atau password salah",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Failed"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "message": {
+                          "type": "string",
+                          "example": "email atau password salah"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/register": {
+      "post": {
+        "tags": ["Auths"],
+        "summary": "API untuk register",
+        "description": "API ini digunakan ketika user ingin register",
+        "requestBody": {
+          "description": "request body untuk user register",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "Nama user",
+                    "example": "Fadhlan"
+                  },
+                  "email": {
+                    "type": "string",
+                    "description": "Email user",
+                    "example": "johndoe@example.com"
+                  },
+                  "phoneNumber": {
+                    "type": "string",
+                    "description": "Nomor Handphone user",
+                    "example": "081234567890"
+                  },
+                  "password": {
+                    "type": "string",
+                    "description": "Password user",
+                    "example": "12345678"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "User sukses register",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Success"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Registrasi berhasil & OTP berhasil dikirim ke email anda, silahkan verifikasi OTP sebelum login"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Data register tidak valid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Failed"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Data register tidak valid"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/verify-email": {
+      "post": {
+        "tags": ["Auths"],
+        "summary": "API untuk verify email",
+        "description": "API ini digunakan ketika user ingin memverifikasi email",
+        "requestBody": {
+          "description": "request body untuk user memverifikasi email",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "description": "Email user",
+                    "example": "johndoe@example.com"
+                  },
+                  "otpCode": {
+                    "type": "string",
+                    "description": "Kode OTP",
+                    "example": "123456"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Kode OTP sukses",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Success"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Berhasil verifikasi email"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "token": {
+                          "type": "string",
+                          "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwibmFtZSI6IkZhZGhsYW4iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3MDA4NzY0NTksImV4cCI6MTcwMDk2Mjg1OSwiaXNzIjoiU2lOb3dfU2VjdXJpdHkifQ.eoFRELxyGri_tV4-ZltzZxHPGz6bcwwSq2zLPN61Mng"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Data verifikasi email tidak valid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Failed"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Data verifikasi email tidak valid"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/resend-otp": {
+      "post": {
+        "tags": ["Auths"],
+        "summary": "API untuk resend kode OTP",
+        "description": "API ini digunakan ketika user ingin mengirim ulang kode OTP",
+        "requestBody": {
+          "description": "request body untuk user mengirim ulang kode OTP",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "description": "Email user",
+                    "example": "2110631170138@student.unsika.ac.id"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Kode OTP sukses",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Success"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Kode OTP berhasil dikirim ulang ke email"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Data resend OTP tidak valid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Failed"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Data resend OTP tidak valid"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/reset-password": {
+      "post": {
+        "tags": ["Auths"],
+        "summary": "API untuk request reset password",
+        "description": "API ini digunakan ketika user me-request reset password",
+        "requestBody": {
+          "description": "request body untuk user mereset password",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "description": "Email user",
+                    "example": "johndoe@example.com"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Password sukses direset",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Tautan reset password berhasil dikirim ke email"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Data reset password tidak valid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Failed"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Data reset password tidak valid"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/reset-password/{token}": {
+      "post": {
+        "tags": ["Auths"],
+        "summary": "API untuk mereset password",
+        "description": "API ini digunakan untuk user mereset password",
+        "parameters": [
+          {
+            "name": "token",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "Token reset password",
+              "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjEsImVtYWlsIjoiMjExMDYzMTE3MDEzOEBzdHVkZW50LnVuc2lrYS5hYy5pZCIsImlhdCI6MTcwMDg4NzU3OCwiZXhwIjoxNzAwODg5Mzc4fQ.g0qPDOK7vcYCuLWl3wybyqc-lwMZuqr79OInsYM_beY"
+            },
+            "description": "Token reset password"
+          }
+        ],
+        "requestBody": {
+          "description": "request body untuk user mereset password",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "password": {
+                    "type": "string",
+                    "description": "Password user",
+                    "example": "password"
+                  },
+                  "confirm_password": {
+                    "type": "string",
+                    "description": "Confirm password user",
+                    "example": "password"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Password sukses direset",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/auth/check-token": {
+      "get": {
+        "tags": ["Auths"],
+        "summary": "API untuk mengecek token",
+        "description": "API ini digunakan untuk user mengecek token",
+        "security": [
+          {
+            "bearerToken": []
+          }
+        ],
+
+        "responses": {
+          "200": {
+            "description": "Token valid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Success"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Token valid"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "integer",
+                          "example": 1
+                        },
+                        "username": {
+                          "type": "string",
+                          "example": "johndoe"
+                        },
+                        "email": {
+                          "type": "string",
+                          "example": "johndoe@example.com"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Token tidak valid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Failed"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Token tidak valid"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/my-details": {
+      "get": {
+        "tags": ["My Details"],
+        "summary": "API untuk mengambil data user",
+        "description": "API ini digunakan untuk user mengambil data user",
+        "security": [
+          {
+            "bearerToken": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Data user sukses diambil",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Success"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Berhasil mengambil detail user"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "integer",
+                          "example": 1
+                        },
+                        "name": {
+                          "type": "string",
+                          "example": "johndoe"
+                        },
+                        "photoProfileUrl": {
+                          "type": "string",
+                          "example": "https://ik.imagekit.io/96gmelvyq/Video-1700822964903_ldrsjCyaH.mp4?updatedAt=1700822968315"
+                        },
+                        "country": {
+                          "type": "string",
+                          "example": "Indonesia"
+                        },
+                        "city": {
+                          "type": "string",
+                          "example": "Jakarta"
+                        },
+                        "role": {
+                          "type": "string",
+                          "example": "user"
+                        },
+                        "createdAt": {
+                          "type": "string",
+                          "example": "2022-09-01T07:56:07.000Z"
+                        },
+                        "updatedAt": {
+                          "type": "string",
+                          "example": "2022-09-01T07:56:07.000Z"
+                        },
+                        "Auth": {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "integer",
+                              "example": 1
+                            },
+                            "email": {
+                              "type": "string",
+                              "example": "johndoe@example.com"
+                            },
+                            "phoneNumber": {
+                              "type": "string",
+                              "example": "81234567890"
+                            },
+                            "password": {
+                              "type": "string",
+                              "example": "$2a$10$VOZdAZlTEN6tuhmMU1g1xOJ9OPvlJutSqSa0m1AT7bJC2PZgJRzVa"
+                            },
+                            "userId": {
+                              "type": "integer",
+                              "example": 1
+                            },
+                            "isEmailVerified": {
+                              "type": "boolean",
+                              "example": true
+                            },
+                            "createdAt": {
+                              "type": "string",
+                              "example": "2022-09-01T07:56:07.000Z"
+                            },
+                            "updatedAt": {
+                              "type": "string",
+                              "example": "2022-09-01T07:56:07.000Z"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Token tidak valid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Failed"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Token tidak valid"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/my-details/update": {
+      "patch": {
+        "tags": ["My Details"],
+        "summary": "API untuk mengupdate data user",
+        "description": "API ini digunakan untuk user mengupdate data user",
+        "security": [
+          {
+            "bearerToken": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "example": "johndoe",
+                    "description": "Nama User"
+                  },
+                  "email": {
+                    "type": "string",
+                    "example": "johndoe@example.com",
+                    "description": "Email User"
+                  },
+                  "phoneNumber": {
+                    "type": "string",
+                    "example": "81234567890",
+                    "description": "Nomor Handphone User"
+                  },
+                  "country": {
+                    "type": "string",
+                    "example": "Indonesia",
+                    "description": "Negara asal user"
+                  },
+                  "city": {
+                    "type": "string",
+                    "example": "Jakarta",
+                    "description": "Kota asal user"
+                  },
+                  "image": {
+                    "type": "file",
+                    "description": "Foto profil user"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Data user sukses diupdate",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Success"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Berhasil mengupdate data user"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Token tidak valid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Failed"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Token tidak valid"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Data user tidak valid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Failed"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Data user tidak valid"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/my-details/change-password": {
+      "patch": {
+        "tags": ["My Details"],
+        "summary": "API untuk mengubah password user",
+        "description": "API ini digunakan untuk user mengubah password user",
+        "security": [
+          {
+            "bearerToken": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "oldPassword": {
+                    "type": "string",
+                    "example": "oldPassword",
+                    "description": "Password lama"
+                  },
+                  "newPassword": {
+                    "type": "string",
+                    "example": "newPassword",
+                    "description": "Password baru"
+                  },
+                  "confirmNewPassword": {
+                    "type": "string",
+                    "example": "newPassword",
+                    "description": "Konfirmasi password baru"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Password user sukses diubah",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Success"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Berhasil mengubah password user"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Password user tidak valid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Failed"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Password user tidak valid"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Token tidak valid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Failed"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Token tidak valid"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/courses": {
+      "get": {
+        "tags": ["Courses"],
+        "summary": "API untuk menampilkan semua course",
+        "description": "API ini digunakan untuk user mengecek course",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "search",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "category",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "integer"
+              }
+            }
+          },
+          {
+            "in": "query",
+            "name": "level",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Data course sukses diambil",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Success"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Filter query tidak valid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Failed"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Filter query tidak valid"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Data course tidak ditemukan",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Failed"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Data course tidak ditemukan"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/courses/{id}": {
+      "get": {
+        "tags": ["Courses"],
+        "summary": "API untuk mengecek course berdasarkan ID",
+        "description": "API ini digunakan untuk user mengecek course berdasarkan ID",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Data course sukses diambil",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Success"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Berhasil mengambil data course"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "integer",
+                          "example": 1
+                        },
+                        "name": {
+                          "type": "string",
+                          "example": "Belajar Fullstack Web"
+                        },
+                        "description": {
+                          "type": "string",
+                          "example": "Belajar Fullstack Web dari nol"
+                        },
+                        "level": {
+                          "type": "string",
+                          "example": "beginner"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Data course tidak ditemukan",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Failed"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Data course tidak ditemukan"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/course": {
+      "post": {
+        "tags": ["Courses"],
+        "summary": "API untuk menambahkan data course",
+        "description": "API ini digunakan untuk admin menambahkan data course",
+        "security": [
+          {
+            "bearerToken": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "example": "Belajar Fullstack Web",
+                    "description": "Judul course"
+                  },
+                  "level": {
+                    "type": "string",
+                    "example": "beginner",
+                    "description": "Level course"
+                  },
+                  "rating": {
+                    "type": "integer",
+                    "example": 4,
+                    "description": "Rating course"
+                  },
+                  "categoryId": {
+                    "type": "integer",
+                    "example": 1,
+                    "description": "ID category untuk course"
+                  },
+                  "description": {
+                    "type": "string",
+                    "example": "Belajar Fullstack Web dari nol",
+                    "description": "Deskripsi course"
+                  },
+                  "classCode": {
+                    "type": "string",
+                    "example": "UIUX100",
+                    "description": "Kode kelas"
+                  },
+                  "type": {
+                    "type": "string",
+                    "example": "gratis",
+                    "description": "Tipe course"
+                  },
+                  "price": {
+                    "type": "integer",
+                    "example": 0,
+                    "description": "Harga course"
+                  },
+                  "discount": {
+                    "type": "integer",
+                    "example": 0,
+                    "description": "Diskon course"
+                  },
+                  "courseBy": {
+                    "type": "string",
+                    "example": "John Doe",
+                    "description": "Pembuat course"
+                  },
+                  "image": {
+                    "type": "file",
+                    "description": "Gambar course"
+                  },
+                  "video": {
+                    "type": "file",
+                    "description": "Video course"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Sukses menambahkan data course",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Success"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Berhasil menambahkan data course"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Data course tidak valid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Failed"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Data course tidak valid"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Token tidak valid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Failed"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Token tidak valid"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/course/{id}": {
+      "put": {
+        "tags": ["Courses"],
+        "summary": "API untuk mengupdate data course",
+        "description": "API ini digunakan untuk admin mengupdate data course",
+        "security": [
+          {
+            "bearerToken": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "ID course"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "example": "Belajar Fullstack Web",
+                    "description": "Judul course"
+                  },
+                  "level": {
+                    "type": "string",
+                    "example": "beginner",
+                    "description": "Level course"
+                  },
+                  "rating": {
+                    "type": "integer",
+                    "example": 4,
+                    "description": "Rating course"
+                  },
+                  "categoryId": {
+                    "type": "integer",
+                    "example": 1,
+                    "description": "ID category untuk course"
+                  },
+                  "description": {
+                    "type": "string",
+                    "example": "Belajar Fullstack Web dari nol",
+                    "description": "Deskripsi course"
+                  },
+                  "classCode": {
+                    "type": "string",
+                    "example": "UIUX100",
+                    "description": "Kode kelas"
+                  },
+                  "type": {
+                    "type": "string",
+                    "example": "gratis",
+                    "description": "Tipe course"
+                  },
+                  "price": {
+                    "type": "integer",
+                    "example": 0,
+                    "description": "Harga course"
+                  },
+                  "discount": {
+                    "type": "integer",
+                    "example": 0,
+                    "description": "Diskon course"
+                  },
+                  "courseBy": {
+                    "type": "string",
+                    "example": "John Doe",
+                    "description": "Pembuat course"
+                  },
+                  "image": {
+                    "type": "file",
+                    "description": "Gambar course"
+                  },
+                  "video": {
+                    "type": "file",
+                    "description": "Video course"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Sukses mengupdate data course",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Success"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Berhasil mengupdate data course"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Data course tidak valid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Failed"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Data course tidak valid"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Token tidak valid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Failed"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Token tidak valid"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Data course tidak ditemukan",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Failed"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Course tidak ditemukan"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Courses"],
+        "summary": "API untuk menghapus course",
+        "description": "API ini digunakan untuk admin menghapus course",
+        "security": [
+          {
+            "bearerToken": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "ID course"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Sukses menghapus course",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Success"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Berhasil menghapus data course"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerToken": {
+        "type": "http",
+        "scheme": "bearer"
+      }
+    }
+  }
+}

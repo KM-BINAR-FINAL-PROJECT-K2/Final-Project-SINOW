@@ -4,11 +4,11 @@ const checkRole = (role) => {
   return async (req, res, next) => {
     try {
       if (role !== req.user.role) {
-        next(new ApiError(`kamu tidak berkepentingan disini`, 403));
+        return next(new ApiError(`kamu tidak berkepentingan disini`, 403));
       }
       next();
     } catch (err) {
-      next(new ApiError(err.message, 500));
+      return next(new ApiError(err.message, 500));
     }
   };
 };
