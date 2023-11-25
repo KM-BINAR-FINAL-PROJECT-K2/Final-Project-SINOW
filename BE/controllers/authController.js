@@ -50,14 +50,14 @@ const login = async (req, res, next) => {
     });
 
     res.status(200).json({
-      status: "success",
+      status: "Success",
       message: "Berhasil login",
       data: {
         token,
       },
     });
   } catch (error) {
-    next(new ApiError(error.message, 500));
+    return next(new ApiError(error.message, 500));
   }
 };
 
@@ -109,12 +109,7 @@ const register = async (req, res, next) => {
       role: "user",
     });
 
-    await Auth.create({
-      email,
-      phoneNumber,
-      password: hashedPassword,
-      userId: newUser.id,
-    });
+    const otpCode = await sendOTPVerificationEmail(email, next);
 
     const checkOtp = await OTP.findOne({
       where: {
@@ -130,8 +125,6 @@ const register = async (req, res, next) => {
       });
     }
 
-    const otpCode = await sendOTPVerificationEmail(email);
-
     const otp = await OTP.create({
       userEmail: email,
       otpValue: otpCode,
@@ -141,12 +134,20 @@ const register = async (req, res, next) => {
       return next(new ApiError("Gagal membuat OTP", 500));
     }
 
-    res.status(200).json({
-      status: "success",
-      message: "OTP berhasil dikirim",
+    await Auth.create({
+      email,
+      phoneNumber,
+      password: hashedPassword,
+      userId: newUser.id,
+    });
+
+    res.status(201).json({
+      status: "Success",
+      message:
+        "Registrasi berhasil & OTP berhasil dikirim ke email anda, silahkan verifikasi OTP sebelum login",
     });
   } catch (error) {
-    next(new ApiError(error.message, 500));
+    return next(new ApiError(error.message, 500));
   }
 };
 
@@ -190,7 +191,7 @@ const resendOtp = async (req, res, next) => {
       });
     }
 
-    const otpCode = await sendOTPVerificationEmail(email);
+    const otpCode = await sendOTPVerificationEmail(email, next);
 
     const otp = await OTP.create({
       userEmail: email,
@@ -202,11 +203,11 @@ const resendOtp = async (req, res, next) => {
     }
 
     res.status(200).json({
-      status: "success",
-      message: "OTP berhasil dikirim",
+      status: "Success",
+      message: "Kode OTP berhasil dikirim ulang ke email",
     });
   } catch (error) {
-    next(new ApiError(error.message, 500));
+    return next(new ApiError(error.message, 500));
   }
 };
 
@@ -244,7 +245,7 @@ const verifyEmail = async (req, res, next) => {
       return next(new ApiError("OTP tidak valid", 400));
     }
 
-    let updatedUser;
+    let updatedAuth;
 
     await sequelize.transaction(async (t) => {
       await Auth.update(
@@ -259,7 +260,7 @@ const verifyEmail = async (req, res, next) => {
         }
       );
 
-      updatedUser = await Auth.findOne({
+      updatedAuth = await Auth.findOne({
         where: {
           email,
         },
@@ -269,7 +270,7 @@ const verifyEmail = async (req, res, next) => {
       await createNotification(
         "Notifikasi",
         "Yeay! Akun mu berhasil dibuat",
-        updatedUser.userId,
+        updatedAuth.userId,
         `Selamat Bergabung di SiNow!\n\nKami dengan senang hati menyambut Anda di SiNow, tempat terbaik untuk belajar melalui kursus daring. Sekarang Anda memiliki akses penuh ke ribuan kursus berkualitas dari berbagai bidang IT.\n\nDengan SiNow, belajar menjadi lebih fleksibel dan mudah. Temukan kursus yang sesuai dengan minat dan tujuan karir Anda, ikuti perkembangan terbaru dalam industri IT, dan tingkatkan keterampilan Anda dengan materi pembelajaran terkini.\n\nJangan lewatkan kesempatan untuk:\n\n📚 Menjelajahi kursus-kursus unggulan dari instruktur terbaik.\n🎓 Mendapatkan\n🌐 Bergabung dengan komunitas pembelajar aktif dan berbagi pengetahuan.\n🚀 Memulai perjalanan pendidikan online Anda menuju kesuksesan.\n\nSelamat belajar,\nTim SiNow 🫡`
       );
 
@@ -280,27 +281,28 @@ const verifyEmail = async (req, res, next) => {
         transaction: t,
       });
     });
-    if (!updatedUser) {
+    if (!updatedAuth) {
       return next(new ApiError("gagal memverifikasi OTP"));
     }
 
-    console.log(updatedUser);
+    const token = createToken(
+      {
+        id: updatedAuth.User.id,
+        name: updatedAuth.User.name,
+        role: updatedAuth.User.role,
+      },
+      next
+    );
 
-    const token = createToken({
-      id: updatedUser.id,
-      name: updatedUser.name,
-      role: updatedUser.role,
-    });
-
-    res.status(201).json({
-      status: "success",
-      message: "Berhasil registrasi",
+    res.status(200).json({
+      status: "Success",
+      message: "Berhasil verifikasi email",
       data: {
         token,
       },
     });
   } catch (error) {
-    next(new ApiError(error.message, 500));
+    return next(new ApiError(error.message, 500));
   }
 };
 
@@ -326,11 +328,11 @@ const reqResetPassword = async (req, res, next) => {
       return next(new ApiError("Email tidak terdaftar", 400));
     }
 
-    await sendResetPasswordEmail(auth);
+    await sendResetPasswordEmail(auth, next);
 
     res.status(200).json({
-      status: "success",
-      message: "tautan reset password berhasil dikirim ke email",
+      status: "Success",
+      message: "Tautan reset password berhasil dikirim ke email",
     });
   } catch (error) {
     return next(new ApiError(error.message, 500));
@@ -397,11 +399,10 @@ const resetPassword = async (req, res, next) => {
     );
 
     res.status(200).json({
-      status: "success",
+      status: "Success",
       message: "Password berhasil diubah",
     });
   } catch (error) {
-    console.log(error);
     return next(new ApiError(error, 500));
   }
 };
@@ -415,8 +416,8 @@ const checkToken = async (req, res, next) => {
     }
 
     res.status(200).json({
-      status: "success",
-      message: "Berhasil mendapatkan data token",
+      status: "Success",
+      message: "Token valid",
       data: user,
     });
   } catch (error) {
@@ -425,11 +426,11 @@ const checkToken = async (req, res, next) => {
 };
 
 module.exports = {
-  register,
   login,
-  checkToken,
+  register,
   verifyEmail,
   resendOtp,
   reqResetPassword,
   resetPassword,
+  checkToken,
 };

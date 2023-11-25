@@ -27,11 +27,11 @@ const createNotificationForAllUsers = async (req, res, next) => {
     await Notification.bulkCreate(notificationsData);
 
     res.status(201).json({
-      status: "success",
+      status: "Success",
       message: "Notifications created successfully",
     });
   } catch (err) {
-    next(new ApiError(err.message, 500));
+    return next(new ApiError(err.message, 500));
   }
 };
 
@@ -65,11 +65,11 @@ const getAllNotifications = async (req, res, next) => {
     }
 
     res.status(200).json({
-      status: "success",
+      status: "Success",
       data: notifications,
     });
   } catch (err) {
-    next(new ApiError(err.message, 500));
+    return next(new ApiError(err.message, 500));
   }
 };
 
@@ -87,7 +87,7 @@ const getUserNotification = async (req, res, next) => {
     }
 
     res.status(200).json({
-      status: "success",
+      status: "Success",
       data: userNotifications,
     });
   } catch (err) {
@@ -127,7 +127,7 @@ const openNotification = async (req, res, next) => {
     }
 
     res.status(200).json({
-      status: "success",
+      status: "Success",
       message: "Berhasil membuka notifikasi",
       data: updatedNotification,
     });
@@ -178,11 +178,11 @@ const updateNotification = async (req, res, next) => {
     }
 
     res.status(200).json({
-      status: "success",
+      status: "Success",
       message: "Notifikasi diperbarui",
     });
   } catch (err) {
-    next(new ApiError(err.message, 500));
+    return next(new ApiError(err.message, 500));
   }
 };
 
@@ -201,11 +201,11 @@ const deleteNotificationById = async (req, res, next) => {
     }
 
     res.status(200).json({
-      status: "success",
+      status: "Success",
       message: `Berhasil menghapus notifikasi dengan id: ${id}`,
     });
   } catch (err) {
-    next(new ApiError(err.message, 500));
+    return next(new ApiError(err.message, 500));
   }
 };
 const deleteNotificationByTitle = async (req, res, next) => {
@@ -223,11 +223,11 @@ const deleteNotificationByTitle = async (req, res, next) => {
     }
 
     res.status(200).json({
-      status: "success",
+      status: "Success",
       message: `Berhasil menghapus notifikasi dengan id: ${title}`,
     });
   } catch (err) {
-    next(new ApiError(err.message, 500));
+    return next(new ApiError(err.message, 500));
   }
 };
 

@@ -9,18 +9,9 @@ const { uploadImage } = require("../utils/imagekitUploader");
 
 const myDetails = async (req, res, next) => {
   try {
-    const { id } = req.user;
-
-    const user = await User.findByPk(id, {
-      include: ["Auth"],
-    });
-
-    if (!user) {
-      throw new ApiError("User tidak ditemukan", 404);
-    }
-
     res.status(200).json({
-      status: "success",
+      status: "Success",
+      message: "Berhasil mengambil detail user",
       data: req.user,
     });
   } catch (error) {
@@ -138,7 +129,7 @@ const updateMyDetails = async (req, res, next) => {
     );
 
     res.status(200).json({
-      status: "success",
+      status: "Success",
       message: `Berhasil mengupdate data user id: ${id}`,
     });
   } catch (error) {
@@ -148,14 +139,9 @@ const updateMyDetails = async (req, res, next) => {
 
 const changeMyPassword = async (req, res, next) => {
   try {
-    const { id } = req.user;
+    const { user } = req;
     const { oldPassword, newPassword, confirmNewPassword } = req.body;
-    const user = await User.findByPk(id, {
-      include: ["Auth"],
-    });
-    if (!user) {
-      return next(new ApiError("User tidak ditemukan", 404));
-    }
+
     const isMatch = await bcrypt.compare(oldPassword, user.Auth.password);
     if (!isMatch) {
       return next(new ApiError("Password lama tidak sesuai", 400));
@@ -188,8 +174,8 @@ const changeMyPassword = async (req, res, next) => {
       `Halo ${user.name},\n\nPassword akun Anda telah diubah. Jika Anda merasa tidak melakukan perubahan ini, segera hubungi dukungan pelanggan kami.\n\nTerima kasih,\nTim SiNow 🫡`
     );
     res.status(200).json({
-      status: "success",
-      message: `Berhasil mengupdate password user: ${user.name}`,
+      status: "Success",
+      message: `Berhasil mengubah password user: ${user.name}`,
     });
   } catch (error) {
     return next(new ApiError(error.message, 500));

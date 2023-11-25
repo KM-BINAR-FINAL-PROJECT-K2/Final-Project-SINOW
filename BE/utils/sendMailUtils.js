@@ -9,7 +9,7 @@ const transporter = nodemailer.createTransport({
   port: 587,
   secure: false,
   auth: {
-    user: process.env.EMAIL,
+    user: process.env.APP_EMAIL,
     pass: process.env.APP_PASSWORD,
   },
 });
@@ -17,20 +17,20 @@ const transporter = nodemailer.createTransport({
 const generateOTP = () =>
   randomString.generate({ length: 6, charset: "numeric" });
 
-const sendMail = async (mailOptions) => {
+const sendMail = async (mailOptions, next) => {
   try {
     await transporter.sendMail(mailOptions);
   } catch (error) {
-    throw new ApiError("Gagal mengirim email", 500);
+    return next(new ApiError(error, 500));
   }
 };
 
-const sendOTPVerificationEmail = async (email) => {
+const sendOTPVerificationEmail = async (email, next) => {
   try {
     const otpCode = generateOTP();
 
     const mailOptions = {
-      from: { name: process.env.APP_NAME, address: process.env.EMAIL },
+      from: { name: "SiNow", address: process.env.APP_EMAIL },
       to: email,
       subject: "SiNow - Verifikasi OTP",
       text: `Kode verifikasi OTP Anda adalah:\n${otpCode}\n\nGunakan kode ini untuk verifikasi akun Anda. Jangan berikan kode ini kepada siapa pun.\n\nTerima kasih,\nSiNow Team`,
@@ -40,11 +40,11 @@ const sendOTPVerificationEmail = async (email) => {
 
     return otpCode;
   } catch (error) {
-    throw new ApiError(error, 500);
+    return next(new ApiError(error, 500));
   }
 };
 
-const sendResetPasswordEmail = async (auth) => {
+const sendResetPasswordEmail = async (auth, next) => {
   try {
     const generateToken = jwt.sign(
       { id: auth.id, email: auth.email },
@@ -63,9 +63,9 @@ const sendResetPasswordEmail = async (auth) => {
       <p>Terima kasih,</br>SiNow Team</p>`,
     };
 
-    await sendMail(mailOptions);
+    await sendMail(mailOptions, next);
   } catch (error) {
-    throw new ApiError(error, 500);
+    return next(new ApiError(error, 500));
   }
 };
 

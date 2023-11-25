@@ -71,7 +71,7 @@ const getChapterById = async (req, res, next) => {
       ],
     });
 
-    if (!chapter || chapter.length === 0) {
+    if (!chapter) {
       return next(new ApiError("Chapter tidak ditemukan", 404));
     }
 
@@ -125,12 +125,12 @@ const updateChapter = async (req, res, next) => {
     }
 
     res.status(200).json({
-      status: "success",
+      status: "Success",
       message: `Berhasil mengupdate data chapter id: ${id}`,
       data: updatedChapter,
     });
   } catch (error) {
-    next(new ApiError(error, 500));
+    return next(new ApiError(error, 500));
   }
 };
 const deleteChapter = async (req, res, next) => {
@@ -150,7 +150,9 @@ const deleteChapter = async (req, res, next) => {
     }
 
     if (chapter.modules && chapter.modules.length > 0) {
-      return next(new ApiError("Tidak dapat menghapus chapter dengan modul terkait", 400));
+      return next(
+        new ApiError("Tidak dapat menghapus chapter dengan modul terkait", 400)
+      );
     }
 
     const isChapterDeleted = await Chapter.destroy({

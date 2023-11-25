@@ -45,6 +45,14 @@ module.exports = (sequelize, DataTypes) => {
       },
       type: DataTypes.STRING,
       price: DataTypes.INTEGER,
+      discount: {
+        type: DataTypes.INTEGER,
+        defaultValue: 0,
+      },
+      totalUser: {
+        type: DataTypes.INTEGER,
+        defaultValue: 0,
+      },
       courseBy: DataTypes.STRING,
       createdBy: DataTypes.INTEGER,
     },

@@ -17,7 +17,7 @@ app.use(morgan("dev"));
 app.use(router);
 
 app.all("*", (req, res, next) => {
-  next(new ApiError("Routes tidak tersedia", 404));
+  return next(new ApiError("Routes tidak tersedia", 404));
 });
 
 app.use(errorController);
