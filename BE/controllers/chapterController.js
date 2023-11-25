@@ -22,7 +22,7 @@ const createChapter = async (req, res, next) => {
 
     res.status(201).json({
       status: "Success",
-      message: "Sukses membuat chapter",
+      message: "Sukses menambahkan data chapter",
       data: chapter,
     });
   } catch (error) {
@@ -139,17 +139,12 @@ const deleteChapter = async (req, res, next) => {
       return next(new ApiError("Chapter tidak ditemukan", 404));
     }
 
-    if (chapter.modules && chapter.modules.length > 0) {
-      return next(
-        new ApiError("Tidak dapat menghapus chapter dengan modul terkait", 400)
-      );
-    }
-
     const isChapterDeleted = await Chapter.destroy({
       where: {
         id,
       },
     });
+
     if (!isChapterDeleted) {
       return next(new ApiError("Gagal menghapus Chapter", 500));
     }
@@ -157,7 +152,7 @@ const deleteChapter = async (req, res, next) => {
     res.status(200).json({
       status: "Success",
       message: `Berhasil menghapus data Chapter id: ${id};`,
-      data: Chapter,
+      data: chapter,
     });
   } catch (error) {
     return next(new ApiError(error.message, 500));
