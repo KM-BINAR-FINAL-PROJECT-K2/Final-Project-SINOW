@@ -35,11 +35,11 @@ const createCategory = async (req, res, next) => {
 
     res.status(201).json({
       status: "Success",
-      message: "sukses membuat category",
+      message: "Berhasil menambahkan data category",
       data: category,
     });
   } catch (error) {
-    return next(new ApiError((error.message = 500)));
+    return next(new ApiError(error, 500));
   }
 };
 
@@ -56,10 +56,11 @@ const getAllCategory = async (req, res, next) => {
 
     const categories = await Category.findAll({
       where,
+      order: [["id", "ASC"]],
     });
 
-    if (!categories) {
-      return next(new ApiError("Category tidak ditemukan atau kosong", 404));
+    if (!categories || categories.length === 0) {
+      return next(new ApiError("Category tidak ditemukan", 404));
     }
 
     res.status(200).json({
@@ -91,40 +92,45 @@ const getCategoryById = async (req, res, next) => {
 
 const updateCategory = async (req, res, next) => {
   try {
-    let { name, imageUrl } = req.body;
+    let { name } = req.body;
+    const { id } = req.params;
 
     const updateData = {};
 
-    if (name) {
-      const existingCategory = await Category.findOne({
-        where: {
-          name,
-        },
-      });
+    const category = await Category.findByPk(id);
 
-      if (existingCategory) {
-        return next(new ApiError("nama category sudah ada", 400));
-      }
+    if (!category) {
+      return next(new ApiError("Category tidak ditemukan", 404));
+    }
+
+    if (name && name !== category.name) {
       updateData.name = name;
     }
 
-    if (imageUrl) {
+    if (req.file) {
+      const { imageUrl } = await uploadImage(req.file);
       updateData.imageUrl = imageUrl;
     }
 
-    const category = await Category.update(updateData, {
-      where: {
-        id: req.params.id,
-      },
-    });
+    if (Object.keys(updateData).length !== 0) {
+      console.log(updateData);
+      const [rowCount, [updatedCategory]] = await Category.update(updateData, {
+        where: {
+          id,
+        },
+        returning: true,
+      });
+      if (rowCount === 0 || !updatedCategory) {
+        return next(new ApiError("gagal upate category", 500));
+      }
+    }
 
     res.status(200).json({
       status: "Success",
       message: "sukses update category",
-      data: category,
     });
   } catch (error) {
-    return next(new ApiError((error.message = 500)));
+    return next(new ApiError(error, 500));
   }
 };
 
@@ -143,7 +149,12 @@ const deleteCategory = async (req, res, next) => {
   });
 
   if (checkCourse) {
-    return next(new ApiError("Gagal menghapus kategory karena sudah ada course dengan kategory ini", 400));
+    return next(
+      new ApiError(
+        "Gagal menghapus kategory karena sudah ada course dengan kategory ini",
+        400
+      )
+    );
   }
 
   const isCategoryDeleted = await category.destroy({
