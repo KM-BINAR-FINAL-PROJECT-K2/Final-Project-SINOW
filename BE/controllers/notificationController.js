@@ -1,5 +1,6 @@
 const { Notification, User } = require("../models");
 const ApiError = require("../utils/ApiError");
+const { Op } = require("sequelize");
 
 const createNotificationForAllUsers = async (req, res, next) => {
   try {
@@ -28,7 +29,7 @@ const createNotificationForAllUsers = async (req, res, next) => {
 
     res.status(201).json({
       status: "Success",
-      message: "Notifications created successfully",
+      message: "Notifications berhasil dibuat",
     });
   } catch (err) {
     return next(new ApiError(err.message, 500));
@@ -37,28 +38,42 @@ const createNotificationForAllUsers = async (req, res, next) => {
 
 const getAllNotifications = async (req, res, next) => {
   try {
-    const { limit = 100, userId } = req.query;
+    const { limit = 100, type, title, userId } = req.query;
 
-    if (isNaN(limit) || limit <= 0 || limit > 100) {
+    if (isNaN(limit) || limit <= 0) {
       return next(new ApiError("Batas jumlah notifikasi tidak valid", 400));
+    }
+    if (limit > 500) {
+      return next(new ApiError("Batas notifikasi maksimal adalah 500", 400));
     }
 
     if (userId && (isNaN(userId) || userId <= 0)) {
       return next(new ApiError("ID pengguna tidak valid", 400));
     }
 
-    const queryOptions = {
-      limit: parseInt(limit),
-      order: [["createdAt", "DESC"]],
-    };
+    const where = {};
 
-    if (userId) {
-      queryOptions.where = {
-        userId,
+    if (type) {
+      where.type = {
+        [Op.iLike]: `%${type}%`,
       };
     }
 
-    const notifications = await Notification.findAll(queryOptions);
+    if (title) {
+      where.title = {
+        [Op.iLike]: `%${title}%`,
+      };
+    }
+
+    if (userId) {
+      where.userId = userId;
+    }
+
+    const notifications = await Notification.findAll({
+      where,
+      limit,
+      order: [["updatedAt", "DESC"]],
+    });
 
     if (!notifications || notifications.length === 0) {
       return next(new ApiError("Tidak ada notifikasi", 404));
@@ -139,7 +154,7 @@ const openNotification = async (req, res, next) => {
 const updateNotification = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const { type, title, content, isRead } = req.body;
+    const { type, title, content } = req.body;
 
     const notification = await Notification.findByPk(id);
     if (!notification) {
@@ -160,16 +175,13 @@ const updateNotification = async (req, res, next) => {
       updateData.content = content;
     }
 
-    if (isRead) {
-      updateData.isRead = isRead;
-    }
-
     const [rowCount, [updatedNotification]] = await Notification.update(
       updateData,
       {
         where: {
           id,
         },
+        returning: true,
       }
     );
 

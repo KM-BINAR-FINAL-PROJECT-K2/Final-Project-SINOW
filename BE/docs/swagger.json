@@ -880,98 +880,6 @@
       }
     },
     "/courses": {
-      "get": {
-        "tags": ["Courses"],
-        "summary": "API untuk menampilkan semua course",
-        "description": "API ini digunakan untuk user mengecek course",
-        "parameters": [
-          {
-            "in": "query",
-            "name": "search",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "in": "query",
-            "name": "category",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "integer"
-              }
-            }
-          },
-          {
-            "in": "query",
-            "name": "level",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Data course sukses diambil",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "status": {
-                      "type": "string",
-                      "example": "Success"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Filter query tidak valid",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "status": {
-                      "type": "string",
-                      "example": "Failed"
-                    },
-                    "message": {
-                      "type": "string",
-                      "example": "Filter query tidak valid"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Data course tidak ditemukan",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "status": {
-                      "type": "string",
-                      "example": "Failed"
-                    },
-                    "message": {
-                      "type": "string",
-                      "example": "Data course tidak ditemukan"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
       "post": {
         "tags": ["Courses"],
         "summary": "API untuk menambahkan data course",
@@ -1106,6 +1014,98 @@
                     "message": {
                       "type": "string",
                       "example": "Token tidak valid"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": ["Courses"],
+        "summary": "API untuk menampilkan semua course",
+        "description": "API ini digunakan untuk user mengecek course",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "search",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "category",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "integer"
+              }
+            }
+          },
+          {
+            "in": "query",
+            "name": "level",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Data course sukses diambil",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Success"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Filter query tidak valid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Failed"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Filter query tidak valid"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Data course tidak ditemukan",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Failed"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Data course tidak ditemukan"
                     }
                   }
                 }
@@ -1412,122 +1412,6 @@
       }
     },
     "/modules": {
-      "get": {
-        "tags": ["Modules"],
-        "summary": "API untuk menampilkan semua module",
-        "description": "API ini digunakan untuk user mengecek module",
-        "responses": {
-          "200": {
-            "description": "Semua data module sukses diambil",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "status": {
-                      "type": "string",
-                      "example": "Success"
-                    },
-                    "message": {
-                      "type": "string",
-                      "example": "Berhasil mendapatkan data module"
-                    },
-                    "data": {
-                      "type": "object",
-                      "properties": {
-                        "id": {
-                          "type": "integer",
-                          "example": 1
-                        },
-                        "name": {
-                          "type": "string",
-                          "example": "Color Palette"
-                        },
-                        "no": {
-                          "type": "integer",
-                          "example": "1"
-                        },
-                        "videoUrl": {
-                          "type": "string",
-                          "example": "https://ik.imagekit.io/xh4e1rnhlx/Video-1700925166270_UrevQ_DxZ.mp4"
-                        },
-                        "chapterId": {
-                          "type": "integer",
-                          "example": "1"
-                        },
-                        "duration": {
-                          "type": "integer",
-                          "example": "10"
-                        },
-                        "createdBy": {
-                          "type": "integer",
-                          "example": "2"
-                        },
-                        "chapter": {
-                          "properties": {
-                            "id": {
-                              "type": "integer",
-                              "example": 1
-                            },
-                            "name": {
-                              "type": "string",
-                              "example": "Pendahuluan"
-                            }
-                          }
-                        },
-                        "moduleCreator": {
-                          "properties": {
-                            "id": {
-                              "type": "integer",
-                              "example": 1
-                            },
-                            "name": {
-                              "type": "string",
-                              "example": "Adella"
-                            }
-                          }
-                        },
-                        "user": {
-                          "properties": {
-                            "id": {
-                              "type": "integer",
-                              "example": 1
-                            },
-                            "name": {
-                              "type": "string",
-                              "example": "Joko"
-                            }
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Data module tidak ditemukan",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "status": {
-                      "type": "string",
-                      "example": "Failed"
-                    },
-                    "message": {
-                      "type": "string",
-                      "example": "Data module tidak ditemukan"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
       "post": {
         "tags": ["Modules"],
         "summary": "API untuk menambahkan data module",
@@ -1663,6 +1547,122 @@
                     "message": {
                       "type": "string",
                       "example": "Chapter tidak ditemukan, silahkan cek daftar chapter untuk melihat chapter yang tersedia"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": ["Modules"],
+        "summary": "API untuk menampilkan semua module",
+        "description": "API ini digunakan untuk user mengecek module",
+        "responses": {
+          "200": {
+            "description": "Semua data module sukses diambil",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Success"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Berhasil mendapatkan data module"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "integer",
+                          "example": 1
+                        },
+                        "name": {
+                          "type": "string",
+                          "example": "Color Palette"
+                        },
+                        "no": {
+                          "type": "integer",
+                          "example": "1"
+                        },
+                        "videoUrl": {
+                          "type": "string",
+                          "example": "https://ik.imagekit.io/xh4e1rnhlx/Video-1700925166270_UrevQ_DxZ.mp4"
+                        },
+                        "chapterId": {
+                          "type": "integer",
+                          "example": "1"
+                        },
+                        "duration": {
+                          "type": "integer",
+                          "example": "10"
+                        },
+                        "createdBy": {
+                          "type": "integer",
+                          "example": "2"
+                        },
+                        "chapter": {
+                          "properties": {
+                            "id": {
+                              "type": "integer",
+                              "example": 1
+                            },
+                            "name": {
+                              "type": "string",
+                              "example": "Pendahuluan"
+                            }
+                          }
+                        },
+                        "moduleCreator": {
+                          "properties": {
+                            "id": {
+                              "type": "integer",
+                              "example": 1
+                            },
+                            "name": {
+                              "type": "string",
+                              "example": "Adella"
+                            }
+                          }
+                        },
+                        "user": {
+                          "properties": {
+                            "id": {
+                              "type": "integer",
+                              "example": 1
+                            },
+                            "name": {
+                              "type": "string",
+                              "example": "Joko"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Data module tidak ditemukan",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Failed"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Data module tidak ditemukan"
                     }
                   }
                 }
@@ -2058,106 +2058,6 @@
       }
     },
     "/chapters": {
-      "get": {
-        "tags": ["Chapters"],
-        "summary": "API untuk menampilkan semua chapter",
-        "description": "API ini digunakan untuk user mengecek chapter",
-        "responses": {
-          "200": {
-            "description": "Semua data chapter sukses diambil",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "status": {
-                      "type": "string",
-                      "example": "Success"
-                    },
-                    "message": {
-                      "type": "string",
-                      "example": "Berhasil mendapatkan data chapter"
-                    },
-                    "data": {
-                      "type": "object",
-                      "properties": {
-                        "id": {
-                          "type": "integer",
-                          "example": 1
-                        },
-                        "no": {
-                          "type": "integer",
-                          "example": "1"
-                        },
-                        "name": {
-                          "type": "string",
-                          "example": "Pendahuluan"
-                        },
-                        "courseId": {
-                          "type": "integer",
-                          "example": "1"
-                        },
-                        "modules": {
-                          "properties": {
-                            "id": {
-                              "type": "integer",
-                              "example": 1
-                            },
-                            "name": {
-                              "type": "string",
-                              "example": "Color Palette"
-                            },
-                            "no": {
-                              "type": "integer",
-                              "example": "1"
-                            },
-                            "videoUrl": {
-                              "type": "string",
-                              "example": "https://ik.imagekit.io/xh4e1rnhlx/Video-1700925166270_UrevQ_DxZ.mp4"
-                            },
-                            "chapterId": {
-                              "type": "integer",
-                              "example": "1"
-                            },
-                            "duration": {
-                              "type": "integer",
-                              "example": "10"
-                            },
-                            "createdBy": {
-                              "type": "integer",
-                              "example": "2"
-                            }
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Data chapter tidak ditemukan",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "status": {
-                      "type": "string",
-                      "example": "Failed"
-                    },
-                    "message": {
-                      "type": "string",
-                      "example": "Data chapter tidak ditemukan"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
       "post": {
         "tags": ["Chapters"],
         "summary": "API untuk menambahkan data chapter",
@@ -2289,6 +2189,106 @@
                     "message": {
                       "type": "string",
                       "example": "Kursus tidak tersedia, silahkan cek daftar kursus untuk melihat kursus yang tersedia"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": ["Chapters"],
+        "summary": "API untuk menampilkan semua chapter",
+        "description": "API ini digunakan untuk user mengecek chapter",
+        "responses": {
+          "200": {
+            "description": "Semua data chapter sukses diambil",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Success"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Berhasil mendapatkan data chapter"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "integer",
+                          "example": 1
+                        },
+                        "no": {
+                          "type": "integer",
+                          "example": "1"
+                        },
+                        "name": {
+                          "type": "string",
+                          "example": "Pendahuluan"
+                        },
+                        "courseId": {
+                          "type": "integer",
+                          "example": "1"
+                        },
+                        "modules": {
+                          "properties": {
+                            "id": {
+                              "type": "integer",
+                              "example": 1
+                            },
+                            "name": {
+                              "type": "string",
+                              "example": "Color Palette"
+                            },
+                            "no": {
+                              "type": "integer",
+                              "example": "1"
+                            },
+                            "videoUrl": {
+                              "type": "string",
+                              "example": "https://ik.imagekit.io/xh4e1rnhlx/Video-1700925166270_UrevQ_DxZ.mp4"
+                            },
+                            "chapterId": {
+                              "type": "integer",
+                              "example": "1"
+                            },
+                            "duration": {
+                              "type": "integer",
+                              "example": "10"
+                            },
+                            "createdBy": {
+                              "type": "integer",
+                              "example": "2"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Data chapter tidak ditemukan",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Failed"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Data chapter tidak ditemukan"
                     }
                   }
                 }
@@ -2645,79 +2645,6 @@
       }
     },
     "/category": {
-      "get": {
-        "tags": ["Category"],
-        "summary": "API untuk menampilkan semua category",
-        "description": "API ini digunakan untuk user mengecek category",
-        "parameters": [
-          {
-            "in": "query",
-            "name": "name",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Semua data category sukses diambil",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "status": {
-                      "type": "string",
-                      "example": "Success"
-                    },
-                    "message": {
-                      "type": "string",
-                      "example": "Berhasil mengambil data category"
-                    },
-                    "data": {
-                      "type": "object",
-                      "properties": {
-                        "id": {
-                          "type": "integer",
-                          "example": 1
-                        },
-                        "name": {
-                          "type": "string",
-                          "example": "UX / UI Design"
-                        },
-                        "imageUrl": {
-                          "type": "string",
-                          "example": "https://plus.unsplash.com/premium_photo-1678565202049-9e37b2da8060?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Data category tidak ditemukan",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "status": {
-                      "type": "string",
-                      "example": "Failed"
-                    },
-                    "message": {
-                      "type": "string",
-                      "example": "Data category tidak ditemukan"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
       "post": {
         "tags": ["Category"],
         "summary": "API untuk menambahkan data category",
@@ -2823,6 +2750,80 @@
                     "message": {
                       "type": "string",
                       "example": "Kamu tidak berkepentingan disini"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+
+      "get": {
+        "tags": ["Category"],
+        "summary": "API untuk menampilkan semua category",
+        "description": "API ini digunakan untuk user mengecek category",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "name",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Semua data category sukses diambil",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Success"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Berhasil mengambil data category"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "integer",
+                          "example": 1
+                        },
+                        "name": {
+                          "type": "string",
+                          "example": "UX / UI Design"
+                        },
+                        "imageUrl": {
+                          "type": "string",
+                          "example": "https://plus.unsplash.com/premium_photo-1678565202049-9e37b2da8060?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Data category tidak ditemukan",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Failed"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Data category tidak ditemukan"
                     }
                   }
                 }
@@ -3147,6 +3148,757 @@
                     "message": {
                       "type": "string",
                       "example": "category tidak ditemukan"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/notifications": {
+      "post": {
+        "tags": ["Notification"],
+        "summary": "API untuk menambahkan notifikasi",
+        "description": "API ini digunakan untuk menambahkan notifikasi",
+        "security": [
+          {
+            "bearerToken": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "example": "Promosi",
+                    "description": "Tipe notifikasi"
+                  },
+                  "title": {
+                    "type": "string",
+                    "example": "Diskon untuk course UI/UX sebesar 40%",
+                    "description": "Judul notifikasi"
+                  },
+                  "content": {
+                    "type": "string",
+                    "example": "Course UI/UX sebesar 40% berlaku dari 1 november 2023 sampai 12 Desember 2023 buruan sebelum kehabisan",
+                    "description": "Isi notifikasi"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Sukses menambahkan notifikasi",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Success"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Berhasil berhasil dibuat"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Data notifikasi tidak valid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Failed"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Data tidak valid"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Token tidak valid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Failed"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Token tidak valid"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Bukan admin",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Failed"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Kamu tidak berkepentingan disini"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": ["Notification"],
+        "summary": "API untuk menampilkan notifikasi",
+        "description": "API ini digunakan untuk menarik notifikasi",
+        "security": [
+          {
+            "bearerToken": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Jumlah notifikasi yang ingin ditampilkan"
+          },
+          {
+            "name": "type",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Tipe notifikasi yang ingin ditampilkan"
+          },
+          {
+            "name": "title",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Judul notifikasi yang ingin ditampilkan"
+          },
+          {
+            "name": "userId",
+            "in": "query",
+            "schema": {
+              "type": "integer"
+            },
+            "description": "ID user yang ingin ditampilkan notifikasi"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Data notifikasi sukses diambil",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Success"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Berhasil mengambil data notifikasi"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Token tidak valid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Failed"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Token tidak valid"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Bukan admin",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Failed"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Kamu tidak berkepentingan disini"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Data notifikasi tidak ditemukan",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Failed"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Tidak ada notifikasi"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/notifications/{id}": {
+      "put": {
+        "tags": ["Notification"],
+        "summary": "API ini untuk memngubah data notifikasi",
+        "description": "API ini digunakan untuk admin mengubah data notifikasi",
+        "security": [
+          {
+            "bearerToken": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "schema": {
+              "type": "integer"
+            },
+            "description": "ID notifikasi"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "example": "Promosi"
+                  },
+                  "title": {
+                    "type": "string",
+                    "example": "Diskon hingga 90% selama bulan April"
+                  },
+                  "content": {
+                    "type": "string",
+                    "example": "Diskon hingga 90% selama bulan April buruan sebelum kehabisan"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Berhasil mengubah data notifikasi",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Success"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Berhasil mengubah data notifikasi"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Data notifikasi tidak valid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Failed"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Data notifikasi tidak valid"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Token tidak valid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Failed"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Token tidak valid"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Bukan admin",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Failed"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Kamu tidak berkepentingan disini"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Data notifikasi tidak ditemukan",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Failed"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Tidak ada notifikasi"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Notification"],
+        "summary": "API ini untuk menghapus data notifikasi",
+        "description": "API ini digunakan untuk admin menghapus data notifikasi",
+        "security": [
+          {
+            "bearerToken": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "schema": {
+              "type": "integer"
+            },
+            "description": "ID notifikasi",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Berhasil menghapus data notifikasi",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Success"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Berhasil menghapus data notifikasi"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Token tidak valid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Failed"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Token tidak valid"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Bukan admin",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Failed"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Kamu tidak berkepentingan disini"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Data notifikasi tidak ditemukan",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Failed"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/notifications/title/{title}": {
+      "delete": {
+        "tags": ["Notification"],
+        "summary": "API ini untuk menghapus data notifikasi",
+        "description": "API ini digunakan untuk admin menghapus data notifikasi",
+        "security": [
+          {
+            "bearerToken": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "title",
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Berhasil menghapus data notifikasi",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Success"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Berhasil menghapus data notifikasi"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Token tidak valid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Failed"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Token tidak valid"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Bukan admin",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Failed"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Kamu tidak berkepentingan disini"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Data notifikasi tidak ditemukan",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Failed"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/notifications/user": {
+      "get": {
+        "tags": ["Notification"],
+        "summary": "API ini untuk menampilkan data notifikasi dari user yang login",
+        "description": "API ini digunakan untuk user menampilkan data notifikasi mereka",
+        "security": [
+          {
+            "bearerToken": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Berhasil mendapatkan data notifikasi",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Success"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Berhasil mendapatkan data notifikasi"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Token tidak valid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Failed"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Token tidak valid"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Data notifikasi tidak ada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Failed"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Tidak ada notifikasi"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/notifications/user/{id}": {
+      "get": {
+        "tags": ["Notification"],
+        "summary": "API ini untuk menampilkan detail data notifikasi dari user yang login",
+        "description": "API ini digunakan untuk user menampilkan detail data notifikasi mereka",
+        "security": [
+          {
+            "bearerToken": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "schema": {
+              "type": "integer"
+            },
+            "description": "ID notifikasi",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Berhasil mendapatkan data notifikasi",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Success"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Berhasil mendapatkan data notifikasi"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Token tidak valid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Failed"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Token tidak valid"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Data notifikasi tidak ada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Failed"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Tidak ada notifikasi"
                     }
                   }
                 }

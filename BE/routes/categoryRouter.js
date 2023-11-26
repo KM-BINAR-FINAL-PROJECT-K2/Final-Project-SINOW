@@ -5,7 +5,7 @@ const authenticate = require("../middlewares/authenticate");
 const checkRole = require("../middlewares/checkRole");
 
 router.get("/", Category.getAllCategory);
-router.get(":id", Category.getCategoryById);
+router.get("/:id", Category.getCategoryById);
 router.post(
   "/",
   authenticate,
@@ -13,7 +13,18 @@ router.post(
   uploader.single("image"),
   Category.createCategory
 );
-router.put("/:id", authenticate, checkRole("admin"), Category.updateCategory);
-router.delete(":id", authenticate, checkRole("admin"), Category.deleteCategory);
+router.put(
+  "/:id",
+  authenticate,
+  checkRole("admin"),
+  uploader.single("image"),
+  Category.updateCategory
+);
+router.delete(
+  "/:id",
+  authenticate,
+  checkRole("admin"),
+  Category.deleteCategory
+);
 
 module.exports = router;
