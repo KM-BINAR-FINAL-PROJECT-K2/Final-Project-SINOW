@@ -9,7 +9,7 @@ export default function Navigation({ children }) {
       <main className="flex flex-auto">
         <Sidebar />
         <section className="w-full">
-          <Header name={"Admin"} />
+          <Header />
           {children}
         </section>
       </main>

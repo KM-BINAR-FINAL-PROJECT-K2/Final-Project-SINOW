@@ -1,5 +1,53 @@
 /* eslint-disable react/prop-types */
-export default function Header({ name }) {
+import axios from "axios";
+import { useEffect, useState } from "react";
+export default function Header() {
+  const [name, setName] = useState("Admin");
+
+  const adminToken = localStorage.getItem("token");
+  useEffect(() => {
+    if (!adminToken) {
+      window.location.href = "/";
+      return;
+    }
+    const validateToken = async () => {
+      try {
+        if (adminToken) {
+          const res = await axios.get(
+            "http://localhost:3000/api/v1/auth/check-token",
+            {
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${adminToken}`,
+              },
+            }
+          );
+          if (res.data.status === "Success") {
+            const response = res.data.data;
+
+            const dataListString = JSON.stringify([
+              response.Auth.email,
+              response.name,
+              response.city,
+              response.country,
+            ]);
+
+            setName(response.name);
+
+            localStorage.setItem("data", dataListString);
+          }
+        }
+      } catch (error) {
+        if (error.response.data.status === "Failed") {
+          localStorage.clear();
+          window.location.href = "/";
+        }
+      }
+    };
+
+    validateToken();
+  }, [adminToken]);
+
   return (
     <header className="bg-lightblue-05 pt-[26px] pb-[20px] md:pt-[46px] md:pb-[40px] pl-10 pr-[35px] lg:pr-[87px] flex justify-between drop-shadow-sm mb-[79px] sticky top-0 gap-5 flex-wrap z-[600]">
       <h1 className=" font-bold text-[24px] text-darkblue-05 flex-1 ">
