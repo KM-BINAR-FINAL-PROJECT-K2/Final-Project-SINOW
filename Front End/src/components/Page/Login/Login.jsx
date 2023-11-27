@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { FiEye, FiEyeOff } from "react-icons/fi";
-import Logo from "/images/logo.png";
+import Logo from "/images/logo-n-maskot/Logo-png.png";
 
 export default function Login() {
   const [password, setPassword] = useState("");
