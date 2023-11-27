@@ -131,7 +131,7 @@ const createCourse = async (req, res, next) => {
 
 const getAllCourse = async (req, res, next) => {
   try {
-    const { search, category, level } = req.query;
+    const { search, category, level, type } = req.query;
 
     if (category) {
       if (Array.isArray(category)) {
@@ -182,6 +182,12 @@ const getAllCourse = async (req, res, next) => {
       }
     }
 
+    if (type) {
+      if (type !== "gratis" && type !== "premium") {
+        return next(new ApiError("Type harus 'gratis' atau 'premium'", 400));
+      }
+    }
+
     const where = {};
 
     if (search) {
@@ -198,6 +204,10 @@ const getAllCourse = async (req, res, next) => {
       where.level = {
         [Op.in]: Array.isArray(level) ? level : [level],
       };
+    }
+
+    if (type) {
+      where.type = type;
     }
 
     const courses = await Course.findAll({

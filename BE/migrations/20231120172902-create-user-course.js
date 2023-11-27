@@ -15,8 +15,14 @@ module.exports = {
       courseId: {
         type: Sequelize.INTEGER,
       },
+      isAccessible: {
+        type: Sequelize.BOOLEAN,
+      },
       progress: {
         type: Sequelize.INTEGER,
+      },
+      lastSeen: {
+        type: Sequelize.DATE,
       },
       createdAt: {
         allowNull: false,
