@@ -8,6 +8,10 @@ export default function Sidebar() {
     kelolaKelas: false,
   });
 
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+  };
+
   useEffect(() => {
     if (location.pathname === "/dashboard") {
       setBackground({
@@ -56,6 +60,7 @@ export default function Sidebar() {
           id="keluar"
           href="/"
           className={`pl-[12px] text-[12px] inline-block lg:text-[16px] font-bold text-neutral-01 font-montserrat hover:bg-darkblue-03 py-[13px] lg:pl-[25px] w-full hover:pl-[18px]  lg:hover:pl-[45px] transition-all duration-300`}
+          onClick={handleLogout}
         >
           <p>Keluar</p>
         </a>

@@ -6,6 +6,10 @@ export default function SmallSidebar() {
     setShowNav(!showNav);
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+  };
+
   return (
     <div className="sticky top-0 z-[700]">
       {showNav && (
@@ -59,6 +63,7 @@ export default function SmallSidebar() {
         <a
           href="/"
           className="inline-block cursor-pointer w-[50px] relative group"
+          onClick={handleLogout}
         >
           <img
             src="/images/exit-icon.png"
