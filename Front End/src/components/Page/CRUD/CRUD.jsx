@@ -4,6 +4,11 @@ import Navigation from "../../Template/Navigation/Navigation";
 import ClassTable from "../../Molecule/ClassTable/ClassTable";
 import AddClass from "../../Organism/AddClass/AddClass";
 export default function CRUD() {
+  const checkToken = localStorage.getItem("token");
+  if (!checkToken) {
+    window.location.href = "/";
+  }
+
   const [showAddClass, setShowAddClass] = useState(false);
 
   const toggleShowContainer = () => {

@@ -3,6 +3,10 @@ import Card from "../../Molecule/Card/Card";
 import PaymentTable from "../../Molecule/PaymentTable/PaymentTable";
 
 export default function DashboadAdmin() {
+  const checkToken = localStorage.getItem("token");
+  if (!checkToken) {
+    window.location.href = "/";
+  }
   return (
     <Navigation>
       <section className="mx-16 flex justify-around gap-6 flex-wrap mb-[54px]">
