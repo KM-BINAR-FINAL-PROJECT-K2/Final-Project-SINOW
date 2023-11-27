@@ -62,14 +62,6 @@ export default function Login() {
 
   return (
     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 h-screen w-full">
-      <div className="logo-app bg-darkblue-05 hidden sm:flex justify-center items-center">
-        <img
-          src={Logo}
-          alt=""
-          className="w-24 h-24 sm:w-32 sm:h-32 md:w-48 md:h-48"
-        />
-      </div>
-
       <div className="p-[50px] orm-app flex flex-col justify-center md:h-screen lg:py-0">
         <form
           onSubmit={handleSubmit}
@@ -133,6 +125,14 @@ export default function Login() {
             Masuk
           </button>
         </form>
+      </div>
+
+      <div className="logo-app bg-darkblue-05 hidden sm:flex justify-center items-center">
+        <img
+          src={Logo}
+          alt=""
+          className="w-24 h-24 sm:w-32 sm:h-32 md:w-48 md:h-48"
+        />
       </div>
     </div>
   );
