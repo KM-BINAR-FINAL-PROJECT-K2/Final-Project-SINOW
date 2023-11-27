@@ -7,7 +7,7 @@ export default function SmallSidebar() {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
+    localStorage.clear();
   };
 
   return (
