@@ -113,7 +113,7 @@ export default function AddClass({ toggleShowContainer }) {
                   className="text-white text-[16px] font-semibold bg-alert-danger p-[12px] rounded-[25px] flex-1 lg:w-full"
                   onClick={handleButtonClick}
                 >
-                  {selectedFiles.length > 0
+                  {selectedFiles && selectedFiles.length > 0
                     ? `Total Files: ${selectedFiles.length}`
                     : "Upload Video"}
                 </button>
