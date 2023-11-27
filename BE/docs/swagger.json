@@ -7,11 +7,11 @@
   },
   "tags": [
     {
-      "name": "Auths",
+      "name": "Auth",
       "description": "API ini untuk mengelola auth resources"
     },
     {
-      "name": "My Details",
+      "name": "User",
       "description": "API ini untuk mengelola data user resources"
     },
     {
@@ -43,7 +43,7 @@
   "paths": {
     "/auth/login": {
       "post": {
-        "tags": ["Auths"],
+        "tags": ["Auth"],
         "summary": "API untuk login",
         "description": "API ini digunakan ketika user ingin login",
         "requestBody": {
@@ -128,7 +128,7 @@
     },
     "/auth/register": {
       "post": {
-        "tags": ["Auths"],
+        "tags": ["Auth"],
         "summary": "API untuk register",
         "description": "API ini digunakan ketika user ingin register",
         "requestBody": {
@@ -209,7 +209,7 @@
     },
     "/auth/verify-email": {
       "post": {
-        "tags": ["Auths"],
+        "tags": ["Auth"],
         "summary": "API untuk verify email",
         "description": "API ini digunakan ketika user ingin memverifikasi email",
         "requestBody": {
@@ -289,7 +289,7 @@
     },
     "/auth/resend-otp": {
       "post": {
-        "tags": ["Auths"],
+        "tags": ["Auth"],
         "summary": "API untuk resend kode OTP",
         "description": "API ini digunakan ketika user ingin mengirim ulang kode OTP",
         "requestBody": {
@@ -355,7 +355,7 @@
     },
     "/auth/reset-password": {
       "post": {
-        "tags": ["Auths"],
+        "tags": ["Auth"],
         "summary": "API untuk request reset password",
         "description": "API ini digunakan ketika user me-request reset password",
         "requestBody": {
@@ -417,7 +417,7 @@
     },
     "/auth/reset-password/{token}": {
       "post": {
-        "tags": ["Auths"],
+        "tags": ["Auth"],
         "summary": "API untuk mereset password",
         "description": "API ini digunakan untuk user mereset password",
         "parameters": [
@@ -465,7 +465,7 @@
     },
     "/auth/check-token": {
       "get": {
-        "tags": ["Auths"],
+        "tags": ["Auth"],
         "summary": "API untuk mengecek token",
         "description": "API ini digunakan untuk user mengecek token",
         "security": [
@@ -535,9 +535,9 @@
         }
       }
     },
-    "/my-details": {
+    "/user": {
       "get": {
-        "tags": ["My Details"],
+        "tags": ["User"],
         "summary": "API untuk mengambil data user",
         "description": "API ini digunakan untuk user mengambil data user",
         "security": [
@@ -663,9 +663,9 @@
         }
       }
     },
-    "/my-details/update": {
+    "/user/update": {
       "patch": {
-        "tags": ["My Details"],
+        "tags": ["User"],
         "summary": "API untuk mengupdate data user",
         "description": "API ini digunakan untuk user mengupdate data user",
         "security": [
@@ -778,9 +778,9 @@
         }
       }
     },
-    "/my-details/change-password": {
+    "/user/change-password": {
       "patch": {
-        "tags": ["My Details"],
+        "tags": ["User"],
         "summary": "API untuk mengubah password user",
         "description": "API ini digunakan untuk user mengubah password user",
         "security": [
@@ -850,6 +850,125 @@
                     "message": {
                       "type": "string",
                       "example": "Password user tidak valid"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Token tidak valid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Failed"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Token tidak valid"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user/my-courses": {
+      "get": {
+        "tags": ["User"],
+        "summary": "API untuk mengecek semua data course user",
+        "description": "API ini digunakan untuk user mengecek semua data course user",
+        "security": [
+          {
+            "bearerToken": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Course user sukses ditemukan",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Success"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Berhasil mendapatkan data course user"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Token tidak valid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Failed"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Token tidak valid"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user/my-courses/{courseId}": {
+      "get": {
+        "tags": ["User"],
+        "summary": "API untuk mengecek detail course user",
+        "description": "API ini digunakan untuk user mengecek detail course user",
+        "security": [
+          {
+            "bearerToken": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "courseId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "example": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Course user sukses ditemukan",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Success"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Berhasil mendapatkan detail data course user"
                     }
                   }
                 }
@@ -1030,6 +1149,13 @@
           {
             "in": "query",
             "name": "search",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "type",
             "schema": {
               "type": "string"
             }

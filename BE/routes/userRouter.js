@@ -13,4 +13,7 @@ router.patch(
 );
 router.patch("/change-password", authenticate, User.changeMyPassword);
 
+router.get("/my-courses", authenticate, User.getMyCourses);
+router.get("/my-courses/:courseId", authenticate, User.openCourse);
+
 module.exports = router;

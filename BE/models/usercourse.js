@@ -28,6 +28,7 @@ module.exports = (sequelize, DataTypes) => {
       userId: DataTypes.INTEGER,
       courseId: DataTypes.INTEGER,
       isAccessible: DataTypes.BOOLEAN,
+      lastSeen: DataTypes.DATE,
       progress: DataTypes.INTEGER,
     },
     {

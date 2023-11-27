@@ -1,5 +1,12 @@
 const jwt = require("jsonwebtoken");
-const { User, Auth } = require("../models");
+const {
+  User,
+  Auth,
+  Course,
+  UserCourse,
+  Module,
+  UserModule,
+} = require("../models");
 const ApiError = require("../utils/ApiError");
 const validator = require("validator");
 const bcrypt = require("bcrypt");
@@ -178,8 +185,141 @@ const changeMyPassword = async (req, res, next) => {
   }
 };
 
+const createUserCourse = async (req, res, next) => {
+  try {
+    const { user } = req;
+    const { courseId } = req.params;
+
+    const checkUserCourse = await UserCourse.findOne({
+      where: {
+        userId: user.id,
+        courseId,
+      },
+    });
+
+    if (checkUserCourse) {
+      res.status(200).json({
+        status: "Success",
+        message: "User sudah mengikuti course ini",
+      });
+    }
+
+    const course = await Course.findByPk(courseId);
+
+    const userCourse = await UserCourse.create({
+      userId: user.id,
+      courseId,
+      isAccessible: course.type === "gratis" ? true : false,
+      progresss: 0,
+      lastSeen: new Date(),
+    });
+
+    if (!userCourse) {
+      return next(new ApiError("Gagal membuat user course", 500));
+    }
+
+    res.status(200).json({
+      status: "Success",
+      message: "Berhasil mengikuti course",
+    });
+  } catch (error) {
+    return next(new ApiError(error.message, 500));
+  }
+};
+
+const getMyCourses = async (req, res, next) => {
+  try {
+    const { user } = req;
+
+    const course = await UserCourse.findAll({
+      where: {
+        userId: user.id,
+      },
+      include: [
+        {
+          model: Course,
+        },
+      ],
+    });
+
+    if (!course || course.length === 0) {
+      return next(new ApiError("Data course masih kosong", 404));
+    }
+
+    res.status(200).json({
+      status: "Success",
+      message: "Berhasil mengambil data course",
+      data: course,
+    });
+  } catch (error) {
+    return next(new ApiError(error, 500));
+  }
+};
+
+const openCourse = async (req, res, next) => {
+  try {
+    const { user } = req;
+    const { courseId } = req.params;
+
+    const course = await Course.findByPk(courseId);
+
+    if (!course) {
+      return next(new ApiError("Course tidak ditemukan", 404));
+    }
+
+    const [userCourse, created] = await UserCourse.findOrCreate({
+      where: {
+        userId: user.id,
+        courseId,
+      },
+      defaults: {
+        userId: user.id,
+        courseId,
+        isAccessible: course.type === "gratis",
+        progress: 0,
+        lastSeen: new Date(),
+      },
+      include: [
+        {
+          model: Course,
+        },
+      ],
+    });
+
+    if (!created) {
+      await userCourse.update({
+        lastSeen: new Date(),
+      });
+
+      return res.status(200).json({
+        status: "Success",
+        message: "Berhasil mendapatkan detail course user",
+        data: userCourse,
+      });
+    }
+
+    const newUserCourse = await UserCourse.findByPk(userCourse.id, {
+      include: [
+        {
+          model: Course,
+        },
+      ],
+    });
+
+    res.status(200).json({
+      status: "Success",
+      message: "Berhasil mengikuti course",
+      data: newUserCourse,
+    });
+  } catch (error) {
+    return next(new ApiError(error.message, 500));
+  }
+};
+
 module.exports = {
   myDetails,
   updateMyDetails,
   changeMyPassword,
+  getMyCourses,
+  openCourse,
 };
