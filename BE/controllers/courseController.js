@@ -6,6 +6,14 @@ const {
   Module,
   Benefit,
 } = require("../models");
+const {
+  validateCategory,
+  validateLevel,
+  validateType,
+  validateNumericFields,
+  getCourseOrder,
+} = require("../utils/courseValidator");
+
 const { Op } = require("sequelize");
 const ApiError = require("../utils/ApiError");
 
@@ -13,6 +21,7 @@ const { uploadImage, uploadVideo } = require("../utils/imagekitUploader");
 
 const createCourse = async (req, res, next) => {
   const user = req.user;
+
   try {
     let {
       name,
@@ -23,74 +32,49 @@ const createCourse = async (req, res, next) => {
       classCode,
       type,
       price,
-      discount,
+      promo,
       courseBy,
     } = req.body;
 
-    if (
-      !name ||
-      !level ||
-      !rating ||
-      !categoryId ||
-      !description ||
-      !classCode ||
-      !type ||
-      !price ||
-      !courseBy
-    ) {
-      return next(new ApiError("Semua field harus diisi", 400));
-    }
+    const missingFields = [
+      "name",
+      "level",
+      "rating",
+      "categoryId",
+      "description",
+      "classCode",
+      "type",
+      "price",
+      "courseBy",
+    ].filter((field) => !req.body[field]);
 
-    if (!req.files || Object.keys(req.files).length !== 2) {
-      return next(new ApiError("Harus menyertakan gambar dan video", 400));
-    }
-
-    if (
-      level !== "beginner" &&
-      level !== "intermediate" &&
-      level !== "advance"
-    ) {
+    if (missingFields.length > 0) {
       return next(
-        new ApiError(
-          "Level harus 'beginner', 'intermediate' atau 'advance', perhatikan juga huruf kecil besarnya",
-          400
-        )
+        new ApiError(`Field ${missingFields.join(", ")} harus diisi`, 400)
       );
     }
 
-    if (!isNaN(rating)) {
-      return next(new ApiError("Rating harus angka", 400));
+    const { image, video } = req.files || {};
+
+    if (!image || !video) {
+      return next(new ApiError("Harus menyertakan gambar dan video", 400));
     }
 
-    if (type !== "gratis" && type !== "premium") {
-      return next(new ApiError("Type harus 'gratis' atau 'premium'", 400));
+    validateLevel(level, next);
+    validateType(type, next);
+    validateNumericFields({ rating, price, promo }, next);
+    await validateCategory(categoryId, next);
+
+    if (rating < 0 || rating > 5) {
+      return next(new ApiError("Rating harus antara 0 dan 5", 400));
     }
 
-    if (isNaN(price)) {
-      return next(new ApiError("Harga yang dimasukkan bukan angka", 400));
-    }
-
-    if (isNaN(discount)) {
-      return next(new ApiError("Diskon harus angka", 400));
+    if (promo < 0 || promo > 100) {
+      return next(new ApiError("Diskon harus antara 0 dan 100", 400));
     }
 
     if (type === "premium" && price <= 0) {
       return next(new ApiError("Harga harus lebih dari 0", 400));
-    }
-
-    if (type === "gratis") {
-      price = 0;
-    }
-
-    const checkCategory = await Category.findByPk(categoryId);
-
-    if (!checkCategory) {
-      return next(
-        new ApiError(
-          "Category tidak tersedia, cek 'localhost:3000/api/v1/category' untuk melihat daftar kategori yang tersedia",
-          400
-        )
-      );
     }
 
     const { imageUrl } = await uploadImage(req.files.image[0], next);
@@ -100,24 +84,20 @@ const createCourse = async (req, res, next) => {
       name,
       level,
       rating,
-      categoryId,
+      categoryId: Math.floor(categoryId),
       description,
       classCode,
       totalDuration: 0,
       totalModule: 0,
       type,
-      price,
-      discount,
+      price: type === "gratis" ? 0 : price,
+      promo: Math.floor(promo),
       totalUser: 0,
       imageUrl: imageUrl,
       videoPreviewUrl: videoUrl,
       courseBy,
-      createdBy: user.name,
+      createdBy: user.id,
     });
-
-    if (!course) {
-      return next(new ApiError("Gagal membuat course", 500));
-    }
 
     res.status(201).json({
       status: "Success",
@@ -131,63 +111,7 @@ const createCourse = async (req, res, next) => {
 
 const getAllCourse = async (req, res, next) => {
   try {
-    const { search, category, level, type } = req.query;
-
-    if (category) {
-      if (Array.isArray(category)) {
-        category.map((cat) => {
-          if (isNaN(cat)) {
-            return next(
-              new ApiError(
-                "Semua category harus berupa angka bilangan bulat",
-                400
-              )
-            );
-          }
-        });
-      } else {
-        if (isNaN(category)) {
-          return next(
-            new ApiError("Category harus berupa angka bilangan bulat", 400)
-          );
-        }
-      }
-    }
-
-    const validLevels = ["beginner", "intermediate", "advanced"];
-
-    if (level) {
-      if (typeof level === "string") {
-        if (
-          level !== "beginner" &&
-          level !== "intermediate" &&
-          level !== "advanced"
-        ) {
-          return next(
-            new ApiError(
-              "Level harus antara 'beginner', 'intermediate' atau 'advanced', perhatikan juga huruf kecil besarnya",
-              400
-            )
-          );
-        }
-      } else if (Array.isArray(level)) {
-        if (!level.every((item) => validLevels.includes(item))) {
-          return next(
-            new ApiError(
-              "Level harus antara 'beginer', 'intermediate' atau 'advanced', perhatikan juga huruf kecil besarnya",
-              400
-            )
-          );
-        }
-      }
-    }
-
-    if (type) {
-      if (type !== "gratis" && type !== "premium") {
-        return next(new ApiError("Type harus 'gratis' atau 'premium'", 400));
-      }
-    }
-
+    const { search, category, level, type, sortBy } = req.query;
     const where = {};
 
     if (search) {
@@ -195,20 +119,30 @@ const getAllCourse = async (req, res, next) => {
         [Op.iLike]: `%${search}%`,
       };
     }
+
     if (category) {
-      where.categoryId = {
-        [Op.in]: Array.isArray(category) ? category : [category],
-      };
+      if (Array.isArray(category)) {
+        where.categoryId = {
+          [Op.in]: category.map((cat) => parseInt(cat, 10)), // Mengonversi string ke integer
+        };
+      } else {
+        where.categoryId = parseInt(category, 10); // Mengonversi string ke integer
+      }
     }
+
     if (level) {
+      validateLevel(level, next);
       where.level = {
         [Op.in]: Array.isArray(level) ? level : [level],
       };
     }
 
     if (type) {
+      validateType(type, next);
       where.type = type;
     }
+
+    const courseOrder = getCourseOrder(sortBy, next);
 
     const courses = await Course.findAll({
       include: [
@@ -225,15 +159,15 @@ const getAllCourse = async (req, res, next) => {
         {
           model: Benefit,
           as: "benefits",
-          attributes: ["id", "description"],
+          attributes: ["id", "courseId", "description"],
         },
       ],
       where,
-      order: [["id", "ASC"]],
+      order: [courseOrder.length === 0 ? ["id", "ASC"] : courseOrder],
     });
 
     if (!courses || courses.length === 0) {
-      return next(new ApiError("Course tidak ditemukan", 404));
+      return next(new ApiError("Course tidak ada", 404));
     }
 
     res.status(200).json({
@@ -328,34 +262,17 @@ const updateCourse = async (req, res, next) => {
     }
 
     if (level) {
-      if (
-        level !== "beginner" &&
-        level !== "intermediate" &&
-        level !== "advanced"
-      ) {
-        return next(
-          new ApiError("Level harus beginner, intermediate, atau advanced", 400)
-        );
-      }
+      validateLevel(level, next);
       updateData.level = level;
     }
 
     if (rating) {
-      if (isNaN(rating)) {
-        return next(new ApiError("Rating harus berupa angka", 400));
-      }
+      validateNumericFields({ rating }, next);
       updateData.rating = rating;
     }
 
     if (categoryId) {
-      if (categoryId < 1 || categoryId > 6) {
-        return next(
-          new ApiError(
-            "Kategori course yang dimasukkan harus antara 1-6: 1. UI/UX Design, 2. Product Management, 3. Web Development, 4. Android Development, 5. iOS Development, 6. Data Science",
-            400
-          )
-        );
-      }
+      validateCategory(categoryId, next);
       updateData.categoryId = categoryId;
     }
 
@@ -372,12 +289,8 @@ const updateCourse = async (req, res, next) => {
     }
 
     if (type) {
-      if (type !== "free" && type !== "premium") {
-        return next(
-          new ApiError("Tipe course harus 'free' atau 'premium'", 400)
-        );
-      }
-      if (type === "free") {
+      validateType(type, next);
+      if (type === "gratis") {
         updateData.price = 0;
       }
       if (type === "premium") {
@@ -391,6 +304,7 @@ const updateCourse = async (req, res, next) => {
       }
       updateData.type = type;
     }
+
     if (req.files || Object.keys(req.files).length > 0) {
       if (req.files.image[0]) {
         const { imageUrl } = await uploadImage(req.files.image[0]);
@@ -417,7 +331,7 @@ const updateCourse = async (req, res, next) => {
     });
 
     if (rowCount === 0 && !updatedCourse) {
-      return next(new ApiError("Gagal update course", 500));
+      return next(new ApiError("Tidak ada course yang diupdate", 500));
     }
 
     res.status(200).json({

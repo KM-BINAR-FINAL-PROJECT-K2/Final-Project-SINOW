@@ -94,7 +94,7 @@ module.exports = {
 
     let lastThreeDigit = 200;
     const auths = insertUsers.map((user) => ({
-      email: `${user.name}@binar.com`.toLowerCase(),
+      email: `${user.name}@sinow.com`.toLowerCase(),
       phoneNumber: `81234567${lastThreeDigit++}`,
       password: password,
       userId: user.id,

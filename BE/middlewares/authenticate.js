@@ -23,6 +23,10 @@ module.exports = async (req, res, next) => {
       include: ["Auth"],
     });
 
+    if (!user) {
+      return next(new ApiError("Token tidak valid", 404));
+    }
+
     req.user = user;
 
     next();

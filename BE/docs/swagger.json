@@ -3,7 +3,7 @@
   "info": {
     "title": "SiNow API Documentation",
     "version": "1.0.0",
-    "description": "Halaman ini untuk mendokumentasi API dari applikasi SiNow"
+    "description": "Halaman ini untuk mendokumentasi API dari aplikasi SiNow"
   },
   "tags": [
     {
@@ -998,6 +998,165 @@
         }
       }
     },
+    "/user/notifications": {
+      "get": {
+        "tags": ["User"],
+        "summary": "API ini untuk menampilkan data notifikasi dari user yang login",
+        "description": "API ini digunakan untuk user menampilkan data notifikasi mereka",
+        "security": [
+          {
+            "bearerToken": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Berhasil mendapatkan data notifikasi",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Success"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Berhasil mendapatkan data notifikasi"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Token tidak valid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Failed"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Token tidak valid"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Data notifikasi tidak ada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Failed"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Tidak ada notifikasi"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user/notifications/{id}": {
+      "get": {
+        "tags": ["User"],
+        "summary": "API ini untuk menampilkan detail data notifikasi dari user yang login",
+        "description": "API ini digunakan untuk user menampilkan detail data notifikasi mereka",
+        "security": [
+          {
+            "bearerToken": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "schema": {
+              "type": "integer"
+            },
+            "description": "ID notifikasi",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Berhasil mendapatkan data notifikasi",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Success"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Berhasil mendapatkan data notifikasi"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Token tidak valid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Failed"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Token tidak valid"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Data notifikasi tidak ada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Failed"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Tidak ada notifikasi"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/courses": {
       "post": {
         "tags": ["Courses"],
@@ -1055,7 +1214,7 @@
                     "example": 0,
                     "description": "Harga course"
                   },
-                  "discount": {
+                  "promo": {
                     "type": "integer",
                     "example": 0,
                     "description": "Diskon course"
@@ -1178,6 +1337,13 @@
               "items": {
                 "type": "string"
               }
+            }
+          },
+          {
+            "in": "query",
+            "name": "sortBy",
+            "schema": {
+              "type": "string"
             }
           }
         ],
@@ -1387,7 +1553,7 @@
                     "example": 0,
                     "description": "Harga course"
                   },
-                  "discount": {
+                  "promo": {
                     "type": "integer",
                     "example": 0,
                     "description": "Diskon course"
@@ -3866,165 +4032,6 @@
                     "status": {
                       "type": "string",
                       "example": "Failed"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/notifications/user": {
-      "get": {
-        "tags": ["Notification"],
-        "summary": "API ini untuk menampilkan data notifikasi dari user yang login",
-        "description": "API ini digunakan untuk user menampilkan data notifikasi mereka",
-        "security": [
-          {
-            "bearerToken": []
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Berhasil mendapatkan data notifikasi",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "status": {
-                      "type": "string",
-                      "example": "Success"
-                    },
-                    "message": {
-                      "type": "string",
-                      "example": "Berhasil mendapatkan data notifikasi"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Token tidak valid",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "status": {
-                      "type": "string",
-                      "example": "Failed"
-                    },
-                    "message": {
-                      "type": "string",
-                      "example": "Token tidak valid"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Data notifikasi tidak ada",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "status": {
-                      "type": "string",
-                      "example": "Failed"
-                    },
-                    "message": {
-                      "type": "string",
-                      "example": "Tidak ada notifikasi"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/notifications/user/{id}": {
-      "get": {
-        "tags": ["Notification"],
-        "summary": "API ini untuk menampilkan detail data notifikasi dari user yang login",
-        "description": "API ini digunakan untuk user menampilkan detail data notifikasi mereka",
-        "security": [
-          {
-            "bearerToken": []
-          }
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "schema": {
-              "type": "integer"
-            },
-            "description": "ID notifikasi",
-            "required": true
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Berhasil mendapatkan data notifikasi",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "status": {
-                      "type": "string",
-                      "example": "Success"
-                    },
-                    "message": {
-                      "type": "string",
-                      "example": "Berhasil mendapatkan data notifikasi"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Token tidak valid",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "status": {
-                      "type": "string",
-                      "example": "Failed"
-                    },
-                    "message": {
-                      "type": "string",
-                      "example": "Token tidak valid"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Data notifikasi tidak ada",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "status": {
-                      "type": "string",
-                      "example": "Failed"
-                    },
-                    "message": {
-                      "type": "string",
-                      "example": "Tidak ada notifikasi"
                     }
                   }
                 }
