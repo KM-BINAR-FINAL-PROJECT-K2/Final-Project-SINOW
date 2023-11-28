@@ -102,6 +102,14 @@ const register = async (req, res, next) => {
       return next(new ApiError("Email sudah terdaftar", 400));
     }
 
+    const isPhoneNumberExist = await Auth.findOne({
+      where: { phoneNumber },
+    });
+
+    if (isPhoneNumberExist) {
+      return next(new ApiError("Nomor telepon sudah terdaftar", 400));
+    }
+
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const newUser = await User.create({
