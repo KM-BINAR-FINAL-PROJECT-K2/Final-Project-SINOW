@@ -37,7 +37,7 @@
   ],
   "servers": [
     {
-      "url": "https://final-project-sinow-production.up.railway.app/api/v1"
+      "url": "https://sinow-production.up.railway.app/api/v1"
     }
   ],
   "paths": {

@@ -3,6 +3,7 @@ require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const morgan = require("morgan");
+const path = require("path");
 
 const ApiError = require("./utils/ApiError");
 const errorController = require("./controllers/errorController");
@@ -18,7 +19,8 @@ app.use(morgan("dev"));
 app.use(router);
 
 app.all("*", (req, res, next) => {
-  return next(new ApiError("Routes tidak tersedia", 404));
+  const filePath = path.join(__dirname, "views", "404-not-found.html");
+  res.status(404).sendFile(filePath);
 });
 
 app.use(errorController);
