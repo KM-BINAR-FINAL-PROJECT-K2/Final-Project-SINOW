@@ -11,7 +11,12 @@ router.patch(
   uploader.single("image"),
   User.updateMyDetails
 );
+
 router.patch("/change-password", authenticate, User.changeMyPassword);
+
+router.get("/notifications", authenticate, User.getUserNotification);
+
+router.get("/notifications/:id", authenticate, User.openNotification);
 
 router.get("/my-courses", authenticate, User.getMyCourses);
 router.get("/my-courses/:courseId", authenticate, User.openCourse);

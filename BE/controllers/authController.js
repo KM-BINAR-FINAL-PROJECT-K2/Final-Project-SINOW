@@ -411,10 +411,6 @@ const checkToken = async (req, res, next) => {
   try {
     const user = req.user;
 
-    if (!user) {
-      return next(new ApiError("Gagal mendapatkan data token", 404));
-    }
-
     res.status(200).json({
       status: "Success",
       message: "Token valid",

@@ -5,7 +5,10 @@ const {
   Course,
   UserCourse,
   Module,
-  UserModule,
+  Category,
+  Benefit,
+  Chapter,
+  Notification,
 } = require("../models");
 const ApiError = require("../utils/ApiError");
 const validator = require("validator");
@@ -15,6 +18,7 @@ const { createNotification } = require("../utils/notificationUtils");
 const { uploadImage } = require("../utils/imagekitUploader");
 
 const myDetails = async (req, res, next) => {
+  console.log(req.user);
   try {
     res.status(200).json({
       status: "Success",
@@ -185,6 +189,69 @@ const changeMyPassword = async (req, res, next) => {
   }
 };
 
+const getUserNotification = async (req, res, next) => {
+  try {
+    const userNotifications = await Notification.findAll({
+      where: {
+        userId: req.user.id,
+      },
+      order: [["createdAt", "DESC"]],
+    });
+
+    if (userNotifications.length === 0 || !userNotifications) {
+      return next(new ApiError("Tidak ada notifikasi", 404));
+    }
+
+    res.status(200).json({
+      status: "Success",
+      data: userNotifications,
+    });
+  } catch (err) {
+    return next(new ApiError(err.message, 500));
+  }
+};
+
+const openNotification = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const userId = req.user.id;
+
+    const notification = await Notification.findByPk(id);
+    if (!notification) {
+      return next(new ApiError("Notifikasi tidak ditemukan", 404));
+    }
+    console.log("\n\n\n\n\n\n\n\n", notification.userId, userId);
+    if (notification.userId !== userId) {
+      return next(new ApiError("Akses ditolak", 403));
+    }
+
+    const [rowCount, [updatedNotification]] = await Notification.update(
+      {
+        isRead: true,
+      },
+      {
+        where: {
+          id,
+          userId,
+        },
+        returning: true,
+      }
+    );
+
+    if (rowCount === 0 && !updatedNotification) {
+      return next(new ApiError("Gagal mengupdate notifikasi"));
+    }
+
+    res.status(200).json({
+      status: "Success",
+      message: "Berhasil membuka notifikasi",
+      data: updatedNotification,
+    });
+  } catch (error) {
+    return next(new ApiError(error.message, 500));
+  }
+};
+
 const createUserCourse = async (req, res, next) => {
   try {
     const { user } = req;
@@ -282,7 +349,41 @@ const openCourse = async (req, res, next) => {
       include: [
         {
           model: Course,
+          include: [
+            {
+              model: Category,
+              attributes: ["id", "name"],
+              as: "category",
+            },
+            {
+              model: User,
+              as: "courseCreator",
+              attributes: ["id", "name"],
+            },
+            {
+              model: Benefit,
+              as: "benefits",
+              attributes: ["id", "description"],
+            },
+            {
+              model: Chapter,
+              as: "chapters",
+              attributes: ["id", "no", "name"],
+              include: [
+                {
+                  model: Module,
+                  as: "modules",
+                  attributes: ["id", "no", "name", "videoUrl", "duration"],
+                },
+              ],
+            },
+          ],
         },
+      ],
+      order: [
+        ["Course", "id", "ASC"],
+        ["Course", "chapters", "no", "ASC"],
+        ["Course", "chapters", "modules", "no", "ASC"],
       ],
     });
 
@@ -302,7 +403,41 @@ const openCourse = async (req, res, next) => {
       include: [
         {
           model: Course,
+          include: [
+            {
+              model: Category,
+              attributes: ["id", "name"],
+              as: "category",
+            },
+            {
+              model: User,
+              as: "courseCreator",
+              attributes: ["id", "name"],
+            },
+            {
+              model: Benefit,
+              as: "benefits",
+              attributes: ["id", "description"],
+            },
+            {
+              model: Chapter,
+              as: "chapters",
+              attributes: ["id", "no", "name"],
+              include: [
+                {
+                  model: Module,
+                  as: "modules",
+                  attributes: ["id", "no", "name", "videoUrl", "duration"],
+                },
+              ],
+            },
+          ],
         },
+      ],
+      order: [
+        ["Course", "id", "ASC"],
+        ["Course", "chapters", "no", "ASC"],
+        ["Course", "chapters", "modules", "no", "ASC"],
       ],
     });
 
@@ -319,6 +454,8 @@ const openCourse = async (req, res, next) => {
 module.exports = {
   myDetails,
   updateMyDetails,
+  getUserNotification,
+  openNotification,
   changeMyPassword,
   getMyCourses,
   openCourse,

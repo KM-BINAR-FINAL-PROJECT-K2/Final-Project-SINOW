@@ -37,8 +37,4 @@ router.delete(
   Notification.deleteNotificationByTitle
 );
 
-router.get("/user", authenticate, Notification.getUserNotification);
-
-router.get("/user/:id", authenticate, Notification.openNotification);
-
 module.exports = router;

@@ -88,69 +88,6 @@ const getAllNotifications = async (req, res, next) => {
   }
 };
 
-const getUserNotification = async (req, res, next) => {
-  try {
-    const userNotifications = await Notification.findAll({
-      where: {
-        userId: req.user.id,
-      },
-      order: [["createdAt", "DESC"]],
-    });
-
-    if (userNotifications.length === 0 || !userNotifications) {
-      return next(new ApiError("Tidak ada notifikasi", 404));
-    }
-
-    res.status(200).json({
-      status: "Success",
-      data: userNotifications,
-    });
-  } catch (err) {
-    return next(new ApiError(err.message, 500));
-  }
-};
-
-const openNotification = async (req, res, next) => {
-  try {
-    const { id } = req.params;
-    const userId = req.user.id;
-
-    const notification = await Notification.findByPk(id);
-    if (!notification) {
-      return next(new ApiError("Notifikasi tidak ditemukan", 404));
-    }
-    console.log("\n\n\n\n\n\n\n\n", notification.userId, userId);
-    if (notification.userId !== userId) {
-      return next(new ApiError("Akses ditolak", 403));
-    }
-
-    const [rowCount, [updatedNotification]] = await Notification.update(
-      {
-        isRead: true,
-      },
-      {
-        where: {
-          id,
-          userId,
-        },
-        returning: true,
-      }
-    );
-
-    if (rowCount === 0 && !updatedNotification) {
-      return next(new ApiError("Gagal mengupdate notifikasi"));
-    }
-
-    res.status(200).json({
-      status: "Success",
-      message: "Berhasil membuka notifikasi",
-      data: updatedNotification,
-    });
-  } catch (error) {
-    return next(new ApiError(error.message, 500));
-  }
-};
-
 const updateNotification = async (req, res, next) => {
   try {
     const { id } = req.params;
@@ -246,8 +183,6 @@ const deleteNotificationByTitle = async (req, res, next) => {
 module.exports = {
   createNotificationForAllUsers,
   getAllNotifications,
-  getUserNotification,
-  openNotification,
   updateNotification,
   deleteNotificationById,
   deleteNotificationByTitle,

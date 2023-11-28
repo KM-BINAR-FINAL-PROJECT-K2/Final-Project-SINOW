@@ -32,6 +32,22 @@ module.exports = (sequelize, DataTypes) => {
       progress: DataTypes.INTEGER,
     },
     {
+      hooks: {
+        beforeCreate: async (userCourse, options) => {
+          const course = await userCourse.getCourse();
+
+          await course.update({
+            totalUser: course.totalUser + 1,
+          });
+        },
+        beforeDestroy: async (userCourse, options) => {
+          const course = await userCourse.getCourse();
+
+          await course.update({
+            totalUser: course.totalUser - 1,
+          });
+        },
+      },
       sequelize,
       modelName: "UserCourse",
     }
