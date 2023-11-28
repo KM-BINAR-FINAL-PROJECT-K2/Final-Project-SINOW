@@ -36,7 +36,7 @@ const sendOTPVerificationEmail = async (email, next) => {
       text: `Kode verifikasi OTP Anda adalah:\n${otpCode}\n\nGunakan kode ini untuk verifikasi akun Anda. Jangan berikan kode ini kepada siapa pun.\n\nTerima kasih,\nSiNow Team`,
     };
 
-    await sendMail(mailOptions);
+    await sendMail(mailOptions, next);
 
     return otpCode;
   } catch (error) {
