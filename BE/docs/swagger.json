@@ -445,7 +445,7 @@
                     "description": "Password user",
                     "example": "password"
                   },
-                  "confirm_password": {
+                  "confirmPassword": {
                     "type": "string",
                     "description": "Confirm password user",
                     "example": "password"
@@ -1737,7 +1737,7 @@
                   "chapterId": {
                     "type": "integer",
                     "example": "3",
-                    "description": "Chapter terkait"
+                    "description": "ID Chapter untuk module"
                   }
                 }
               }
@@ -2135,7 +2135,7 @@
                   "chapterId": {
                     "type": "integer",
                     "example": "3",
-                    "description": "Chapter terkait"
+                    "description": "ID Chapter untuk module"
                   }
                 }
               }
