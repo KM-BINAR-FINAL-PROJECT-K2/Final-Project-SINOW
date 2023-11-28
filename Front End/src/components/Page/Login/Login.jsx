@@ -77,7 +77,7 @@ export default function Login() {
             </label>
             <input
               type="text"
-              className="border sm:text-sm rounded-lg block w-full p-3 text-lightgrey-05"
+              className="border text-neutral-05 sm:text-sm rounded-lg block w-full p-3"
               placeholder="ID Admin Kamu"
               required=""
               name="email"
@@ -101,13 +101,13 @@ export default function Login() {
                 type={showPassword ? "text" : "password"}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="border sm:text-sm rounded-l-lg block w-full p-3 text-lightgrey-05 border-r-0"
+                className="border sm:text-sm rounded-l-lg block w-full p-3 text-neutral-05 border-r-0"
                 placeholder="Masukkan Password"
                 required=""
                 name="password"
               />
               <span
-                className="border p-[20px] sm:p-[20px] cursor-pointer rounded-r-lg border-l-0"
+                className="border justify-center p-5 sm:p-5 cursor-pointer rounded-r-lg border-l-0"
                 onClick={handleTogglePassword}
               >
                 {showPassword ? (
