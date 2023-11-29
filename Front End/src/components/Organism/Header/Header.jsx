@@ -14,7 +14,7 @@ export default function Header() {
       try {
         if (adminToken) {
           const res = await axios.get(
-            "http://localhost:3000/api/v1/auth/check-token",
+            "https://sinow-production.up.railway.app/api/v1/auth/check-token",
             {
               headers: {
                 "Content-Type": "application/json",
