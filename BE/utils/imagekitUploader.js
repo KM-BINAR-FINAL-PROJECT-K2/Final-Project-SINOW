@@ -1,5 +1,6 @@
 const imagekit = require("../lib/imagekit");
 const ApiError = require("./ApiError");
+const ffmpeg = require("fluent-ffmpeg");
 
 const uploadVideo = async (file, next) => {
   try {
@@ -8,8 +9,10 @@ const uploadVideo = async (file, next) => {
     }
     const extension = getExtension(file);
 
+    const compressedVideo = await compressVideo(file.buffer);
+
     const uploadedVideo = await imagekit.upload({
-      file: file.buffer,
+      file: compressedVideo,
       fileName: `Video-${Date.now()}.${extension}`,
     });
 
@@ -60,6 +63,27 @@ const isImageFile = (file) => {
 const getExtension = (file) => {
   const split = file.originalname.split(".");
   return split[split.length - 1];
+};
+
+const compressVideo = async (videoBuffer) => {
+  return new Promise((resolve, reject) => {
+    const ffmpegCommand = ffmpeg();
+    ffmpegCommand
+      .input(videoBuffer)
+      .videoCodec("libx264")
+      .audioCodec("aac")
+      .outputOptions(["-preset veryfast"])
+      .on("end", () => {
+        console.log("Video compressed successfully");
+        resolve(ffmpegCommand.pipe());
+      })
+      .on("error", (err) => {
+        console.error("Error compressing video:", err);
+        reject(err);
+      })
+      .toFormat("mp4")
+      .pipe();
+  });
 };
 
 module.exports = {

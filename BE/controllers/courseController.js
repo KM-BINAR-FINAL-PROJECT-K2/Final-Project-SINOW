@@ -176,7 +176,6 @@ const getAllCourse = async (req, res, next) => {
       data: courses,
     });
   } catch (error) {
-    console.log(error);
     return next(new ApiError(error, 500));
   }
 };

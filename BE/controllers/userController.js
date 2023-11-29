@@ -14,11 +14,11 @@ const ApiError = require("../utils/ApiError");
 const validator = require("validator");
 const bcrypt = require("bcrypt");
 const { createNotification } = require("../utils/notificationUtils");
+const { createToken } = require("../utils/jwtUtils");
 
 const { uploadImage } = require("../utils/imagekitUploader");
 
 const myDetails = async (req, res, next) => {
-  console.log(req.user);
   try {
     res.status(200).json({
       status: "Success",
@@ -36,11 +36,11 @@ const updateMyDetails = async (req, res, next) => {
     let { email, phoneNumber } = req.body;
     const { id } = req.user;
 
-    const user = await User.findByPk(id, {
+    const checkUser = await User.findByPk(id, {
       include: ["Auth"],
     });
 
-    if (!user) {
+    if (!checkUser) {
       return next(new ApiError("User tidak ditemukan", 404));
     }
 
@@ -73,7 +73,7 @@ const updateMyDetails = async (req, res, next) => {
       if (!validator.isEmail(email)) {
         return next(new ApiError("Email tidak valid", 400));
       }
-      if (email !== user.Auth.email) {
+      if (email !== checkUser.Auth.email) {
         const isEmailExist = await Auth.findOne({ where: { email } });
         if (isEmailExist) {
           return next(new ApiError("Email sudah terdaftar di lain akun", 400));
@@ -90,7 +90,7 @@ const updateMyDetails = async (req, res, next) => {
         return next(new ApiError("Nomor telepon tidak valid", 400));
       }
 
-      if (phoneNumber !== user.Auth.phoneNumber) {
+      if (phoneNumber !== checkUser.Auth.phoneNumber) {
         const isPhoneNumberExist = await Auth.findOne({
           where: { phoneNumber },
         });
@@ -119,7 +119,7 @@ const updateMyDetails = async (req, res, next) => {
     if (updateDataAuth.email || updateDataAuth.phoneNumber) {
       const [rowCountAuth, [updatedAuth]] = await Auth.update(updateDataAuth, {
         where: {
-          id: user.Auth.id,
+          id: checkUser.Auth.id,
         },
         returning: true,
       });
@@ -127,6 +127,17 @@ const updateMyDetails = async (req, res, next) => {
         return next(new ApiError("Gagal update auth", 500));
       }
     }
+
+    const user = await User.findByPk(id, {
+      include: ["Auth"],
+    });
+
+    req.user = user;
+
+    const token = createToken(
+      { id: user.id, name: user.name, role: user.role },
+      next
+    );
 
     await createNotification(
       "Notifikasi",
@@ -138,6 +149,9 @@ const updateMyDetails = async (req, res, next) => {
     res.status(200).json({
       status: "Success",
       message: `Berhasil mengupdate data user id: ${id}`,
+      data: {
+        token,
+      },
     });
   } catch (error) {
     return next(new ApiError(error.message, 500));
@@ -220,7 +234,6 @@ const openNotification = async (req, res, next) => {
     if (!notification) {
       return next(new ApiError("Notifikasi tidak ditemukan", 404));
     }
-    console.log("\n\n\n\n\n\n\n\n", notification.userId, userId);
     if (notification.userId !== userId) {
       return next(new ApiError("Akses ditolak", 403));
     }
@@ -301,6 +314,7 @@ const getMyCourses = async (req, res, next) => {
     const course = await UserCourse.findAll({
       where: {
         userId: user.id,
+        isAccessible: true,
       },
       include: [
         {
