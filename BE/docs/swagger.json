@@ -1781,7 +1781,7 @@
                     },
                     "message": {
                       "type": "string",
-                      "example": "Semua field harus terisi / harus menyertakan video"
+                      "example": "Field nama harus di isi/ Nomor dan courseId harus berupa angka / harus menyertakan video"
                     }
                   }
                 }
@@ -2423,7 +2423,7 @@
                     },
                     "message": {
                       "type": "string",
-                      "example": "Semua field harus terisi"
+                      "example": "Field nama harus di isi / Nomor dan courseId harus berupa angka"
                     }
                   }
                 }
