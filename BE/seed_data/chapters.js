@@ -1,6 +1,5 @@
 module.exports = [
   {
-    id: 1,
     no: 1,
     name: "Pendahuluan",
     courseId: 1,
@@ -8,7 +7,6 @@ module.exports = [
     updatedAt: new Date(),
   },
   {
-    id: 2,
     no: 2,
     name: "Memulai Frontend",
     courseId: 1,
@@ -16,7 +14,6 @@ module.exports = [
     updatedAt: new Date(),
   },
   {
-    id: 3,
     no: 1,
     name: "Pendahuluan",
     courseId: 2,
@@ -24,7 +21,6 @@ module.exports = [
     updatedAt: new Date(),
   },
   {
-    id: 4,
     no: 2,
     name: "Memulai UI/UX design",
     courseId: 2,
@@ -32,7 +28,6 @@ module.exports = [
     updatedAt: new Date(),
   },
   {
-    id: 5,
     no: 1,
     name: "Pendahuluan",
     courseId: 3,
@@ -40,7 +35,6 @@ module.exports = [
     updatedAt: new Date(),
   },
   {
-    id: 6,
     no: 2,
     name: "Memulai bahasa assembly x86",
     courseId: 3,
@@ -48,7 +42,6 @@ module.exports = [
     updatedAt: new Date(),
   },
   {
-    id: 7,
     no: 3,
     name: "Membuat aplikasi android menggunakan asembly x86",
     courseId: 3,
@@ -56,7 +49,6 @@ module.exports = [
     updatedAt: new Date(),
   },
   {
-    id: 8,
     no: 1,
     name: "Pendahuluan",
     courseId: 4,
@@ -64,7 +56,6 @@ module.exports = [
     updatedAt: new Date(),
   },
   {
-    id: 9,
     no: 2,
     name: "Membuat Restful API dengan C",
     courseId: 4,
@@ -72,7 +63,6 @@ module.exports = [
     updatedAt: new Date(),
   },
   {
-    id: 10,
     no: 1,
     name: "Pendahuluan",
     courseId: 5,
@@ -80,7 +70,6 @@ module.exports = [
     updatedAt: new Date(),
   },
   {
-    id: 11,
     no: 2,
     name: "Memulai Backend dengan Golang",
     courseId: 5,
@@ -88,7 +77,6 @@ module.exports = [
     updatedAt: new Date(),
   },
   {
-    id: 12,
     no: 1,
     name: "Pendahuluan",
     courseId: 6,
@@ -96,7 +84,6 @@ module.exports = [
     updatedAt: new Date(),
   },
   {
-    id: 13,
     no: 2,
     name: "Memulai Android Studio",
     courseId: 6,
@@ -104,7 +91,6 @@ module.exports = [
     updatedAt: new Date(),
   },
   {
-    id: 14,
     no: 1,
     name: "Pendahuluan",
     courseId: 7,
@@ -112,7 +98,6 @@ module.exports = [
     updatedAt: new Date(),
   },
   {
-    id: 15,
     no: 2,
     name: "Memulai UI/UX design",
     courseId: 7,
@@ -120,7 +105,6 @@ module.exports = [
     updatedAt: new Date(),
   },
   {
-    id: 16,
     no: 1,
     name: "Pendahuluan",
     courseId: 8,
@@ -128,7 +112,6 @@ module.exports = [
     updatedAt: new Date(),
   },
   {
-    id: 17,
     no: 2,
     name: "Memulai UI/UX design",
     courseId: 8,
@@ -136,7 +119,6 @@ module.exports = [
     updatedAt: new Date(),
   },
   {
-    id: 18,
     no: 1,
     name: "Pendahuluan",
     courseId: 9,
@@ -144,7 +126,6 @@ module.exports = [
     updatedAt: new Date(),
   },
   {
-    id: 19,
     no: 2,
     name: "Memulai Product Management",
     courseId: 9,
@@ -152,7 +133,6 @@ module.exports = [
     updatedAt: new Date(),
   },
   {
-    id: 20,
     no: 1,
     name: "Pendahuluan",
     courseId: 10,
@@ -160,7 +140,6 @@ module.exports = [
     updatedAt: new Date(),
   },
   {
-    id: 21,
     no: 2,
     name: "Memulai iOS dengan Swift",
     courseId: 10,
@@ -168,7 +147,6 @@ module.exports = [
     updatedAt: new Date(),
   },
   {
-    id: 22,
     no: 1,
     name: "Pendahuluan",
     courseId: 11,
@@ -176,7 +154,6 @@ module.exports = [
     updatedAt: new Date(),
   },
   {
-    id: 23,
     no: 2,
     name: "Memulai Data Science",
     courseId: 11,
@@ -184,7 +161,6 @@ module.exports = [
     updatedAt: new Date(),
   },
   {
-    id: 24,
     no: 1,
     name: "Pendahuluan",
     courseId: 12,
@@ -192,7 +168,6 @@ module.exports = [
     updatedAt: new Date(),
   },
   {
-    id: 25,
     no: 2,
     name: "Memulai Android dengan Android Studio",
     courseId: 12,

@@ -8,9 +8,15 @@ const createModule = async (req, res, next) => {
   try {
     let { name, no, chapterId } = req.body;
 
-    if (!name || !no || !chapterId) {
-      return next(new ApiError("Semua field harus di isi", 400));
+    const missingFields = ["name", "no", "chapterId"].filter((field) => !req.body[field]);
+    if (missingFields.length > 0) {
+      return next(new ApiError(`Field ${missingFields.join(", ")} harus di isi`, 400));
     }
+
+    if (isNaN(no) || isNaN(chapterId)) {
+      return next(new ApiError("Nomor dan chapterId harus berupa angka", 400));
+    }
+    no = parseInt(no, 10);
 
     if (!req.file) {
       return next(new ApiError("Harus menyertakan video", 400));
@@ -20,23 +26,34 @@ const createModule = async (req, res, next) => {
     if (!checkChapter) {
       return next(new ApiError("Chapter tidak ditemukan, silahkan cek daftar chapter untuk melihat chapter yang tersedia", 404));
     }
-
     const existingModule = await Module.findOne({
       where: {
-        name,
-        chapterId,
+        [Op.and]: [
+          { chapterId },
+          {
+            [Op.or]: [{ name }, { no }],
+          },
+        ],
       },
     });
 
     if (existingModule) {
-      return next(new ApiError("Nama modul sudah ada dalam chapter ini", 400));
+      const errorMessage = [];
+
+      if (existingModule.name === name) {
+        errorMessage.push("Nama modul sudah ada dalam chapter ini");
+      }
+
+      if (existingModule.no === no) {
+        errorMessage.push("Nomor modul sudah digunakan dalam chapter ini");
+      }
+
+      if (errorMessage.length > 0) {
+        return next(new ApiError(errorMessage.join(", "), 400));
+      }
     }
 
     const uploadedFile = await uploadVideo(req.file);
-
-    if (!uploadedFile) {
-      return next(new ApiError("Gagal upload video", 400));
-    }
 
     const module = await Module.create({
       name,
@@ -160,9 +177,30 @@ const updateModule = async (req, res, next) => {
     }
 
     if (no) {
-      updateData.no = no;
+      const parsedNo = parseInt(no, 10);
+      if (isNaN(parsedNo)) {
+        return next(new ApiError("Nomor modul harus berupa angka", 400));
+      }
+
+      const checkNumber = await Module.findOne({
+        where: {
+          no: parsedNo,
+          chapterId,
+          id: { [Op.not]: id },
+        },
+      });
+
+      if (checkNumber) {
+        return next(new ApiError("Nomor modul sudah digunakan dalam chapter ini", 400));
+      }
+      updateData.no = parsedNo;
     }
+
     if (chapterId) {
+      if (isNaN(chapterId)) {
+        return next(new ApiError("Chapter ID harus berupa angka", 400));
+      }
+
       const checkChapter = await Chapter.findByPk(chapterId);
       if (!checkChapter) {
         return next(new ApiError("Chapter tidak ditemukan, silahkan cek daftar chapter untuk melihat chapter yang tersedia", 404));
