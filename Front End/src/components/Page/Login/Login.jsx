@@ -16,6 +16,8 @@ export default function Login() {
 
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [passwordError, setPasswordError] = useState("");
+  const [passwordLengthError, setPasswordLengthError] = useState("");
 
   const handleTogglePassword = () => {
     setShowPassword((prevShowPassword) => !prevShowPassword);
@@ -26,6 +28,12 @@ export default function Login() {
     const formData = new FormData(e.target);
     const email = formData.get("email");
     const password = formData.get("password");
+    // if password less than 8
+    if (password.length < 8) {
+      setPasswordError(""); // Reset pesan kesalahan password salah
+      setPasswordLengthError("Password harus memiliki minimal 8 karakter."); // Pesan password lebih dari 8
+      return;
+    }
 
     setForm({
       email,
@@ -38,7 +46,7 @@ export default function Login() {
       try {
         if (form.email && form.password) {
           const res = await axios.post(
-            "http://localhost:3000/api/v1/auth/login",
+            " https://sinow-production.up.railway.app/api/v1/auth/login",
             form,
             {
               headers: {
@@ -55,6 +63,9 @@ export default function Login() {
         }
       } catch (error) {
         console.error(error.response.data);
+        setPasswordLengthError(""); // Reset pesan kesalahan panjang password
+        setPasswordError("ID Admin atau Password salah. Silakan coba lagi."); // pesan ID atau password salah
+        return;
       }
     };
     login();
@@ -71,6 +82,15 @@ export default function Login() {
           <h1 className="text-darkblue-05 text-xl font-bold md:text-2xl">
             Log In
           </h1>
+          {/* message if ID and password wrong */}
+          {passwordError && (
+            <p className="text-alert-danger text-sm mt-2">{passwordError}</p>
+          )}
+          {/* message if passsword less than 8 */}
+          {passwordLengthError && (
+            <p className="text-red-500 text-sm mt-2">{passwordLengthError}</p>
+          )}
+
           <div>
             <label htmlFor="idAdmin" className="block mb-2 font-bold">
               ID Admin
@@ -107,13 +127,13 @@ export default function Login() {
                 name="password"
               />
               <span
-                className="border justify-center p-5 sm:p-5 cursor-pointer rounded-r-lg border-l-0"
+                className="border justify-center p-5 sm:p-1 cursor-pointer rounded-r-lg border-l-0"
                 onClick={handleTogglePassword}
               >
                 {showPassword ? (
-                  <FiEyeOff style={{ color: "#B0B0B0" }} />
+                  <FiEyeOff style={{ margin: "10px", color: "#B0B0B0" }} />
                 ) : (
-                  <FiEye style={{ color: "#B0B0B0" }} />
+                  <FiEye style={{ margin: "10px", color: "#B0B0B0" }} />
                 )}
               </span>
             </div>
