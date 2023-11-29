@@ -113,7 +113,6 @@ const updateCategory = async (req, res, next) => {
     }
 
     if (Object.keys(updateData).length !== 0) {
-      console.log(updateData);
       const [rowCount, [updatedCategory]] = await Category.update(updateData, {
         where: {
           id,
