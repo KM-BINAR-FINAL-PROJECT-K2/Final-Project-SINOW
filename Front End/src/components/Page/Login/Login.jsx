@@ -64,7 +64,7 @@ export default function Login() {
       } catch (error) {
         console.error(error.response.data);
         setPasswordLengthError(""); // Reset pesan kesalahan panjang password
-        setPasswordError("ID Admin atau Password salah. Silakan coba lagi."); // pesan ID atau password salah
+        setPasswordError("ID Admin atau Password salah. Silakan coba lagi."); // Pesan ID atau password salah
         return;
       }
     };
