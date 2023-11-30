@@ -10,6 +10,7 @@ const Category = require("./categoryRouter");
 const Notification = require("./notificationRouter");
 const User = require("./userRouter");
 const Chapter = require("./chapterRouter");
+const Benefit = require("./benefitRouter");
 
 router.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 router.use("/api/v1/auth", Auth);
@@ -19,5 +20,6 @@ router.use("/api/v1/chapters", Chapter);
 router.use("/api/v1/modules", Module);
 router.use("/api/v1/category", Category);
 router.use("/api/v1/notifications", Notification);
+router.use("/api/v1/benefits", Benefit);
 
 module.exports = router;
