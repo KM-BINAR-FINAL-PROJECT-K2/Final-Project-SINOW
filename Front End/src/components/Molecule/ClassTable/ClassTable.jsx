@@ -1,23 +1,6 @@
-import axios from "axios";
-import { useEffect, useState } from "react";
+/* eslint-disable react/prop-types */
 import { rupiah } from "../../../utils/formatCurrency";
-export default function ClassTable() {
-  const [classSinow, setClassSinow] = useState([]);
-  useEffect(() => {
-    const getClasses = async () => {
-      try {
-        const res = await axios.get(
-          "https://sinow-production.up.railway.app/api/v1/courses"
-        );
-        setClassSinow(res.data.data);
-        console.log(res.data.data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    getClasses();
-  }, []);
-
+export default function ClassTable({ toggleShowInfo, dataClass }) {
   return (
     <table className="w-full table-auto">
       <thead className="sticky top-0 bg-lightblue-05 z-10">
@@ -44,7 +27,7 @@ export default function ClassTable() {
         </tr>
       </thead>
       <tbody>
-        {classSinow.map((classItem) => (
+        {dataClass.map((classItem) => (
           <tr key={classItem.id} className="border-b border-slate-200">
             <td className="py-2 px-4 text-[10px] font-bold text-gray-600">
               {classItem.classCode ? classItem.classCode.toUpperCase() : "-"}
@@ -78,7 +61,10 @@ export default function ClassTable() {
               <button className="m-2 py-[3px] font-bold text-neutral-01 inline-block rounded-[10px] bg-alert-danger w-[50px] text-center leading-[14px]">
                 Hapus
               </button>
-              <button className="m-2 py-[3px] font-bold text-neutral-01 inline-block rounded-[10px] bg-alert-success w-[50px] text-center leading-[14px]">
+              <button
+                onClick={() => toggleShowInfo(classItem.id)}
+                className="m-2 py-[3px] font-bold text-neutral-01 inline-block rounded-[10px] bg-alert-success w-[50px] text-center leading-[14px]"
+              >
                 Info
               </button>
             </td>

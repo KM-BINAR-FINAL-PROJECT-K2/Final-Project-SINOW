@@ -1,13 +1,41 @@
-import { useState } from "react";
+/* eslint-disable react/prop-types */
+import axios from "axios";
+import { useEffect, useState } from "react";
 import Card from "../../Molecule/Card/Card";
 import Navigation from "../../Template/Navigation/Navigation";
 import ClassTable from "../../Molecule/ClassTable/ClassTable";
 import AddClass from "../../Organism/AddClass/AddClass";
+import InfoClass from "../../Organism/InfoClass/InfoClass";
 export default function CRUD() {
   const [showAddClass, setShowAddClass] = useState(false);
+  const [showInfoClass, setshowInfoClass] = useState(false);
+  const [classSinow, setClassSinow] = useState([]);
+  const [keyClass, setKeyClass] = useState("");
+
+  useEffect(() => {
+    const getClasses = async () => {
+      try {
+        setClassSinow([]);
+        const res = await axios.get("http://localhost:3000/api/v1/courses");
+        setClassSinow(res.data.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    getClasses();
+    return () => {
+      setClassSinow([]);
+    };
+  }, []);
 
   const toggleShowContainer = () => {
     setShowAddClass(!showAddClass);
+  };
+
+  const toggleShowInfo = (id) => {
+    setKeyClass(id);
+    setshowInfoClass(!showInfoClass);
   };
   return (
     <>
@@ -77,12 +105,22 @@ export default function CRUD() {
         <section className="border-red-500 mx-4 n lg:mx-[64px] mb-64 ">
           <div className="border-blue-500 ">
             <section className="border-yellow-300 overflow-auto">
-              <ClassTable />{" "}
+              <ClassTable
+                toggleShowInfo={toggleShowInfo}
+                dataClass={classSinow}
+              />{" "}
             </section>
           </div>
         </section>
       </Navigation>
       {showAddClass && <AddClass toggleShowContainer={toggleShowContainer} />}
+      {showInfoClass && (
+        <InfoClass
+          toggleShowContainer={toggleShowInfo}
+          dataClass={classSinow}
+          id={keyClass}
+        />
+      )}
     </>
   );
 }
