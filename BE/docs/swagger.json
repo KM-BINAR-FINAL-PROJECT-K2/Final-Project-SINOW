@@ -2958,7 +2958,6 @@
                 "properties": {
                   "name": {
                     "type": "string",
-                    "example": "Software Development Engineer",
                     "description": "Nama category"
                   },
                   "image": {

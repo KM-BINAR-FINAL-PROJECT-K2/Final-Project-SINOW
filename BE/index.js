@@ -3,7 +3,6 @@ require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const morgan = require("morgan");
-const path = require("path");
 
 const ApiError = require("./utils/ApiError");
 const errorController = require("./controllers/errorController");
@@ -18,9 +17,19 @@ app.use(morgan("dev"));
 
 app.use(router);
 
+app.use("/", (req, res, next) => {
+  if (req.originalUrl === "/") {
+    res.status(301).redirect(`${process.env.BASE_URL}/api-docs`);
+  } else {
+    next();
+  }
+});
+
 app.all("*", (req, res, next) => {
-  const filePath = path.join(__dirname, "views", "404-not-found.html");
-  res.status(404).sendFile(filePath);
+  res.status(404).json({
+    status: "Failed",
+    message: `Halaman tidak ditemukan, silahkan cek dokumentasi ${process.env.BASE_URL}/api-docs/`,
+  });
 });
 
 app.use(errorController);

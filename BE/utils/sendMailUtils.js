@@ -58,7 +58,7 @@ const sendResetPasswordEmail = async (auth, next) => {
       subject: "SiNow - Reset Password",
       html: `<p>Dear ${auth.User.name},</p>
       <p>Kami menerima permintaan untuk mereset kata sandi akun SiNow Anda. Silakan klik tautan berikut:</p>
-      <p><a href="http://${process.env.CLIENT_URL}/reset-password/${generateToken}">Reset Password</a></p>
+      <p><a href="${process.env.BASE_URL}/reset-password/${generateToken}">Reset Password</a></p>
       <p>Jika Anda tidak membuat permintaan ini, harap abaikan email ini.</p>
       <p>Terima kasih,</br>SiNow Team</p>`,
     };

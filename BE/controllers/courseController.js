@@ -31,8 +31,8 @@ const createCourse = async (req, res, next) => {
       description,
       classCode,
       type,
-      price,
-      promo,
+      price = 0,
+      promo = 0,
       courseBy,
     } = req.body;
 
@@ -54,9 +54,7 @@ const createCourse = async (req, res, next) => {
       );
     }
 
-    const { image, video } = req.files || {};
-
-    if (!image || !video) {
+    if (Object.keys(req.files).length !== 2) {
       return next(new ApiError("Harus menyertakan gambar dan video", 400));
     }
 
@@ -246,6 +244,7 @@ const updateCourse = async (req, res, next) => {
       classCode,
       type,
       price,
+      promo,
       courseBy,
     } = req.body;
 
@@ -304,8 +303,16 @@ const updateCourse = async (req, res, next) => {
       updateData.type = type;
     }
 
+    if (promo) {
+      if (promo < 0 || promo > 100) {
+        return next(new ApiError("Diskon harus antara 0 dan 100", 400));
+      }
+      validateNumericFields({ promo }, next);
+      updateData.promo = promo;
+    }
+
     if (req.files || Object.keys(req.files).length > 0) {
-      if (req.files.image[0]) {
+      if (req.files.image) {
         const { imageUrl } = await uploadImage(req.files.image[0]);
         if (!imageUrl) {
           return next(new ApiError("Gagal upload image", 400));
@@ -313,7 +320,7 @@ const updateCourse = async (req, res, next) => {
         updateData.imageUrl = imageUrl;
       }
 
-      if (req.files.video[0]) {
+      if (req.files.video) {
         const { videoUrl } = await uploadVideo(req.files.video[0]);
         if (!videoUrl) {
           return next(new ApiError("Gagal upload video", 400));
