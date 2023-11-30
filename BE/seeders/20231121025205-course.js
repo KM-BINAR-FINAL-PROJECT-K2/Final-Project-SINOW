@@ -3,7 +3,6 @@
 /** @type {import('sequelize-cli').Migration} */
 
 const categories = require("../seed_data/categories");
-const courses = require("../seed_data/courses");
 
 const randomUsers = (usersData) => {
   const users = usersData[0];
