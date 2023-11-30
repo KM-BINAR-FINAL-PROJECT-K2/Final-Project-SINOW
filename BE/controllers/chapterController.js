@@ -164,8 +164,11 @@ const updateChapter = async (req, res, next) => {
     }
 
     if (courseId) {
-      const course = await Course.findByPk(courseId);
-      if (!course) {
+      if (isNaN(courseId)) {
+        return next(new ApiError("Chapter ID harus berupa angka", 400));
+      }
+      const checkCourse = await Course.findByPk(courseId);
+      if (!checkCourse) {
         return next(new ApiError("Kursus tidak tersedia, silahkan cek daftar kursus untuk melihat kursus yang tersedia", 404));
       }
       updateData.courseId = courseId;

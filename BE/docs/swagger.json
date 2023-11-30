@@ -33,6 +33,10 @@
     {
       "name": "Notification",
       "description": "API ini untuk mengelola notification resources"
+    },
+    {
+      "name": "Benefit",
+      "description": "API ini untuk mengelola benefit resources"
     }
   ],
   "servers": [
@@ -2773,6 +2777,26 @@
               }
             }
           },
+          "400": {
+            "description": "Data chapter tidak valid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Failed"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Nama chapter sudah ada / Course ID harus berupa angka"
+                    }
+                  }
+                }
+              }
+            }
+          },
           "401": {
             "description": "Token tidak valid",
             "content": {
@@ -4034,6 +4058,530 @@
                     "status": {
                       "type": "string",
                       "example": "Failed"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/benefits": {
+      "post": {
+        "tags": ["Benefit"],
+        "summary": "API untuk menambahkan data benefitr",
+        "description": "API ini digunakan untuk admin menambahkan data benefit",
+        "security": [
+          {
+            "bearerToken": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "description": {
+                    "type": "string",
+                    "example": "Bisa Mengikuti Real Project untuk Membangun Portofolio",
+                    "description": "Deskripsi benefit mengikuti course"
+                  },
+                  "courseId": {
+                    "type": "integer",
+                    "example": "4",
+                    "description": "Course terkait"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Sukses menambahkan data benefit",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Success"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Berhasil menambahkan data benefit"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Data benefit tidak valid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Failed"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Field description harus di isi / Course ID harus berupa angka"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Token tidak valid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Failed"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Token tidak valid"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Bukan admin",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Failed"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Kamu tidak berkepentingan disini"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Course tidak tersedia",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Failed"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Kursus tidak tersedia, silahkan cek daftar kursus untuk melihat kursus yang tersedia"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": ["Benefit"],
+        "summary": "API untuk menampilkan semua data benefit",
+        "description": "API ini digunakan untuk user mengecek benefit",
+        "responses": {
+          "200": {
+            "description": "Semua data benefit sukses diambil",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Success"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Berhasil mendapatkan data benefit"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "integer",
+                          "example": 1
+                        },
+                        "description": {
+                          "type": "string",
+                          "example": "Kursus ramah pemula untuk belajar pengembangan web dengan React JS tanpa perlu latar belakang IT."
+                        },
+                        "courseId": {
+                          "type": "integer",
+                          "example": "1"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Data benefit tidak ditemukan",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Failed"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Data benefit tidak ditemukan"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/benefits/{id}": {
+      "get": {
+        "tags": ["Benefit"],
+        "summary": "API untuk mengecek benefit berdasarkan ID",
+        "description": "API ini digunakan untuk user mengecek benefit berdasarkan ID",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "ID Benefit"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Data benefit sukses diambil",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Success"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Berhasil mendapatkan data benefit id : 2"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "integer",
+                          "example": 2
+                        },
+                        "description": {
+                          "type": "string",
+                          "example": "Fokus pada membangun pemahaman yang kuat tentang React JS bagi peserta tanpa pengalaman teknis."
+                        },
+                        "courseId": {
+                          "type": "integer",
+                          "example": "1"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Data benefit tidak ditemukan",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Failed"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Data benefit tidak ditemukan"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": ["Benefit"],
+        "summary": "API untuk mengupdate data benefitr",
+        "description": "API ini digunakan untuk admin mengupdate data benefit",
+        "security": [
+          {
+            "bearerToken": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "ID Benefit"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "description": {
+                    "type": "string",
+                    "example": "Fokus pada membangun pemahaman yang kuat tentang React JS bagi peserta tanpa pengalaman teknis."
+                  },
+                  "courseId": {
+                    "type": "integer",
+                    "example": "6",
+                    "description": "Course terkait"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Sukses mengupdate data benefit",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Success"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Berhasil mengupdate data benefit"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Data benefit tidak valid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Failed"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Benefit sudah ada / Course ID harus berupa angka"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Token tidak valid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Failed"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Token tidak valid"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Bukan admin",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Failed"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Kamu tidak berkepentingan disini"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Data benefit tidak ditemukan",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Failed"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "benefit tidak ditemukan"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Benefit"],
+        "summary": "API untuk menghapus benefit",
+        "description": "API ini digunakan untuk admin menghapus benefit",
+        "security": [
+          {
+            "bearerToken": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "ID benefit"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Sukses menghapus benefit",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Success"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Berhasil menghapus data benefit"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Token tidak valid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Failed"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Token tidak valid"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Bukan admin",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Failed"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Kamu tidak berkepentingan disini"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Data benefit tidak ditemukan",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Failed"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "benefit tidak ditemukan"
                     }
                   }
                 }
