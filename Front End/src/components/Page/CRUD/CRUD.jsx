@@ -79,18 +79,65 @@ export default function CRUD() {
                   </span>
                 </div>
               </button>
-              <button className="bg-neutral-01 border-2 border-darkblue-05 inline-block rounded-[16px] py-[5px] px-[10px] w-[125px] h-[34px] mr-[16px] my-[10px]">
-                <div className="flex gap-[8px] items-center justify-center">
-                  <img
-                    src="/images/prefix-wrapper.png"
-                    alt=""
-                    className="w-[24px] h-[24px]"
-                  />
-                  <span className="text-[16px] font-semibold text-darkblue-05">
+              <div className="flex items-center justify-center">
+                <img
+                  src="/images/prefix-wrapper.png"
+                  alt=""
+                  className="border-darkblue-05  border-2 rounded-l-[18px] border-r-0 p-[5px] w-[36px] h-[36px]"
+                />
+                <select
+                  style={{
+                    appearance: "none",
+                  }}
+                  className="bg-neutral-01 border-2 rounded-r-[18px] border-darkblue-05 border-l-0 inline-block ] py-[5px] px-[10px] w-[80px] h-[36px] mr-[16px] my-[10px] font-semibold text-darkblue-05"
+                  name="filter"
+                  placeholder="Filter"
+                  id="filter"
+                >
+                  <option
+                    className="font-normal text-neutral-05"
+                    value="default"
+                  >
                     Filter
-                  </span>
-                </div>
-              </button>
+                  </option>
+                  <option
+                    className="font-normal text-neutral-05"
+                    value="kategori"
+                  >
+                    Kategori
+                  </option>
+                  <option
+                    className="font-normal text-neutral-05"
+                    value="kelas_premium"
+                  >
+                    Nama Kelas
+                  </option>
+                  <option
+                    className="font-normal text-neutral-05"
+                    value="status"
+                  >
+                    Tipe Kelas
+                  </option>
+                  <option
+                    className="font-normal text-neutral-05"
+                    value="metode_pembayaran"
+                  >
+                    Level
+                  </option>
+                  <option
+                    className="font-normal text-neutral-05"
+                    value="tanggal_bayar"
+                  >
+                    Harga Kelas
+                  </option>
+                  <option
+                    className="font-normal text-neutral-05"
+                    value="tanggal_bayar"
+                  >
+                    Aksi
+                  </option>
+                </select>
+              </div>
               <button className="">
                 <img
                   src="/images/search-icon-2.png"
