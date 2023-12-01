@@ -1,13 +1,15 @@
 /* eslint-disable react/prop-types */
+import { useContext } from "react";
 import { rupiah } from "../../../utils/formatCurrency";
 import Loading from "../Loading/Loading";
+import { Loader } from "../../../context/Loader";
 export default function ClassTable({
   toggleShowInfo,
   toggleShowRemove,
   dataClass,
-  loading,
   error,
 }) {
+  const { isLoading } = useContext(Loader);
   return (
     <table className="w-full table-auto">
       <thead className="sticky top-0 bg-lightblue-05 z-10">
@@ -34,7 +36,7 @@ export default function ClassTable({
         </tr>
       </thead>
       <tbody>
-        {loading && (
+        {isLoading && (
           <tr>
             <td colSpan={7} className="text-center">
               <Loading />
@@ -75,7 +77,7 @@ export default function ClassTable({
           </>
         )}
 
-        {!loading &&
+        {!isLoading &&
           !error &&
           dataClass.map((classItem) => (
             <tr key={classItem.id} className="border-b border-slate-200">
