@@ -6,9 +6,11 @@ import Navigation from "../../Template/Navigation/Navigation";
 import ClassTable from "../../Molecule/ClassTable/ClassTable";
 import AddClass from "../../Organism/AddClass/AddClass";
 import InfoClass from "../../Organism/InfoClass/InfoClass";
+import RemoveClass from "../../Molecule/RemoveClass/RemoveClass";
 export default function CRUD() {
   const [showAddClass, setShowAddClass] = useState(false);
   const [showInfoClass, setshowInfoClass] = useState(false);
+  const [showRemoveClass, setShowRemoveClass] = useState(false);
   const [classSinow, setClassSinow] = useState([]);
   const [keyClass, setKeyClass] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -46,6 +48,10 @@ export default function CRUD() {
   const toggleShowInfo = (id) => {
     setKeyClass(id);
     setshowInfoClass(!showInfoClass);
+  };
+
+  const toggleShowWarning = () => {
+    setShowRemoveClass(!showRemoveClass);
   };
 
   const handleSearchButtonClick = () => {
@@ -134,44 +140,44 @@ export default function CRUD() {
                   >
                     Filter
                   </option>
-                    <option
-                      className="font-normal text-neutral-05"
-                      value="kategori"
-                    >
-                      Kategori
-                    </option>
-                    <option
-                      className="font-normal text-neutral-05"
-                      value="kelas_premium"
-                    >
-                      Nama Kelas
-                    </option>
-                    <option
-                      className="font-normal text-neutral-05"
-                      value="status"
-                    >
-                      Tipe Kelas
-                    </option>
-                    <option
-                      className="font-normal text-neutral-05"
-                      value="metode_pembayaran"
-                    >
-                      Level
-                    </option>
-                    <option
-                      className="font-normal text-neutral-05"
-                      value="tanggal_bayar"
-                    >
-                      Harga Kelas
-                    </option>
-                    <option
-                      className="font-normal text-neutral-05"
-                      value="tanggal_bayar"
-                    >
-                      Aksi
-                    </option>
-                  </select>
-                </div>
+                  <option
+                    className="font-normal text-neutral-05"
+                    value="kategori"
+                  >
+                    Kategori
+                  </option>
+                  <option
+                    className="font-normal text-neutral-05"
+                    value="kelas_premium"
+                  >
+                    Nama Kelas
+                  </option>
+                  <option
+                    className="font-normal text-neutral-05"
+                    value="status"
+                  >
+                    Tipe Kelas
+                  </option>
+                  <option
+                    className="font-normal text-neutral-05"
+                    value="metode_pembayaran"
+                  >
+                    Level
+                  </option>
+                  <option
+                    className="font-normal text-neutral-05"
+                    value="tanggal_bayar"
+                  >
+                    Harga Kelas
+                  </option>
+                  <option
+                    className="font-normal text-neutral-05"
+                    value="tanggal_bayar"
+                  >
+                    Aksi
+                  </option>
+                </select>
+              </div>
               <button className="" onClick={handleSearchButtonClick}>
                 <img
                   src="/images/search-icon-2.png"
@@ -191,6 +197,7 @@ export default function CRUD() {
                 dataClass={classSinow}
                 loading={isLoading}
                 error={error}
+                toggleShowRemove={toggleShowWarning}
               />{" "}
             </section>
           </div>
@@ -203,6 +210,9 @@ export default function CRUD() {
           dataClass={classSinow}
           id={keyClass}
         />
+      )}
+      {showRemoveClass && (
+        <RemoveClass toggleShowContainer={toggleShowWarning} />
       )}
     </>
   );

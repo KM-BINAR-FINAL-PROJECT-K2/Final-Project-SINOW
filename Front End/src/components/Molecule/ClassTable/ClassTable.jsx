@@ -3,6 +3,7 @@ import { rupiah } from "../../../utils/formatCurrency";
 import Loading from "../Loading/Loading";
 export default function ClassTable({
   toggleShowInfo,
+  toggleShowRemove,
   dataClass,
   loading,
   error,
@@ -107,7 +108,10 @@ export default function ClassTable({
                 <button className="m-2 py-[3px] font-bold text-neutral-01 inline-block rounded-[10px] w-[50px] bg-darkblue-05 text-center leading-[14px]">
                   Ubah
                 </button>
-                <button className="m-2 py-[3px] font-bold text-neutral-01 inline-block rounded-[10px] bg-alert-danger w-[50px] text-center leading-[14px]">
+                <button
+                  className="m-2 py-[3px] font-bold text-neutral-01 inline-block rounded-[10px] bg-alert-danger w-[50px] text-center leading-[14px]"
+                  onClick={toggleShowRemove}
+                >
                   Hapus
                 </button>
                 <button
