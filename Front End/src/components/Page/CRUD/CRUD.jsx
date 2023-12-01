@@ -1,12 +1,14 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react/prop-types */
 import axios from "axios";
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import Card from "../../Molecule/Card/Card";
 import Navigation from "../../Template/Navigation/Navigation";
 import ClassTable from "../../Molecule/ClassTable/ClassTable";
 import AddClass from "../../Organism/AddClass/AddClass";
 import InfoClass from "../../Organism/InfoClass/InfoClass";
 import RemoveClass from "../../Molecule/RemoveClass/RemoveClass";
+import { Loader } from "../../../context/Loader";
 export default function CRUD() {
   const [showAddClass, setShowAddClass] = useState(false);
   const [showInfoClass, setshowInfoClass] = useState(false);
@@ -14,7 +16,7 @@ export default function CRUD() {
   const [classSinow, setClassSinow] = useState([]);
   const [keyClass, setKeyClass] = useState("");
   const [idRemove, setIdRemove] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
+  const { setIsLoading } = useContext(Loader);
   const [error, setError] = useState("");
   const searchInputRefCrud = useRef(null);
   const [inputPlaceholder, setInputPlaceholder] = useState("Cari");
@@ -197,7 +199,6 @@ export default function CRUD() {
               <ClassTable
                 toggleShowInfo={toggleShowInfo}
                 dataClass={classSinow}
-                loading={isLoading}
                 error={error}
                 toggleShowRemove={toggleShowWarning}
               />{" "}
