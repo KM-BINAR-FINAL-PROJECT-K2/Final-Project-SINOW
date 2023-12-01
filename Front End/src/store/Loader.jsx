@@ -1,6 +1,7 @@
+/* eslint-disable react/prop-types */
 import { createContext, useState } from "react";
 
-const LoaderContext = createContext();
+export const LoaderContext = createContext();
 
 const LoaderContextProvider = ({ children }) => {
   const [isLoading, setIsLoading] = useState(false);
@@ -12,5 +13,4 @@ const LoaderContextProvider = ({ children }) => {
   );
 };
 
-export const Loader = LoaderContext;
 export default LoaderContextProvider;

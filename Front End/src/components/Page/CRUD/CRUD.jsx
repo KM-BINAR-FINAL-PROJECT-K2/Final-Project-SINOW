@@ -1,37 +1,43 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react/prop-types */
 import axios from "axios";
-import { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useEffect } from "react";
 import Card from "../../Molecule/Card/Card";
 import Navigation from "../../Template/Navigation/Navigation";
 import ClassTable from "../../Molecule/ClassTable/ClassTable";
 import AddClass from "../../Organism/AddClass/AddClass";
 import InfoClass from "../../Organism/InfoClass/InfoClass";
 import RemoveClass from "../../Molecule/RemoveClass/RemoveClass";
-import { Loader } from "../../../context/Loader";
+import { LoaderContext } from "../../../store/Loader";
+import { AddClassContext } from "../../../store/AddClassUI";
+import { InfoClassContext } from "../../../store/InfoClassUI";
+import { RemoveClassContext } from "../../../store/RemoveClassUI";
+import { ClassContext } from "../../../store/ClassStore";
+import { KeyContext } from "../../../store/ActiveKey";
+import { ErrorContext } from "../../../store/Error";
+import { PlaceholderContext } from "../../../store/PlaceholderStore";
 export default function CRUD() {
-  const [showAddClass, setShowAddClass] = useState(false);
-  const [showInfoClass, setshowInfoClass] = useState(false);
-  const [showRemoveClass, setShowRemoveClass] = useState(false);
-  const [classSinow, setClassSinow] = useState([]);
-  const [keyClass, setKeyClass] = useState("");
-  const [idRemove, setIdRemove] = useState("");
-  const { setIsLoading } = useContext(Loader);
-  const [error, setError] = useState("");
-  const searchInputRefCrud = useRef(null);
-  const [inputPlaceholder, setInputPlaceholder] = useState("Cari");
+  const { showAddClass, toggleShowContainer } = useContext(AddClassContext);
+  const { setIsLoading } = useContext(LoaderContext);
+  const { showInfoClass } = useContext(InfoClassContext);
+  const { showRemoveClass } = useContext(RemoveClassContext);
+  const { classSinow, setClassSinow } = useContext(ClassContext);
+  const { keyClass } = useContext(KeyContext);
+  const { setIsError } = useContext(ErrorContext);
+
+  const { handleSearchButtonClick } = useContext(PlaceholderContext);
 
   useEffect(() => {
     const getClasses = async () => {
       try {
         setClassSinow([]);
         setIsLoading(true);
-        setError("");
+        setIsError("");
         const res = await axios.get("http://localhost:3000/api/v1/courses");
         setClassSinow(res.data.data);
       } catch (error) {
-        setError(
-          error.response ? error.response.data.message : "Network Error"
+        setIsError(
+          error.response ? error.response.data.message : "Kesalahan Jaringan"
         );
       } finally {
         setIsLoading(false);
@@ -44,44 +50,13 @@ export default function CRUD() {
     };
   }, []);
 
-  const toggleShowContainer = () => {
-    setShowAddClass(!showAddClass);
-  };
-
-  const toggleShowInfo = (id) => {
-    setKeyClass(id);
-    setshowInfoClass(!showInfoClass);
-  };
-
-  const toggleShowWarning = (id) => {
-    setIdRemove(id);
-    setShowRemoveClass(!showRemoveClass);
-  };
-
-  const handleSearchButtonClick = () => {
-    if (searchInputRefCrud.current) {
-      searchInputRefCrud.current.focus();
-      setInputPlaceholder("Mulai mengetik...");
-    }
-  };
-
-  const handleInputBlur = () => {
-    if (searchInputRefCrud.current && !searchInputRefCrud.current.value) {
-      setInputPlaceholder("Cari");
-    }
-  };
-
   const totalQuantity = classSinow.reduce((total, item) => {
     return total + item.totalUser;
   }, 0);
 
   return (
     <>
-      <Navigation
-        searchInputRefCrud={searchInputRefCrud}
-        inputPlaceholderCrud={inputPlaceholder}
-        onBlurCrud={handleInputBlur}
-      >
+      <Navigation>
         <section className="mx-8 lg:mx-16 flex justify-around gap-6 flex-wrap mb-[54px]">
           <Card
             color={"bg-darkblue-03"}
@@ -196,32 +171,14 @@ export default function CRUD() {
         <section className=" mx-4 n lg:mx-[64px] mb-64 ">
           <div className="">
             <section className="overflow-auto">
-              <ClassTable
-                toggleShowInfo={toggleShowInfo}
-                dataClass={classSinow}
-                error={error}
-                toggleShowRemove={toggleShowWarning}
-              />{" "}
+              <ClassTable />{" "}
             </section>
           </div>
         </section>
       </Navigation>
-      {showAddClass && <AddClass toggleShowContainer={toggleShowContainer} />}
-      {showInfoClass && (
-        <InfoClass
-          toggleShowContainer={toggleShowInfo}
-          dataClass={classSinow}
-          id={keyClass}
-        />
-      )}
-      {showRemoveClass && (
-        <RemoveClass
-          toggleShowContainer={toggleShowWarning}
-          id={idRemove}
-          data={classSinow}
-          update={setClassSinow}
-        />
-      )}
+      {showAddClass && <AddClass />}
+      {showInfoClass && <InfoClass id={keyClass} />}
+      {showRemoveClass && <RemoveClass id={keyClass} />}
     </>
   );
 }

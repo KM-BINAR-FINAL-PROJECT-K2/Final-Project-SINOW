@@ -4,6 +4,11 @@ import DashboadAdmin from "./components/Page/DashboardAdmin/DashboardAdmin";
 import Login from "./components/Page/Login/Login";
 import ResetPassword from "./components/Page/ResetPass/ResetPass";
 import BackToLogin from "./components/Page/ResetPass/BackToLogin";
+import AddClassContextProvider from "./store/AddClassUI";
+import InfoClassContextProvider from "./store/InfoClassUI";
+import RemoveClassContextProvider from "./store/RemoveClassUI";
+import ClassContextProvider from "./store/ClassStore";
+import KeyContextProvider from "./store/ActiveKey";
 
 export default function App() {
   return (
@@ -15,7 +20,19 @@ export default function App() {
         />
         <Route
           path="/kelola-kelas"
-          element={<CRUD location={"/kelola-kelas"} />}
+          element={
+            <AddClassContextProvider>
+              <ClassContextProvider>
+                <KeyContextProvider>
+                  <RemoveClassContextProvider>
+                    <InfoClassContextProvider>
+                      <CRUD location={"/kelola-kelas"} />
+                    </InfoClassContextProvider>
+                  </RemoveClassContextProvider>
+                </KeyContextProvider>
+              </ClassContextProvider>
+            </AddClassContextProvider>
+          }
         />
         <Route path="/" element={<Login />} />
         <Route path="/reset-password" element={<ResetPassword />} />

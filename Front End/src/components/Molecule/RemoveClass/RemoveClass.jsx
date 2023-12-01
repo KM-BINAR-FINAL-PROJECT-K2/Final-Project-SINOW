@@ -1,10 +1,16 @@
+/* eslint-disable react/prop-types */
 import Swal from "sweetalert2";
 import MaskotLogout from "/images/logo-n-maskot/forgot_pass_aset.png";
 import axios from "axios";
-export default function RemoveClass({ toggleShowContainer, id, data, update }) {
+import { useContext } from "react";
+import { ClassContext } from "../../../store/ClassStore";
+import { RemoveClassContext } from "../../../store/RemoveClassUI";
+export default function RemoveClass({ id }) {
+  const { classSinow, setClassSinow } = useContext(ClassContext);
+  const { toggleShowWarning } = useContext(RemoveClassContext);
   const handleRemoveButton = async () => {
     try {
-      toggleShowContainer();
+      toggleShowWarning();
       await axios.delete(`http://localhost:3000/api/v1/courses/${id}`, {
         headers: {
           "Content-Type": "application/json",
@@ -12,17 +18,10 @@ export default function RemoveClass({ toggleShowContainer, id, data, update }) {
         },
       });
 
-      // Dapatkan indeks item yang dihapus
-      const deletedIndex = data.findIndex((item) => item.id === id);
-
-      // Buat salinan array untuk memodifikasinya
-      const updatedClasses = [...data];
-
-      // Hapus item dari array
+      const deletedIndex = classSinow.findIndex((item) => item.id === id);
+      const updatedClasses = [...classSinow];
       updatedClasses.splice(deletedIndex, 1);
-
-      // Perbarui state dengan data yang telah diperbarui
-      update(updatedClasses);
+      setClassSinow(updatedClasses);
 
       Swal.fire({
         position: "center",
@@ -39,7 +38,7 @@ export default function RemoveClass({ toggleShowContainer, id, data, update }) {
   return (
     <div
       className={`
-       ${toggleShowContainer ? "block" : "hidden"}}`}
+       ${toggleShowWarning ? "block" : "hidden"}}`}
     >
       <div className="fixed z-[1000] bg-black opacity-40 top-0 left-0 right-0 bottom-0"></div>
       <div className="absolute z-[1000] top-0 left-0 right-0 bottom-0 ">
@@ -65,7 +64,7 @@ export default function RemoveClass({ toggleShowContainer, id, data, update }) {
               </button>
               <button
                 className="text-white text-[16px] font-semibold bg-alert-success p-[12px] rounded-[25px] flex-1 md:w-[200px]"
-                onClick={toggleShowContainer}
+                onClick={toggleShowWarning}
               >
                 Batal
               </button>

@@ -2,14 +2,17 @@
 import { useContext } from "react";
 import { rupiah } from "../../../utils/formatCurrency";
 import Loading from "../Loading/Loading";
-import { Loader } from "../../../context/Loader";
-export default function ClassTable({
-  toggleShowInfo,
-  toggleShowRemove,
-  dataClass,
-  error,
-}) {
-  const { isLoading } = useContext(Loader);
+import { LoaderContext } from "../../../store/Loader";
+import { ClassContext } from "../../../store/ClassStore";
+import { InfoClassContext } from "../../../store/InfoClassUI";
+import { RemoveClassContext } from "../../../store/RemoveClassUI";
+import { ErrorContext } from "../../../store/Error";
+export default function ClassTable() {
+  const { isLoading } = useContext(LoaderContext);
+  const { isError } = useContext(ErrorContext);
+  const { classSinow } = useContext(ClassContext);
+  const { toggleShowInfo } = useContext(InfoClassContext);
+  const { toggleShowWarning } = useContext(RemoveClassContext);
   return (
     <table className="w-full table-auto">
       <thead className="sticky top-0 bg-lightblue-05 z-10">
@@ -44,7 +47,7 @@ export default function ClassTable({
           </tr>
         )}
 
-        {error && (
+        {isError && (
           <>
             <tr>
               <td colSpan={7} className="text-center">
@@ -55,7 +58,7 @@ export default function ClassTable({
                     className="w-[100px]"
                   />
                   <p className="text-xl text-alert-danger">
-                    {error}
+                    {isError}
                     <br />
                     <span className="text-sm text-gray-800 font-normal">
                       Cobalah untuk{" "}
@@ -78,8 +81,8 @@ export default function ClassTable({
         )}
 
         {!isLoading &&
-          !error &&
-          dataClass.map((classItem) => (
+          !isError &&
+          classSinow.map((classItem) => (
             <tr key={classItem.id} className="border-b border-slate-200">
               <td className="py-2 px-4 text-[10px] font-bold text-gray-600">
                 {classItem.classCode ? classItem.classCode.toUpperCase() : "-"}
@@ -112,7 +115,7 @@ export default function ClassTable({
                 </button>
                 <button
                   className="m-2 py-[3px] font-bold text-neutral-01 inline-block rounded-[10px] bg-alert-danger w-[50px] text-center leading-[14px]"
-                  onClick={() => toggleShowRemove(classItem.id)}
+                  onClick={() => toggleShowWarning(classItem.id)}
                 >
                   Hapus
                 </button>
