@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Card from "../../Molecule/Card/Card";
 import Navigation from "../../Template/Navigation/Navigation";
 import ClassTable from "../../Molecule/ClassTable/ClassTable";
@@ -11,15 +11,25 @@ export default function CRUD() {
   const [showInfoClass, setshowInfoClass] = useState(false);
   const [classSinow, setClassSinow] = useState([]);
   const [keyClass, setKeyClass] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
+  const searchInputRefCrud = useRef(null);
+  const [inputPlaceholder, setInputPlaceholder] = useState("Cari");
 
   useEffect(() => {
     const getClasses = async () => {
       try {
         setClassSinow([]);
+        setIsLoading(true);
+        setError("");
         const res = await axios.get("http://localhost:3000/api/v1/courses");
         setClassSinow(res.data.data);
       } catch (error) {
-        console.log(error);
+        setError(
+          error.response ? error.response.data.message : "Network Error"
+        );
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -37,24 +47,48 @@ export default function CRUD() {
     setKeyClass(id);
     setshowInfoClass(!showInfoClass);
   };
+
+  const handleSearchButtonClick = () => {
+    if (searchInputRefCrud.current) {
+      searchInputRefCrud.current.focus();
+      setInputPlaceholder("Mulai mengetik...");
+    }
+  };
+
+  const handleInputBlur = () => {
+    if (searchInputRefCrud.current && !searchInputRefCrud.current.value) {
+      setInputPlaceholder("Cari");
+    }
+  };
+
+  const totalQuantity = classSinow.reduce((total, item) => {
+    return total + item.totalUser;
+  }, 0);
+
   return (
     <>
-      <Navigation>
+      <Navigation
+        searchInputRefCrud={searchInputRefCrud}
+        inputPlaceholderCrud={inputPlaceholder}
+        onBlurCrud={handleInputBlur}
+      >
         <section className="mx-8 lg:mx-16 flex justify-around gap-6 flex-wrap mb-[54px]">
           <Card
             color={"bg-darkblue-03"}
-            quantity={"450"}
-            description={"Active Users"}
+            quantity={totalQuantity}
+            description={"Pengguna Aktif"}
           />
           <Card
             color={"bg-alert-success"}
-            quantity={"25"}
-            description={"Active Class"}
+            quantity={classSinow.length}
+            description={"Kelas Terdaftar"}
           />
           <Card
             color={"bg-darkblue-05"}
-            quantity={"20"}
-            description={"Premium Class"}
+            quantity={
+              classSinow.filter((item) => item.type === "premium").length
+            }
+            description={"Kelas Premium"}
           />
         </section>
 
@@ -100,45 +134,45 @@ export default function CRUD() {
                   >
                     Filter
                   </option>
-                  <option
-                    className="font-normal text-neutral-05"
-                    value="kategori"
-                  >
-                    Kategori
-                  </option>
-                  <option
-                    className="font-normal text-neutral-05"
-                    value="kelas_premium"
-                  >
-                    Nama Kelas
-                  </option>
-                  <option
-                    className="font-normal text-neutral-05"
-                    value="status"
-                  >
-                    Tipe Kelas
-                  </option>
-                  <option
-                    className="font-normal text-neutral-05"
-                    value="metode_pembayaran"
-                  >
-                    Level
-                  </option>
-                  <option
-                    className="font-normal text-neutral-05"
-                    value="tanggal_bayar"
-                  >
-                    Harga Kelas
-                  </option>
-                  <option
-                    className="font-normal text-neutral-05"
-                    value="tanggal_bayar"
-                  >
-                    Aksi
-                  </option>
-                </select>
-              </div>
-              <button className="">
+                    <option
+                      className="font-normal text-neutral-05"
+                      value="kategori"
+                    >
+                      Kategori
+                    </option>
+                    <option
+                      className="font-normal text-neutral-05"
+                      value="kelas_premium"
+                    >
+                      Nama Kelas
+                    </option>
+                    <option
+                      className="font-normal text-neutral-05"
+                      value="status"
+                    >
+                      Tipe Kelas
+                    </option>
+                    <option
+                      className="font-normal text-neutral-05"
+                      value="metode_pembayaran"
+                    >
+                      Level
+                    </option>
+                    <option
+                      className="font-normal text-neutral-05"
+                      value="tanggal_bayar"
+                    >
+                      Harga Kelas
+                    </option>
+                    <option
+                      className="font-normal text-neutral-05"
+                      value="tanggal_bayar"
+                    >
+                      Aksi
+                    </option>
+                  </select>
+                </div>
+              <button className="" onClick={handleSearchButtonClick}>
                 <img
                   src="/images/search-icon-2.png"
                   alt=""
@@ -149,12 +183,14 @@ export default function CRUD() {
           </div>
         </section>
 
-        <section className="border-red-500 mx-4 n lg:mx-[64px] mb-64 ">
-          <div className="border-blue-500 ">
-            <section className="border-yellow-300 overflow-auto">
+        <section className=" mx-4 n lg:mx-[64px] mb-64 ">
+          <div className="">
+            <section className="overflow-auto">
               <ClassTable
                 toggleShowInfo={toggleShowInfo}
                 dataClass={classSinow}
+                loading={isLoading}
+                error={error}
               />{" "}
             </section>
           </div>

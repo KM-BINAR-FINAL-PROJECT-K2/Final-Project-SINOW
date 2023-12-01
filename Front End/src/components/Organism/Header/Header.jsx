@@ -1,7 +1,11 @@
 /* eslint-disable react/prop-types */
 import axios from "axios";
 import { useEffect, useState } from "react";
-export default function Header() {
+export default function Header({
+  searchInputRef,
+  placeholderSearch,
+  handleInputBlur,
+}) {
   const [name, setName] = useState("Admin");
 
   const adminToken = localStorage.getItem("token");
@@ -56,10 +60,12 @@ export default function Header() {
       <div className="border-alert-danger flex items-center flex-wrap">
         <input
           type="text"
+          ref={searchInputRef}
           name="search"
           id="search"
           className="py-[13px] px-[20px] md:py-[15px] md:px-[24px] mr-[10px] border border-gray-300 rounded-l-lg focus:outline-none focus:border-gray-300 focus:ring-gray-300 text-gray-500 text-[12px]"
-          placeholder="Cari"
+          placeholder={placeholderSearch}
+          onBlur={handleInputBlur}
         />
         <div className="bg-neutral-01 md:p-[5px] p-[5px] -m-3 rounded-r-lg  border-y-[1px] border-r-[1px] border-gray-300">
           <button className="bg-darkblue-05 p-[3.6px] md:p-[7px] rounded-lg">

@@ -6,7 +6,11 @@ export default function Card({ color, quantity, description }) {
     >
       <div className="flex gap-4 items-center flex-wrap">
         <span className="bg-neutral-01 p-4 rounded-full">
-          <img src="/images/users.png" alt="" className="w-8 h-8" />
+          <img
+            src="/images/logo-n-maskot/Sticker-1.png"
+            alt=""
+            className="w-8 h-8"
+          />
         </span>
         <span className="text-neutral-01">
           <p className="text-[18px] md:text-[24px]">{quantity}</p>

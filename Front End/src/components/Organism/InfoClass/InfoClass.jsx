@@ -1,9 +1,9 @@
 /* eslint-disable react/prop-types */
 import { rupiah } from "../../../utils/formatCurrency";
 import { convertSeconds } from "../../../utils/formatHour";
+import "./rating.css";
 export default function InfoClass({ toggleShowContainer, dataClass, id }) {
   const details = dataClass[id - 1];
-  console.log(details);
   return (
     <div
       className={`
@@ -154,12 +154,19 @@ export default function InfoClass({ toggleShowContainer, dataClass, id }) {
                 >
                   Rating
                 </label>
-                <input
-                  type="text"
-                  placeholder={`${details.rating ? details.rating : "-"} / 5`}
-                  className="px-[16px] py-[12px] rounded-[16px] border-neutral-02 text-gray-800 border w-full "
-                  disabled
-                />
+                <div>
+                  <p className="text-[50px] font-bold text-gray-600 -mb-3 inline-block">
+                    {`${details.rating ? details.rating : "0"}`}{" "}
+                  </p>
+                  <span className="w-[16px] text-gray-600 font-semibold">
+                    {" "}
+                    / 5
+                  </span>
+                </div>
+                <i
+                  className="text-lg"
+                  data-star={`${details.rating ? details.rating : "0"} / 5`}
+                ></i>
               </div>
               <div className="mb-[15px]">
                 <label className="mb-[4px] block text-[10px] text-black font-semibold">
