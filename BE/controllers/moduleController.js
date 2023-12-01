@@ -246,14 +246,7 @@ const deleteModule = async (req, res, next) => {
       return next(new ApiError("Module tidak ditemukan", 404));
     }
 
-    const isModuleDeleted = await Module.destroy({
-      where: {
-        id,
-      },
-    });
-    if (!isModuleDeleted) {
-      return next(new ApiError("Gagal menghapus module", 500));
-    }
+    module.destroy();
 
     res.status(200).json({
       status: "success",
