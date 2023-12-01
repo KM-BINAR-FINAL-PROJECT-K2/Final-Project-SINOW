@@ -56,7 +56,7 @@ export default function ClassTable({
                     {error}
                     <br />
                     <span className="text-sm text-gray-800 font-normal">
-                      Cek jaringan dan Muat{" "}
+                      Cobalah untuk{" "}
                       <a
                         href="/kelola-kelas"
                         className="text-darkblue-03 font-medium"
@@ -65,7 +65,7 @@ export default function ClassTable({
                           window.location.reload();
                         }}
                       >
-                        Ulang Halaman
+                        Muat Ulang Halaman
                       </a>
                     </span>
                   </p>
@@ -110,7 +110,7 @@ export default function ClassTable({
                 </button>
                 <button
                   className="m-2 py-[3px] font-bold text-neutral-01 inline-block rounded-[10px] bg-alert-danger w-[50px] text-center leading-[14px]"
-                  onClick={toggleShowRemove}
+                  onClick={() => toggleShowRemove(classItem.id)}
                 >
                   Hapus
                 </button>

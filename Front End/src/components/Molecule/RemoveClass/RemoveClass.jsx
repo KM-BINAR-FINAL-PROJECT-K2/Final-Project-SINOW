@@ -1,5 +1,41 @@
+import Swal from "sweetalert2";
 import MaskotLogout from "/images/logo-n-maskot/forgot_pass_aset.png";
-export default function RemoveClass({ toggleShowContainer }) {
+import axios from "axios";
+export default function RemoveClass({ toggleShowContainer, id, data, update }) {
+  const handleRemoveButton = async () => {
+    try {
+      toggleShowContainer();
+      await axios.delete(`http://localhost:3000/api/v1/courses/${id}`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+
+      // Dapatkan indeks item yang dihapus
+      const deletedIndex = data.findIndex((item) => item.id === id);
+
+      // Buat salinan array untuk memodifikasinya
+      const updatedClasses = [...data];
+
+      // Hapus item dari array
+      updatedClasses.splice(deletedIndex, 1);
+
+      // Perbarui state dengan data yang telah diperbarui
+      update(updatedClasses);
+
+      Swal.fire({
+        position: "center",
+        icon: "success",
+        title: "Data berhasil dihapus",
+        showConfirmButton: false,
+        timer: 1500,
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <div
       className={`
@@ -21,7 +57,10 @@ export default function RemoveClass({ toggleShowContainer }) {
             </div>
 
             <div className="flex justify-between flex-wrap gap-[15px] m-[50px]">
-              <button className="text-white text-[16px] font-semibold bg-alert-danger p-[12px] rounded-[25px] flex-1 md:w-[200px]">
+              <button
+                className="text-white text-[16px] font-semibold bg-alert-danger p-[12px] rounded-[25px] flex-1 md:w-[200px]"
+                onClick={handleRemoveButton}
+              >
                 Hapus
               </button>
               <button

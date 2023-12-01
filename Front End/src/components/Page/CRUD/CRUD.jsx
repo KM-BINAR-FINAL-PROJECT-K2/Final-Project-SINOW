@@ -13,6 +13,7 @@ export default function CRUD() {
   const [showRemoveClass, setShowRemoveClass] = useState(false);
   const [classSinow, setClassSinow] = useState([]);
   const [keyClass, setKeyClass] = useState("");
+  const [idRemove, setIdRemove] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const searchInputRefCrud = useRef(null);
@@ -50,7 +51,8 @@ export default function CRUD() {
     setshowInfoClass(!showInfoClass);
   };
 
-  const toggleShowWarning = () => {
+  const toggleShowWarning = (id) => {
+    setIdRemove(id);
     setShowRemoveClass(!showRemoveClass);
   };
 
@@ -212,7 +214,12 @@ export default function CRUD() {
         />
       )}
       {showRemoveClass && (
-        <RemoveClass toggleShowContainer={toggleShowWarning} />
+        <RemoveClass
+          toggleShowContainer={toggleShowWarning}
+          id={idRemove}
+          data={classSinow}
+          update={setClassSinow}
+        />
       )}
     </>
   );
