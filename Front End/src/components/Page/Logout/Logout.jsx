@@ -1,4 +1,4 @@
-import { useRef, useref, useState } from "react";
+/* eslint-disable react/prop-types */
 import MaskotLogout from "/images/logo-n-maskot/forgot_pass_aset.png";
 export default function Logout({ toggleShowLogout }) {
   const handleLogout = () => {
