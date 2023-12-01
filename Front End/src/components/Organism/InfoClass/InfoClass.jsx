@@ -1,22 +1,24 @@
 /* eslint-disable react/prop-types */
+import { useContext } from "react";
 import { rupiah } from "../../../utils/formatCurrency";
 import { convertSeconds } from "../../../utils/formatHour";
 import "./rating.css";
-export default function InfoClass({ toggleShowContainer, dataClass, id }) {
-  const details = dataClass[id - 1];
+import { ClassContext } from "../../../store/ClassStore";
+import { InfoClassContext } from "../../../store/InfoClassUI";
+export default function InfoClass({ id }) {
+  const { classSinow } = useContext(ClassContext);
+  const { toggleShowInfo } = useContext(InfoClassContext);
+  const details = classSinow.find((item) => item.id === id);
   return (
     <div
       className={`
-       ${toggleShowContainer ? "block" : "hidden"}}`}
+       ${toggleShowInfo ? "block" : "hidden"}}`}
     >
       <div className="fixed z-[1000] bg-black opacity-40 top-0 left-0 right-0 bottom-0"></div>
       <div className="absolute z-[1000] top-0 left-0 right-0 bottom-0 ">
         <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
           <div className="rounded-[16px] bg-neutral-01 w-[350px] sm:w-[500px] md:w-[600px] lg:w-[750px] h-[500px] py-[50px] text-center overflow-y-auto">
-            <button
-              onClick={toggleShowContainer}
-              className="absolute top-5 right-5"
-            >
+            <button onClick={toggleShowInfo} className="absolute top-5 right-5">
               <img
                 src="/images/x-icon.png"
                 className="w-[24px] h-[24px]"
@@ -29,7 +31,11 @@ export default function InfoClass({ toggleShowContainer, dataClass, id }) {
             <div className="text-left mt-[10px] md:mt-[15px] w-[80%] mx-auto">
               <div className="mb-[15px]">
                 <img
-                  src={details.imageUrl ? details.imageUrl : ""}
+                  src={
+                    details.imageUrl
+                      ? details.imageUrl
+                      : "/images/logo-n-maskot/Stiker-1.png"
+                  }
                   alt="image"
                   className="w-[200px] md:w-[300px] h-[150px] rounded-[16px] object-cover mx-auto mb-3"
                   disabled
@@ -143,6 +149,20 @@ export default function InfoClass({ toggleShowContainer, dataClass, id }) {
                 <input
                   type="text"
                   placeholder={rupiah(details.price)}
+                  className="px-[16px] py-[12px] rounded-[16px] border-neutral-02 text-gray-800 border w-full "
+                  disabled
+                />
+              </div>
+              <div className="mb-[15px]">
+                <label
+                  htmlFor="name"
+                  className="mb-[4px] block text-[10px] text-black font-semibold"
+                >
+                  Promo
+                </label>
+                <input
+                  type="text"
+                  placeholder={rupiah(details.promo)}
                   className="px-[16px] py-[12px] rounded-[16px] border-neutral-02 text-gray-800 border w-full "
                   disabled
                 />

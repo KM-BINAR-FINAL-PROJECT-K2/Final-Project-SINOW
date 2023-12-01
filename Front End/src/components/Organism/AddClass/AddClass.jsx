@@ -1,6 +1,8 @@
 /* eslint-disable react/prop-types */
-import { useRef, useState } from "react";
-export default function AddClass({ toggleShowContainer }) {
+import { useContext, useRef, useState } from "react";
+import { AddClassContext } from "../../../store/AddClassUI";
+export default function AddClass() {
+  const { toggleShowContainer } = useContext(AddClassContext);
   const [selectedFiles, setSelectedFiles] = useState(null);
   const fileInputRef = useRef(null);
 
