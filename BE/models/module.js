@@ -42,6 +42,10 @@ module.exports = (sequelize, DataTypes) => {
           const chapter = await module.getChapter();
           const course = await chapter.getCourse();
 
+          await chapter.update({
+            totalDuration: chapter.totalDuration + module.duration,
+          });
+
           await course.update({
             totalModule: course.totalModule + 1,
             totalDuration: course.totalDuration + module.duration,
@@ -51,6 +55,10 @@ module.exports = (sequelize, DataTypes) => {
           for (const module of modules) {
             const chapter = await module.getChapter();
             const course = await chapter.getCourse();
+
+            await chapter.update({
+              totalDuration: chapter.totalDuration + module.duration,
+            });
 
             await course.update({
               totalModule: course.totalModule + 1,

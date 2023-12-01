@@ -53,6 +53,7 @@ const createChapter = async (req, res, next) => {
       no,
       name,
       courseId,
+      totalDuration: 0,
     });
 
     res.status(201).json({
