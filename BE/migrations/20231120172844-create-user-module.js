@@ -15,12 +15,12 @@ module.exports = {
       moduleId: {
         type: Sequelize.INTEGER,
       },
-      isStudied: {
-        type: Sequelize.BOOLEAN,
+      chapterId: {
+        type: Sequelize.INTEGER,
       },
-      isUnlocked: {
-        type: Sequelize.BOOLEAN,
-        defaultValue: false,
+      status: {
+        type: Sequelize.STRING,
+        defaultValue: "terkunci",
       },
       createdAt: {
         allowNull: false,

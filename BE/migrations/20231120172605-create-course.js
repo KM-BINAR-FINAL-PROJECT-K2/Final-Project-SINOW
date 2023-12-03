@@ -22,7 +22,7 @@ module.exports = {
         type: Sequelize.STRING,
       },
       rating: {
-        type: Sequelize.FLOAT(3, 1),
+        type: Sequelize.FLOAT,
       },
       categoryId: {
         type: Sequelize.INTEGER,

@@ -9,6 +9,7 @@ const {
   Benefit,
   Chapter,
   Notification,
+  UserModule,
 } = require("../models");
 const ApiError = require("../utils/ApiError");
 const validator = require("validator");
@@ -360,45 +361,8 @@ const openCourse = async (req, res, next) => {
         progress: 0,
         lastSeen: new Date(),
       },
-      include: [
-        {
-          model: Course,
-          include: [
-            {
-              model: Category,
-              attributes: ["id", "name"],
-              as: "category",
-            },
-            {
-              model: User,
-              as: "courseCreator",
-              attributes: ["id", "name"],
-            },
-            {
-              model: Benefit,
-              as: "benefits",
-              attributes: ["id", "description"],
-            },
-            {
-              model: Chapter,
-              as: "chapters",
-              attributes: ["id", "no", "name"],
-              include: [
-                {
-                  model: Module,
-                  as: "modules",
-                  attributes: ["id", "no", "name", "videoUrl", "duration"],
-                },
-              ],
-            },
-          ],
-        },
-      ],
-      order: [
-        ["Course", "id", "ASC"],
-        ["Course", "chapters", "no", "ASC"],
-        ["Course", "chapters", "modules", "no", "ASC"],
-      ],
+      include: userCourseRelation.include,
+      order: userCourseRelation.order,
     });
 
     if (!created) {
@@ -413,26 +377,11 @@ const openCourse = async (req, res, next) => {
       });
     }
 
-    const newUserCourse = await UserCourse.findByPk(userCourse.id, {
+    const userCourseBuffer = await UserCourse.findByPk(userCourse.id, {
       include: [
         {
           model: Course,
           include: [
-            {
-              model: Category,
-              attributes: ["id", "name"],
-              as: "category",
-            },
-            {
-              model: User,
-              as: "courseCreator",
-              attributes: ["id", "name"],
-            },
-            {
-              model: Benefit,
-              as: "benefits",
-              attributes: ["id", "description"],
-            },
             {
               model: Chapter,
               as: "chapters",
@@ -448,21 +397,226 @@ const openCourse = async (req, res, next) => {
           ],
         },
       ],
-      order: [
-        ["Course", "id", "ASC"],
-        ["Course", "chapters", "no", "ASC"],
-        ["Course", "chapters", "modules", "no", "ASC"],
-      ],
+    });
+
+    if (userCourseBuffer.Course.chapters.length > 0) {
+      await Promise.all(
+        userCourseBuffer.Course.chapters.map(async (chapter, chapterIndex) => {
+          if (chapter.modules.length > 0) {
+            await Promise.all(
+              chapter.modules.map(async (module, moduleIndex) => {
+                try {
+                  await UserModule.create({
+                    userId: user.id,
+                    moduleId: module.id,
+                    chapterId: chapter.id,
+                    status:
+                      moduleIndex === 0 && chapterIndex === 0
+                        ? "terbuka"
+                        : "terkunci",
+                  });
+                } catch (error) {
+                  return next(new ApiError(error.message, 500));
+                }
+              })
+            );
+          }
+        })
+      );
+    }
+
+    const newUserCourse = await UserCourse.findByPk(userCourse.id, {
+      include: userCourseRelation.include,
+      order: userCourseRelation.order,
     });
 
     res.status(200).json({
       status: "Success",
       message: "Berhasil mengikuti course",
-      data: newUserCourse,
+      data: {
+        userCourse: newUserCourse,
+      },
     });
   } catch (error) {
     return next(new ApiError(error.message, 500));
   }
+};
+
+const openUserModule = async (req, res, next) => {
+  try {
+    const { user } = req;
+    const { courseId, userModuleId } = req.params;
+
+    const userCourse = await UserCourse.findOne({
+      where: {
+        userId: user.id,
+        courseId,
+      },
+      include: [
+        {
+          model: Course,
+          attributes: ["id", "type"],
+          include: [
+            {
+              model: Chapter,
+              as: "chapters",
+              attributes: ["id"],
+              include: [
+                {
+                  model: UserModule,
+                  as: "userModules",
+                  attributes: ["id", "status"],
+                  include: [
+                    {
+                      model: Module,
+                      as: "moduleData",
+                      attributes: ["no", "name"],
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+      ],
+      order: [["Course", "chapters", "userModules", "moduleData", "no", "ASC"]],
+    });
+
+    if (!userCourse) {
+      return next(new ApiError("User Course tidak ditemukan", 404));
+    }
+
+    const mergedUserModules = userCourse.Course.chapters.flatMap((chapter) => {
+      return chapter.userModules;
+    });
+
+    const indexUserModule = mergedUserModules.findIndex(
+      (module) => module.id === parseInt(userModuleId)
+    );
+
+    if (indexUserModule === -1) {
+      return next(
+        new ApiError("Tidak ada relasi antara user course dan user module", 404)
+      );
+    }
+
+    if (!userCourse.isAccessible) {
+      return next(
+        new ApiError(
+          "Anda perlu menyelesaikan pembayaran terlebih dahulu untuk mengakses course ini",
+          403
+        )
+      );
+    }
+
+    const totalModuleStudied = mergedUserModules.reduce((count, module) => {
+      return module.status === "dipelajari" ? count + 1 : count;
+    }, 0);
+
+    const userModule = await UserModule.findByPk(userModuleId, {
+      include: [
+        {
+          model: Module,
+          as: "moduleData",
+          attributes: ["no", "name", "videoUrl"],
+        },
+      ],
+    });
+
+    if (!userModule) {
+      return next(new ApiError("User Module tidak ditemukan", 404));
+    }
+
+    if (userModule.status === "terkunci") {
+      return next(
+        new ApiError(
+          "Module ini masih terkunci, selesaikan module yang sebelumnya dulu",
+          403
+        )
+      );
+    }
+
+    if (userModule.status === "terbuka") {
+      const nextUserModule = mergedUserModules[indexUserModule + 1];
+      if (nextUserModule) {
+        await nextUserModule.update({
+          status: "terbuka",
+        });
+      }
+
+      const progress = Math.ceil(
+        ((totalModuleStudied + 1) / mergedUserModules.length) * 100
+      );
+
+      await userCourse.update({
+        progress: progress,
+      });
+      await userModule.update({
+        status: "dipelajari",
+      });
+
+      await userModule.reload();
+    }
+
+    res.status(200).json({
+      status: "Success",
+      message: "Berhasil membuka module",
+      data: {
+        module: userModule.moduleData,
+      },
+    });
+  } catch (error) {
+    return next(new ApiError(error.message, 500));
+  }
+};
+
+const userCourseRelation = {
+  include: [
+    {
+      model: Course,
+      include: [
+        {
+          model: Category,
+          attributes: ["id", "name"],
+          as: "category",
+        },
+        {
+          model: User,
+          as: "courseCreator",
+          attributes: ["id", "name"],
+        },
+        {
+          model: Benefit,
+          as: "benefits",
+          attributes: ["id", "description"],
+        },
+        {
+          model: Chapter,
+          as: "chapters",
+          attributes: ["id", "no", "name"],
+          include: [
+            {
+              model: UserModule,
+              as: "userModules",
+              attributes: ["id", "status"],
+              include: [
+                {
+                  model: Module,
+                  as: "moduleData",
+                  attributes: ["id", "no", "name"],
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    },
+  ],
+  order: [
+    ["Course", "id", "ASC"],
+    ["Course", "chapters", "no", "ASC"],
+    ["Course", "chapters", "userModules", "moduleData", "no", "ASC"],
+  ],
 };
 
 module.exports = {
@@ -473,4 +627,5 @@ module.exports = {
   changeMyPassword,
   getMyCourses,
   openCourse,
+  openUserModule,
 };

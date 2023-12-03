@@ -24,6 +24,13 @@ module.exports = (sequelize, DataTypes) => {
         as: "modules",
         onDelete: "cascade",
       });
+      Chapter.hasMany(models.UserModule, {
+        foreignKey: {
+          name: "chapterId",
+          allowNull: false,
+        },
+        as: "userModules",
+      });
     }
   }
   Chapter.init(
