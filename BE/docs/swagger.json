@@ -943,8 +943,8 @@
     "/user/my-courses/{courseId}": {
       "get": {
         "tags": ["User"],
-        "summary": "API untuk mengecek detail course user",
-        "description": "API ini digunakan untuk user mengecek detail course user",
+        "summary": "API untuk mengambil data course user",
+        "description": "API ini digunakan untuk user mengambil data course user",
         "security": [
           {
             "bearerToken": []
@@ -976,6 +976,80 @@
                     "message": {
                       "type": "string",
                       "example": "Berhasil mendapatkan detail data course user"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Token tidak valid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Failed"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Token tidak valid"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user/my-courses/{courseId}/modules/{userModuleId}": {
+      "get": {
+        "tags": ["User"],
+        "summary": "API untuk mengambil data module user",
+        "description": "API ini digunakan untuk user mengambil data module user",
+        "security": [
+          {
+            "bearerToken": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "courseId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "example": 1
+            }
+          },
+          {
+            "name": "userModuleId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "example": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Module user sukses ditemukan",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Success"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Berhasil mendapatkan detail data module user"
                     }
                   }
                 }
