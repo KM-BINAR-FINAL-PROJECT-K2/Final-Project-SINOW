@@ -4,6 +4,8 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import Navigation from "../../Template/Navigation/Navigation";
+import Breadcrumb from "../../Organism/Breadcrumb/Breadcrumb";
+// import ImageUploader from "../../Molecule/ImageUploader/ImageUploader";
 import Swal from "sweetalert2";
 
 export default function EditClass() {
@@ -23,8 +25,6 @@ export default function EditClass() {
     imageUrl: "",
     videoPreviewUrl: "",
   });
-
-  console.log(form);
 
   const { id } = useParams();
   useEffect(() => {
@@ -83,26 +83,66 @@ export default function EditClass() {
         return;
       }
       const updateClass = async () => {
-        await axios.put(`http://localhost:3000/api/v1/courses/${id}`, form, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        });
-        Swal.fire({
-          title: "Do you want to save the changes?",
+        await Swal.fire({
+          title: "Yakin menyimpan perubahan?",
+          imageUrl: "/images/logo-n-maskot/Sticker-1.png",
+          color: "#3C3C3C",
+          imageWidth: 200,
           showDenyButton: true,
           showCancelButton: true,
           confirmButtonText: "Save",
+          confirmButtonColor: "#6148FF",
+          denyButtonColor: "#FF0000",
+          cancelButtonColor: "#73CA5C",
           denyButtonText: `Don't save`,
         }).then(async (result) => {
           if (result.isConfirmed) {
-            console.log("yg dikirim:");
-            console.log(form);
-            Swal.fire("Saved!", "", "success");
+            try {
+              const response = await axios.put(
+                `http://localhost:3000/api/v1/courses/${id}`,
+                form,
+                {
+                  headers: {
+                    "Content-Type": "multipart/form-data",
+                    Authorization: `Bearer ${localStorage.getItem("token")}`,
+                  },
+                }
+              );
+            } catch (error) {
+              if (error.response.status !== 200) {
+                const err =
+                  error.response.data.message.charAt(0).toUpperCase() +
+                  error.response.data.message.slice(1);
+                await Swal.fire({
+                  titleText: err,
+                  imageUrl: "/images/logo-n-maskot/failed_payment.png",
+                  imageWidth: 200,
+                  confirmButtonText: "Kembali",
+                  confirmButtonColor: "#73CA5C",
+                });
+
+                return (window.location.href = "/kelola-kelas");
+              }
+              console.log(error);
+            }
+
+            await Swal.fire({
+              titleText: "Tersimpan!",
+              imageUrl: "/images/logo-n-maskot/Sticker-3.png",
+              imageWidth: 200,
+              confirmButtonText: "Kembali ke Kelola Kelas",
+              confirmButtonColor: "#73CA5C",
+            });
+
             window.location.href = "/kelola-kelas";
           } else if (result.isDenied) {
-            Swal.fire("Changes are not saved", "", "info");
+            Swal.fire({
+              titleText: "Perubahan dibatalkan",
+              imageUrl: "/images/logo-n-maskot/Sticker-2.png",
+              imageWidth: 200,
+              confirmButtonText: "Kembali",
+              confirmButtonColor: "#73CA5C",
+            });
           }
         });
       };
@@ -127,250 +167,233 @@ export default function EditClass() {
   return (
     <>
       <Navigation>
-        <section className=" mx-4 n lg:mx-[64px] mb-64 ">
+        <section className=" mx-4 n lg:mx-[64px] mb-64 -mt-[70px]">
           <section className="overflow-auto">
-            <nav
-              className="flex px-5 py-3 text-gray-700 border border-gray-200 rounded-lg bg-gray-50 "
-              aria-label="Breadcrumb"
-            >
-              <ol className="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
-                <li className="inline-flex items-center">
-                  <a
-                    href="/kelola-kelas"
-                    className="inline-flex items-center text-sm font-medium text-gray-700 hover:text-blue-600 "
-                  >
-                    Kelola Kelas
-                  </a>
-                </li>
-                <li>
-                  <div className="flex items-center">
-                    <svg
-                      className="rtl:rotate-180 block w-3 h-3 mx-1 text-gray-400 "
-                      aria-hidden="true"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 6 10"
-                    >
-                      <path
-                        stroke="currentColor"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="m1 9 4-4-4-4"
-                      />
-                    </svg>
-                    <a
-                      href="#"
-                      className="ms-1 text-sm text-gray-700 hover:text-blue-600 md:ms-2 font-semibold"
-                    >
-                      Edit Kelas
-                    </a>
-                  </div>
-                </li>
-              </ol>
-            </nav>
+            <div className="mb-[20px]">
+              <Breadcrumb
+                links={[
+                  { name: "Kelola Kelas", url: "/kelola-kelas" },
+                  { name: "Edit Kelas" },
+                ]}
+              />
+            </div>
+            <h1 className="text-center font-bold text-2xl text-darkblue-05 mb-[30px]">
+              Edit Kelas
+            </h1>
             {editClass && (
               <form className="" onSubmit={handleSubmit}>
-                <div>
-                  <label htmlFor="" className="block">
-                    Judul Course
-                  </label>
-                  <input
-                    type="text"
-                    name="name"
-                    defaultValue={editClass.name}
-                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
-                    placeholder="name@flowbite.com"
-                  />
-                </div>
-
-                <div>
-                  <label htmlFor="" className="block">
-                    Level
-                  </label>
-                  <input
-                    type="text"
-                    name="level"
-                    defaultValue={
-                      editClass.level.charAt(0).toUpperCase() +
-                      editClass.level.slice(1)
-                    }
-                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
-                  />
-                </div>
-
-                <div>
-                  <label htmlFor="" className="block">
-                    Rating
-                  </label>
-                  <input
-                    type="number"
-                    name="rating"
-                    defaultValue={editClass.rating}
-                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
-                  />
-                </div>
-
-                <div>
-                  <label htmlFor="" className="block">
-                    Kategori
-                  </label>
-                  {categories && (
-                    <div className="flex">
-                      <select
-                        id="countries"
-                        name="category"
-                        defaultValue={editClass.category.id}
-                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
-                      >
-                        {categories.map((category) => (
-                          <option
-                            key={category.id}
-                            className="font-normal text-neutral-05"
-                            value={parseInt(category.id, 10)}
-                            selected={category.id === editClass.category.id}
-                          >
-                            {category.name}
-                          </option>
-                        ))}
-                      </select>
+                <div className="grid gap-4 mb-4 sm:grid-cols-2 sm:gap-6 sm:mb-5">
+                  <div className="col-span-2 flex md:gap-8 gap-4">
+                    <div>
+                      <input
+                        type="hidden"
+                        name="imageUrl"
+                        value={editClass.imageUrl}
+                      />
+                      <img
+                        src={editClass.imageUrl}
+                        alt=""
+                        className="md:w-[200px] w-[180px] text-sm rounded-lg block "
+                      />
                     </div>
-                  )}
-                </div>
 
-                <div>
-                  <label htmlFor="" className="block">
-                    Deskripsi
-                  </label>
-
-                  <textarea
-                    name="description"
-                    id=""
-                    cols="30"
-                    rows="10"
-                    defaultValue={editClass.description}
-                    className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 "
-                    placeholder="Leave a comment..."
-                  ></textarea>
-                </div>
-
-                <div>
-                  <label htmlFor="" className="block">
-                    Kode Kelas
-                  </label>
-                  <input
-                    type="text"
-                    name="classCode"
-                    defaultValue={
-                      editClass.classCode ? editClass.classCode : " - "
-                    }
-                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
-                  />
-                </div>
-
-                <div>
-                  <label htmlFor="" className="block">
-                    Tipe
-                  </label>
-                  <select
-                    name="type"
-                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
-                  >
-                    <option
-                      className="font-normal text-neutral-05"
-                      value="gratis"
+                    <div className="flex-1">
+                      <div className="mb-3">
+                        <label
+                          htmlFor=""
+                          className="block md:text-sm text-xs mb-1"
+                        >
+                          Kode Kelas
+                        </label>
+                        <input
+                          type="text"
+                          name="classCode"
+                          defaultValue={
+                            editClass.classCode ? editClass.classCode : " - "
+                          }
+                          className="bg-gray-50 border border-gray-300 text-gray-900 md:text-sm text-xs mb-1 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
+                        />
+                      </div>
+                      <div className="mb-3">
+                        <label
+                          htmlFor=""
+                          className="block md:text-sm text-xs mb-1"
+                        >
+                          Judul Course
+                        </label>
+                        <input
+                          type="text"
+                          name="name"
+                          defaultValue={editClass.name}
+                          className="bg-gray-50 border border-gray-300 text-gray-900 md:text-sm rounded-lg text-xs focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
+                          placeholder="name@flowbite.com"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <div className="mb-1">
+                    <label htmlFor="" className="block md:text-sm text-xs mb-1">
+                      Level
+                    </label>
+                    <select
+                      name="level"
+                      id=""
+                      className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 md:text-sm text-xs"
                     >
-                      GRATIS
-                    </option>
-                    <option
-                      className="font-normal text-neutral-05"
-                      value="premium"
+                      <option value="beginner">Beginner</option>
+                      <option value="intermediate">Intermediate</option>
+                      <option value="advanced">Advanced</option>
+                    </select>
+                  </div>
+
+                  <div className="mb-1">
+                    <label htmlFor="" className="block md:text-sm text-xs mb-1">
+                      Rating
+                    </label>
+                    <input
+                      type="number"
+                      name="rating"
+                      min={0}
+                      max={5}
+                      step="any"
+                      defaultValue={editClass.rating}
+                      className="bg-gray-50 border border-gray-300 text-gray-900 md:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 text-xs"
+                    />
+                  </div>
+
+                  <div className="mb-1">
+                    <label htmlFor="" className="block md:text-sm text-xs mb-1">
+                      Tipe
+                    </label>
+                    <select
+                      name="type"
+                      className="bg-gray-50 border border-gray-300 text-gray-900 md:text-sm text-xs mb-1 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
+                      defaultValue={editClass.type}
                     >
-                      PREMIUM
-                    </option>
-                  </select>
-                </div>
+                      <option
+                        className="font-normal text-neutral-05"
+                        value="gratis"
+                      >
+                        GRATIS
+                      </option>
+                      <option
+                        className="font-normal text-neutral-05"
+                        value="premium"
+                      >
+                        PREMIUM
+                      </option>
+                    </select>
+                  </div>
 
-                <div>
-                  <label htmlFor="" className="block">
-                    Harga
-                  </label>
-                  <input
-                    type="number"
-                    name="price"
-                    defaultValue={editClass.price}
-                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
-                  />
-                </div>
+                  <div className="mb-1">
+                    <label htmlFor="" className="block md:text-sm text-xs mb-1">
+                      Harga [ dalam Rupiah. ]
+                    </label>
+                    <input
+                      type="number"
+                      name="price"
+                      defaultValue={editClass.price}
+                      className="bg-gray-50 border border-gray-300 text-gray-900 md:text-sm text-xs mb-1 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
+                    />
+                  </div>
 
-                <div>
-                  <label htmlFor="" className="block">
-                    Promo
-                  </label>
-                  <input
-                    type="number"
-                    name="promo"
-                    defaultValue={editClass.promo}
-                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
-                  />
-                </div>
+                  <div className="mb-1">
+                    <label htmlFor="" className="block md:text-sm text-xs mb-1">
+                      Promo [ Persen (%) ]
+                    </label>
+                    <input
+                      type="number"
+                      name="promo"
+                      defaultValue={editClass.promo}
+                      className="bg-gray-50 border border-gray-300 text-gray-900 md:text-sm text-xs mb-1 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
+                    />
+                  </div>
 
-                <div>
-                  <label htmlFor="" className="block">
-                    Course Oleh
-                  </label>
-                  <input
-                    type="text"
-                    name="courseBy"
-                    defaultValue={editClass.courseBy}
-                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
-                  />
-                </div>
-
-                <div>
-                  <label htmlFor="" className="block">
-                    Gambar
-                  </label>
-                  <input
-                    type="hidden"
-                    name="imageUrl"
-                    value={editClass.imageUrl}
-                  />
-                  <img
-                    src={editClass.imageUrl}
-                    alt=""
-                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
-                  />
-                </div>
-
-                <div>
-                  <label htmlFor="" className="block">
-                    Video Url
-                  </label>
-                  <div className="flex">
+                  <div className="mb-1">
+                    <label htmlFor="" className="block md:text-sm text-xs mb-1">
+                      Course Oleh
+                    </label>
                     <input
                       type="text"
-                      name="videoPreviewUrl"
-                      className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
-                      defaultValue={editClass.videoPreviewUrl}
+                      name="courseBy"
+                      defaultValue={editClass.courseBy}
+                      className="bg-gray-50 border border-gray-300 text-gray-900 md:text-sm text-xs mb-1 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
                     />
-                    <a
-                      href={editClass.videoPreviewUrl}
-                      className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      Preview Video
-                    </a>
                   </div>
-                </div>
-                <div className="text-center">
-                  <button
-                    type="submit"
-                    className="bg-darkblue-05 text-white text-[16px] font-semibold  p-[12px] rounded-[15px] flex-1 lg:w-full text-center w-[50%]"
-                  >
-                    Simpan Perubahan
-                  </button>
+
+                  <div className="mb-1 col-span-2">
+                    <label htmlFor="" className="block md:text-sm text-xs mb-1">
+                      Kategori
+                    </label>
+                    {categories && (
+                      <div className="flex">
+                        <select
+                          id="countries"
+                          name="category"
+                          defaultValue={editClass.category.id}
+                          className="bg-gray-50 border border-gray-300 text-gray-900 md:text-sm text-xs mb-1 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
+                        >
+                          {categories.map((category) => (
+                            <option
+                              key={category.id}
+                              className="font-normal text-neutral-05"
+                              value={parseInt(category.id, 10)}
+                              selected={category.id === editClass.category.id}
+                            >
+                              {category.name}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="mb-1 col-span-2">
+                    <label htmlFor="" className="block md:text-sm text-xs mb-1">
+                      Video Url
+                    </label>
+                    <div className="flex gap-3">
+                      <input
+                        type="text"
+                        name="videoPreviewUrl"
+                        className="bg-gray-50 border border-gray-300 text-gray-900 md:text-sm text-xs mb-1 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
+                        defaultValue={editClass.videoPreviewUrl}
+                      />
+                      <a
+                        href={editClass.videoPreviewUrl}
+                        className="bg-gray-50 border border-gray-300 text-gray-900 md:text-sm text-xs mb-1 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        Preview Video
+                      </a>
+                    </div>
+                  </div>
+
+                  <div className="mb-1 col-span-2">
+                    <label htmlFor="" className="block md:text-sm text-xs mb-1">
+                      Deskripsi
+                    </label>
+
+                    <textarea
+                      name="description"
+                      id=""
+                      cols="30"
+                      rows="10"
+                      defaultValue={editClass.description}
+                      className="block p-2.5 w-full md:text-sm text-xs mb-1 text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 "
+                      placeholder="Leave a comment..."
+                    ></textarea>
+                  </div>
+
+                  <div className="text-left col-span-2">
+                    <button
+                      type="submit"
+                      className="bg-darkblue-05 text-white md:text-sm text-xs mb-1 font-semibold  p-[12px] rounded-[15px] flex-1 lg:w-full text-center w-full"
+                    >
+                      Simpan Perubahan
+                    </button>
+                  </div>
                 </div>
               </form>
             )}
