@@ -25,7 +25,10 @@ export default function Sidebar() {
         dashboard: true,
         kelolaKelas: false,
       });
-    } else if (location.pathname === "/kelola-kelas") {
+    } else if (
+      location.pathname === "/kelola-kelas" ||
+      location.pathname.includes("/edit-kelas")
+    ) {
       setBackground({
         dashboard: false,
         kelolaKelas: true,

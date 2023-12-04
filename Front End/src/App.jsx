@@ -9,15 +9,13 @@ import InfoClassContextProvider from "./store/InfoClassUI";
 import RemoveClassContextProvider from "./store/RemoveClassUI";
 import ClassContextProvider from "./store/ClassStore";
 import KeyContextProvider from "./store/ActiveKey";
+import EditClass from "./components/Page/EditClass/EditClass";
 
 export default function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route
-          path="/dashboard"
-          element={<DashboadAdmin location={"/dashboard"} />}
-        />
+        <Route path="/dashboard" element={<DashboadAdmin />} />
         <Route
           path="/kelola-kelas"
           element={
@@ -26,7 +24,7 @@ export default function App() {
                 <KeyContextProvider>
                   <RemoveClassContextProvider>
                     <InfoClassContextProvider>
-                      <CRUD location={"/kelola-kelas"} />
+                      <CRUD />
                     </InfoClassContextProvider>
                   </RemoveClassContextProvider>
                 </KeyContextProvider>
@@ -40,6 +38,10 @@ export default function App() {
           path="/message-succes-reset-password"
           element={<BackToLogin />}
         />
+        <Route
+          path="/edit-kelas/:id"
+          element={<EditClass location={"/dashboard"} />}
+        ></Route>
       </Routes>
     </BrowserRouter>
   );
