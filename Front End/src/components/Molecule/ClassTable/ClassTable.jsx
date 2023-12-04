@@ -110,9 +110,12 @@ export default function ClassTable() {
                 {rupiah(classItem.price)}
               </td>
               <td className="px-4 text-[10px] font-bold ">
-                <button className="m-2 py-[3px] font-bold text-neutral-01 inline-block rounded-[10px] w-[50px] bg-darkblue-05 text-center leading-[14px]">
+                <a
+                  className="m-2 py-[3px] font-bold text-neutral-01 inline-block rounded-[10px] w-[50px] bg-darkblue-05 text-center leading-[14px]"
+                  href={`/edit-kelas/${classItem.id}`}
+                >
                   Ubah
-                </button>
+                </a>
                 <button
                   className="m-2 py-[3px] font-bold text-neutral-01 inline-block rounded-[10px] bg-alert-danger w-[50px] text-center leading-[14px]"
                   onClick={() => toggleShowWarning(classItem.id)}

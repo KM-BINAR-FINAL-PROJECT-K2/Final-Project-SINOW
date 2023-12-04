@@ -1,9 +1,11 @@
 /** @type {import('tailwindcss').Config} */
+import defaultTheme from "tailwindcss/defaultTheme";
 export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     extend: {
       colors: {
+        ...defaultTheme.colors,
         darkblue: {
           "05": "#6148FF",
           "04": "#6148FF57",
