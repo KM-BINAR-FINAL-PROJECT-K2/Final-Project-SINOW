@@ -3,7 +3,7 @@ import axios from "axios";
 import { useContext, useEffect, useState } from "react";
 import { PlaceholderContext } from "../../../store/PlaceholderStore";
 export default function Header() {
-  const [name, setName] = useState("Admin");
+  const [name, setName] = useState("");
   const {
     inputPlaceholder,
     searchInputRef,

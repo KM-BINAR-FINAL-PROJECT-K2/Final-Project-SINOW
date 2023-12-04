@@ -1,7 +1,8 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
 import { FiEye, FiEyeOff } from "react-icons/fi";
-import Logo from "/images/logo-n-maskot/Logo-png.png";
+import Logo from "/images/logo-n-maskot/Sticker-2.png";
+import Logo_2 from "/images/logo-n-maskot/Logo-png.png";
 
 export default function Login() {
   const checkToken = localStorage.getItem("token");
@@ -64,7 +65,7 @@ export default function Login() {
       } catch (error) {
         console.error(error.response.data);
         setPasswordLengthError(""); // Reset pesan kesalahan panjang password
-        setPasswordError("ID Admin atau Password salah. Silakan coba lagi."); // Pesan ID atau password salah
+        setPasswordError("Email atau Password salah. Silakan coba lagi."); // Pesan ID atau password salah
         return;
       }
     };
@@ -73,14 +74,21 @@ export default function Login() {
 
   return (
     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 h-screen w-full">
-      <div className="p-[50px] orm-app flex flex-col justify-center md:h-screen lg:py-0">
+      <div className="px-[40px] orm-app flex flex-col justify-center md:h-screen lg:py-0">
+        <div className=" my-[30px] logo-app md:hidden flex justify-center items-center">
+          <img
+            src={Logo_2}
+            alt=""
+            className="w-32 h-32 sm:w-36 sm:h-36 md:w-80 md:h-80 "
+          />
+        </div>
         <form
           onSubmit={handleSubmit}
           action=""
           className="space-y-4 md:space-y-6 max-w-[400px] w-full mx-auto"
         >
-          <h1 className="text-darkblue-05 text-xl font-bold md:text-2xl">
-            Log In
+          <h1 className="text-sinow-05 text-xl font-bold md:text-2xl py-[20px]">
+            Masuk
           </h1>
           {/* message if ID and password wrong */}
           {passwordError && (
@@ -90,15 +98,14 @@ export default function Login() {
           {passwordLengthError && (
             <p className="text-red-500 text-sm mt-2">{passwordLengthError}</p>
           )}
-
           <div>
             <label htmlFor="idAdmin" className="block mb-2 font-bold">
-              ID Admin
+              Email
             </label>
             <input
               type="text"
               className="border text-neutral-05 sm:text-sm rounded-lg block w-full p-3"
-              placeholder="ID Admin Kamu"
+              placeholder="Contoh: johndoe@gmail.com"
               required=""
               name="email"
             />
@@ -112,7 +119,7 @@ export default function Login() {
               >
                 Password
               </label>
-              <a href="#" className="mb-2 text-sm text-darkblue-05 font-bold">
+              <a href="#" className="mb-2 text-sm text-sinow-05 font-semibold">
                 Lupa Kata Sandi
               </a>
             </div>
@@ -127,31 +134,31 @@ export default function Login() {
                 name="password"
               />
               <span
-                className="border justify-center p-5 sm:p-1 cursor-pointer rounded-r-lg border-l-0"
+                className="border justify-center px-3 py-4 md:px-3 md:py-4 cursor-pointer rounded-r-lg border-l-0"
                 onClick={handleTogglePassword}
               >
                 {showPassword ? (
-                  <FiEyeOff style={{ margin: "10px", color: "#B0B0B0" }} />
+                  <FiEyeOff style={{ color: "#B0B0B0" }} />
                 ) : (
-                  <FiEye style={{ margin: "10px", color: "#B0B0B0" }} />
+                  <FiEye style={{ color: "#B0B0B0" }} />
                 )}
               </span>
             </div>
           </div>
           <button
             type="submit"
-            className="w-full text-white bg-darkblue-05 font-medium rounded-lg text-center p-3 "
+            className="w-full text-white bg-sinow-05 font-semibold rounded-2xl text-center p-3 "
           >
             Masuk
           </button>
         </form>
       </div>
 
-      <div className="logo-app bg-darkblue-05 hidden sm:flex justify-center items-center">
+      <div className="border logo-app bg-sinow-05  hidden sm:flex justify-center items-center">
         <img
           src={Logo}
           alt=""
-          className="w-24 h-24 sm:w-32 sm:h-32 md:w-48 md:h-48"
+          className="w-24 h-24 sm:w-32 sm:h-32 md:w-80 md:h-80 "
         />
       </div>
     </div>
