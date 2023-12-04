@@ -38,6 +38,9 @@ export default {
         lightgrey: {
           "05": "#B0B0B0",
         },
+        sinow: {
+          "05": "#00CCF4",
+        },
       },
       boxShadow: {
         low: "0 0 0 0 rgba(0, 0, 0, 0.15) backdrop-blur-4",

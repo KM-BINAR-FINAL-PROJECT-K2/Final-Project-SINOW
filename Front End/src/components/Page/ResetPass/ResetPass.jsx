@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { FiEye, FiEyeOff } from "react-icons/fi";
-import Logo from "/images/logo-n-maskot/Logo-png.png";
+import Logo from "/images/logo-n-maskot/Sticker-3.png";
+import Logo_2 from "/images/logo-n-maskot/Logo-png.png";
+
 export default function ResetPassword() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -22,7 +24,14 @@ export default function ResetPassword() {
           action=""
           className="space-y-4 md:space-y-6 max-w-[400px] w-full mx-auto"
         >
-          <h1 className="text-darkblue-05 text-xl font-bold md:text-2xl md:py-[20px]">
+          <div className=" my-[30px] logo-app md:hidden flex justify-center items-center">
+            <img
+              src={Logo_2}
+              alt=""
+              className="w-32 h-32 sm:w-36 sm:h-36 md:w-80 md:h-80 "
+            />
+          </div>
+          <h1 className="text-sinow-05 text-xl font-bold md:text-2xl py-[20px]">
             Reset Password
           </h1>
           <div>
@@ -44,7 +53,7 @@ export default function ResetPassword() {
                 required=""
               />
               <span
-                className="border p-[20px] sm:p-[20px] cursor-pointer rounded-r-lg border-l-0"
+                className="border px-3 py-4  cursor-pointer rounded-r-lg border-l-0"
                 onClick={handleTogglePassword}
               >
                 {showPassword ? (
@@ -74,7 +83,7 @@ export default function ResetPassword() {
                 required=""
               />
               <span
-                className="border p-[20px] sm:p-[20px] cursor-pointer rounded-r-lg border-l-0"
+                className="border px-3 py-4 cursor-pointer rounded-r-lg border-l-0"
                 onClick={handleToggleConfirmPassword}
               >
                 {showConfirmPassword ? (
@@ -87,17 +96,17 @@ export default function ResetPassword() {
           </div>
           <button
             type="submit"
-            className="w-full text-white bg-darkblue-05 font-medium rounded-lg text-center p-3 "
+            className="w-full text-white bg-sinow-05 font-bold rounded-lg text-center p-3 "
           >
             Simpan
           </button>
         </form>
       </div>
-      <div className="logo-app bg-darkblue-05 hidden sm:flex justify-center items-center">
+      <div className="logo-app bg-sinow-05 hidden sm:flex justify-center items-center">
         <img
           src={Logo}
           alt=""
-          className="w-24 h-24 sm:w-32 sm:h-32 md:w-48 md:h-48"
+          className="w-28 h-24 sm:w-32 sm:h-32 md:w-96 md:h-80"
         />
       </div>
     </div>

@@ -1,25 +1,56 @@
+import axios from "axios";
+import { useContext, useEffect, useState } from "react";
 import Navigation from "../../Template/Navigation/Navigation";
 import Card from "../../Molecule/Card/Card";
 import PaymentTable from "../../Molecule/PaymentTable/PaymentTable";
+import { LoaderContext } from "../../../store/Loader";
 
 export default function DashboadAdmin() {
+  const { setIsLoading } = useContext(LoaderContext);
+  const [error, setError] = useState("");
+  useEffect(() => {
+    const getClasses = async () => {
+      try {
+        setClassSinow([]);
+        setIsLoading(true);
+        setError("");
+        const res = await axios.get("http://localhost:3000/api/v1/courses");
+        setClassSinow(res.data.data);
+      } catch (error) {
+        setError(
+          error.response ? error.response.data.message : "Network Error"
+        );
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    getClasses();
+    return () => {
+      setClassSinow([]);
+    };
+  }, []);
+  const [classSinow, setClassSinow] = useState([]);
+  const totalQuantity = classSinow.reduce((total, item) => {
+    return total + item.totalUser;
+  }, 0);
   return (
     <Navigation>
       <section className="mx-16 flex justify-around gap-6 flex-wrap mb-[54px]">
         <Card
           color={"bg-darkblue-03"}
-          quantity={"450"}
-          description={"Active Users"}
+          quantity={totalQuantity}
+          description={"Pengguna Aktif"}
         />
         <Card
           color={"bg-alert-success"}
-          quantity={"25"}
-          description={"Active Class"}
+          quantity={classSinow.length}
+          description={"Kelas Terdaftar"}
         />
         <Card
           color={"bg-darkblue-05"}
-          quantity={"20"}
-          description={"Premium Class"}
+          quantity={classSinow.filter((item) => item.type === "premium").length}
+          description={"Kelas Premium"}
         />
       </section>
 
@@ -28,6 +59,7 @@ export default function DashboadAdmin() {
           <h2 className="my-[10px] font-semibold text-[20px] flex-wrap flex-1 min-w-[200px]">
             Status Pembayaran
           </h2>
+
           <div className="flex">
             <div className="flex items-center justify-center">
               <img
@@ -35,6 +67,7 @@ export default function DashboadAdmin() {
                 alt=""
                 className="border-darkblue-05  border-2 rounded-l-[18px] border-r-0 p-[5px] w-[36px] h-[36px]"
               />
+
               <select
                 style={{
                   appearance: "none",
@@ -50,28 +83,13 @@ export default function DashboadAdmin() {
                   className="font-normal text-neutral-05"
                   value="kategori"
                 >
-                  Kategori
+                  Sudah Bayar
                 </option>
                 <option
                   className="font-normal text-neutral-05"
                   value="kelas_premium"
                 >
-                  Kelas premium
-                </option>
-                <option className="font-normal text-neutral-05" value="status">
-                  Status
-                </option>
-                <option
-                  className="font-normal text-neutral-05"
-                  value="metode_pembayaran"
-                >
-                  Metode Pembayaran
-                </option>
-                <option
-                  className="font-normal text-neutral-05"
-                  value="tanggal_bayar"
-                >
-                  Tanggal Bayar
+                  Belum Bayar
                 </option>
               </select>
             </div>
