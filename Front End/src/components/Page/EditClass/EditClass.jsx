@@ -98,7 +98,7 @@ export default function EditClass() {
         }).then(async (result) => {
           if (result.isConfirmed) {
             try {
-              const response = await axios.put(
+              await axios.put(
                 `http://localhost:3000/api/v1/courses/${id}`,
                 form,
                 {

@@ -10,6 +10,7 @@ import RemoveClassContextProvider from "./store/RemoveClassUI";
 import ClassContextProvider from "./store/ClassStore";
 import KeyContextProvider from "./store/ActiveKey";
 import EditClass from "./components/Page/EditClass/EditClass";
+import AddClass from "./components/Page/AddClass/AddClass";
 
 export default function App() {
   return (
@@ -38,10 +39,8 @@ export default function App() {
           path="/message-succes-reset-password"
           element={<BackToLogin />}
         />
-        <Route
-          path="/edit-kelas/:id"
-          element={<EditClass location={"/dashboard"} />}
-        ></Route>
+        <Route path="/edit-kelas/:id" element={<EditClass />}></Route>
+        <Route path="/tambah-kelas" element={<AddClass />}></Route>
       </Routes>
     </BrowserRouter>
   );

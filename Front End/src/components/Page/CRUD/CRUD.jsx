@@ -5,11 +5,9 @@ import { useContext, useEffect } from "react";
 import Card from "../../Molecule/Card/Card";
 import Navigation from "../../Template/Navigation/Navigation";
 import ClassTable from "../../Molecule/ClassTable/ClassTable";
-import AddClass from "../../Organism/AddClass/AddClass";
 import InfoClass from "../../Organism/InfoClass/InfoClass";
 import RemoveClass from "../../Molecule/RemoveClass/RemoveClass";
 import { LoaderContext } from "../../../store/Loader";
-import { AddClassContext } from "../../../store/AddClassUI";
 import { InfoClassContext } from "../../../store/InfoClassUI";
 import { RemoveClassContext } from "../../../store/RemoveClassUI";
 import { ClassContext } from "../../../store/ClassStore";
@@ -17,7 +15,6 @@ import { KeyContext } from "../../../store/ActiveKey";
 import { ErrorContext } from "../../../store/Error";
 import { PlaceholderContext } from "../../../store/PlaceholderStore";
 export default function CRUD() {
-  const { showAddClass, toggleShowContainer } = useContext(AddClassContext);
   const { setIsLoading } = useContext(LoaderContext);
   const { showInfoClass } = useContext(InfoClassContext);
   const { showRemoveClass } = useContext(RemoveClassContext);
@@ -27,6 +24,7 @@ export default function CRUD() {
 
   const { handleSearchButtonClick } = useContext(PlaceholderContext);
 
+  console.log(classSinow);
   useEffect(() => {
     const getClasses = async () => {
       try {
@@ -83,9 +81,9 @@ export default function CRUD() {
               Kelola Kelas
             </h2>
             <div className="flex">
-              <button
+              <a
                 className="bg-darkblue-05 inline-block rounded-[16px] py-[5px] px-[10px] w-[125px] h-[34px] mr-[16px] my-[10px]"
-                onClick={toggleShowContainer}
+                href="/tambah-kelas"
               >
                 <div className="flex gap-[8px] items-center justify-center">
                   <img
@@ -97,7 +95,7 @@ export default function CRUD() {
                     Tambah
                   </span>
                 </div>
-              </button>
+              </a>
               <div className="flex items-center justify-center">
                 <img
                   src="/images/prefix-wrapper.png"
@@ -176,7 +174,6 @@ export default function CRUD() {
           </div>
         </section>
       </Navigation>
-      {showAddClass && <AddClass />}
       {showInfoClass && <InfoClass id={keyClass} />}
       {showRemoveClass && <RemoveClass id={keyClass} />}
     </>
