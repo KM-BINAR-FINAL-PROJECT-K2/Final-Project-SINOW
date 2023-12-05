@@ -2,6 +2,8 @@ const randomString = require("randomstring");
 const nodemailer = require("nodemailer");
 const ApiError = require("./ApiError");
 const jwt = require("jsonwebtoken");
+const verificationEmailHTML = require("../lib/verificationEmailHTML");
+const resetPasswordHTML = require("../lib/resetPasswordHTML");
 
 const transporter = nodemailer.createTransport({
   service: "gmail",
@@ -30,10 +32,10 @@ const sendOTPVerificationEmail = async (email, next) => {
     const otpCode = generateOTP();
 
     const mailOptions = {
-      from: { name: "SiNow", address: process.env.APP_EMAIL },
+      from: { name: "SINOW", address: process.env.APP_EMAIL },
       to: email,
-      subject: "SiNow - Verifikasi OTP",
-      text: `Kode verifikasi OTP Anda adalah:\n${otpCode}\n\nGunakan kode ini untuk verifikasi akun Anda. Jangan berikan kode ini kepada siapa pun.\n\nTerima kasih,\nSiNow Team`,
+      subject: "SINOW - Verifikasi OTP",
+      html: verificationEmailHTML(otpCode),
     };
 
     await sendMail(mailOptions, next);
@@ -55,12 +57,8 @@ const sendResetPasswordEmail = async (auth, next) => {
     const mailOptions = {
       from: { name: process.env.APP_NAME, address: process.env.EMAIL },
       to: auth.email,
-      subject: "SiNow - Reset Password",
-      html: `<p>Dear ${auth.User.name},</p>
-      <p>Kami menerima permintaan untuk mereset kata sandi akun SiNow Anda. Silakan klik tautan berikut:</p>
-      <p><a href="${process.env.BASE_URL}/reset-password/${generateToken}">Reset Password</a></p>
-      <p>Jika Anda tidak membuat permintaan ini, harap abaikan email ini.</p>
-      <p>Terima kasih,</br>SiNow Team</p>`,
+      subject: "SINOW - Reset Password",
+      html: resetPasswordHTML(generateToken),
     };
 
     await sendMail(mailOptions, next);

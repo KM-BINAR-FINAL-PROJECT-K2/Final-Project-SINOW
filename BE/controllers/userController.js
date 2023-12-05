@@ -193,7 +193,7 @@ const changeMyPassword = async (req, res, next) => {
       "Notifikasi",
       "Password Berhasil Diubah",
       user.id,
-      `Halo ${user.name},\n\nPassword akun Anda telah diubah. Jika Anda merasa tidak melakukan perubahan ini, segera hubungi dukungan pelanggan kami.\n\nTerima kasih,\nTim SiNow 🫡`
+      `Halo ${user.name},\n\nPassword akun Anda telah diubah. Jika Anda merasa tidak melakukan perubahan ini, segera hubungi dukungan pelanggan kami.\n\nTerima kasih,\nTim SINOW 🫡`
     );
     res.status(200).json({
       status: "Success",

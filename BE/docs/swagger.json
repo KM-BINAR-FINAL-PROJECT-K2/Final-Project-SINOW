@@ -1,9 +1,9 @@
 {
   "openapi": "3.0.0",
   "info": {
-    "title": "SiNow API Documentation",
+    "title": "SINOW API Documentation",
     "version": "1.0.0",
-    "description": "Halaman ini untuk mendokumentasi API dari aplikasi SiNow"
+    "description": "Halaman ini untuk mendokumentasi API dari aplikasi SINOW"
   },
   "tags": [
     {
