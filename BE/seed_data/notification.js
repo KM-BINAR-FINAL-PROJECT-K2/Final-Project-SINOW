@@ -36,7 +36,7 @@ for (let i = 11; i < 20; i++) {
   data.push({
     type: "Promosi",
     title: "Diskon Ramadan Dapatkan potongan 35%",
-    content: "Ngabuburit bersama SiNow nikmati potongan harga hingga 35%",
+    content: "Ngabuburit bersama SINOW nikmati potongan harga hingga 35%",
     userId: i,
     isRead: false,
     createdAt: new Date(),
