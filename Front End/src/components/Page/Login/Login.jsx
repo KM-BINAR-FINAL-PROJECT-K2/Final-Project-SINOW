@@ -19,6 +19,7 @@ export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [passwordError, setPasswordError] = useState("");
   const [passwordLengthError, setPasswordLengthError] = useState("");
+  const [formLength, setFormLength] = useState("");
 
   const handleTogglePassword = () => {
     setShowPassword((prevShowPassword) => !prevShowPassword);
@@ -29,10 +30,18 @@ export default function Login() {
     const formData = new FormData(e.target);
     const email = formData.get("email");
     const password = formData.get("password");
+
+    if (!email || !password) {
+      setPasswordError("");
+      setPasswordLengthError("");
+      setFormLength("Silahkan isi Email dan Password terlebih dahulu");
+      return;
+    }
     // if password less than 8
     if (password.length < 8) {
-      setPasswordError(""); // Reset pesan kesalahan password salah
       setPasswordLengthError("Password harus memiliki minimal 8 karakter."); // Pesan password lebih dari 8
+      setPasswordError(""); // Reset pesan kesalahan password salah
+      setFormLength("");
       return;
     }
 
@@ -64,6 +73,7 @@ export default function Login() {
         }
       } catch (error) {
         console.error(error.response.data);
+        setFormLength("");
         setPasswordLengthError(""); // Reset pesan kesalahan panjang password
         setPasswordError("Email atau Password salah. Silakan coba lagi."); // Pesan ID atau password salah
         return;
@@ -97,6 +107,9 @@ export default function Login() {
           {/* message if passsword less than 8 */}
           {passwordLengthError && (
             <p className="text-red-500 text-sm mt-2">{passwordLengthError}</p>
+          )}
+          {formLength && (
+            <p className="text-red-500 text-sm mt-2">{formLength}</p>
           )}
           <div>
             <label htmlFor="idAdmin" className="block mb-2 font-bold">
@@ -145,12 +158,14 @@ export default function Login() {
               </span>
             </div>
           </div>
-          <button
-            type="submit"
-            className="w-full text-white bg-sinow-05 font-semibold rounded-2xl text-center p-3 "
-          >
-            Masuk
-          </button>
+          <div className=" h-[100px] justify-center items-center flex">
+            <button
+              type="submit"
+              className="hover:bg-darkblue-03 py-[13px] hover:py-[13px] w-full  transition-all duration-300 text-white bg-sinow-05 font-semibold rounded-2xl text-center p-1 "
+            >
+              Masuk
+            </button>
+          </div>
         </form>
       </div>
 
