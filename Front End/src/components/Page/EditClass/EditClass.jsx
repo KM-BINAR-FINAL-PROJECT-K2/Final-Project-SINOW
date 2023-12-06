@@ -1,14 +1,17 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react/prop-types */
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import Navigation from "../../Template/Navigation/Navigation";
 import Breadcrumb from "../../Organism/Breadcrumb/Breadcrumb";
 // import ImageUploader from "../../Molecule/ImageUploader/ImageUploader";
 import Swal from "sweetalert2";
+import { LoaderContext } from "../../../store/Loader";
+import LoadingScreen from "../../Molecule/Loading/LoadingScreen";
 
 export default function EditClass() {
+  const { isLoading, setIsLoading } = useContext(LoaderContext);
   const [editClass, setEditClass] = useState();
   const [categories, setCategories] = useState([]);
   const [form, setForm] = useState({
@@ -65,18 +68,19 @@ export default function EditClass() {
       name,
       level,
       rating,
-      category,
+      categoryId: category,
       description,
       classCode,
       type,
       price,
       promo,
       courseBy,
-      imageUrl,
-      videoPreviewUrl,
+      // image: imageUrl,
+      // video: videoPreviewUrl,
     });
   };
 
+  console.log(form);
   useEffect(() => {
     try {
       if (!form.name) {
@@ -98,6 +102,7 @@ export default function EditClass() {
         }).then(async (result) => {
           if (result.isConfirmed) {
             try {
+              setIsLoading(true);
               await axios.put(
                 `http://localhost:3000/api/v1/courses/${id}`,
                 form,
@@ -125,7 +130,7 @@ export default function EditClass() {
               }
               console.log(error);
             }
-
+            setIsLoading(false);
             await Swal.fire({
               titleText: "Tersimpan!",
               imageUrl: "/images/logo-n-maskot/Sticker-3.png",
@@ -136,7 +141,7 @@ export default function EditClass() {
 
             window.location.href = "/kelola-kelas";
           } else if (result.isDenied) {
-            Swal.fire({
+            await Swal.fire({
               titleText: "Perubahan dibatalkan",
               imageUrl: "/images/logo-n-maskot/Sticker-2.png",
               imageWidth: 200,
@@ -149,6 +154,8 @@ export default function EditClass() {
       updateClass();
     } catch (error) {
       console.log(error);
+    } finally {
+      setIsLoading(false);
     }
   }, [form]);
 
@@ -166,6 +173,7 @@ export default function EditClass() {
 
   return (
     <>
+      {isLoading && <LoadingScreen />}
       <Navigation>
         <section className=" mx-4 n lg:mx-[64px] mb-64 -mt-[70px]">
           <section className="overflow-auto">
@@ -350,14 +358,16 @@ export default function EditClass() {
 
                   <div className="mb-1 col-span-2">
                     <label htmlFor="" className="block md:text-sm text-xs mb-1">
-                      Video Url
+                      Upload Video Preview
                     </label>
                     <div className="flex gap-3">
                       <input
-                        type="text"
+                        type="file"
                         name="videoPreviewUrl"
-                        className="bg-gray-50 border border-gray-300 text-gray-900 md:text-sm text-xs mb-1 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
-                        defaultValue={editClass.videoPreviewUrl}
+                        className="bg-gray-50 border border-gray-300 text-gray-900 md:text-sm text-xs mb-1 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 cursor-pointer"
+                        // defaultValue={editClass.videoPreviewUrl}
+                        multiple
+                        accept="video/*"
                       />
                       <a
                         href={editClass.videoPreviewUrl}
@@ -365,7 +375,7 @@ export default function EditClass() {
                         target="_blank"
                         rel="noreferrer"
                       >
-                        Preview Video
+                        Preview Video Terakhir
                       </a>
                     </div>
                   </div>
