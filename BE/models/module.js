@@ -67,18 +67,32 @@ module.exports = (sequelize, DataTypes) => {
           }
         },
         afterUpdate: async (module, options) => {
+          console.log("\n\n\n\n\nmasuk ke afterUpdate");
           const chapter = await module.getChapter();
           const course = await chapter.getCourse();
 
-          const totalDuration = await Module.sum("duration", {
+          const totalModuleDuration = await Module.sum("duration", {
             where: {
               chapterId: module.chapterId,
             },
           });
 
-          await course.update({
-            totalDuration: totalDuration,
+          await chapter.update({
+            totalDuration: totalModuleDuration,
           });
+
+          await chapter.reload();
+
+          const allChapters = await course.getChapters();
+
+          await course.update({
+            totalDuration: allChapters.reduce(
+              (total, chapter) => total + chapter.totalDuration,
+              0
+            ),
+          });
+
+          console.log("\n\n\n\n Proses ini selesai");
         },
         beforeDestroy: async (module, options) => {
           console.log("Sebelum Modul Dihapus:", module.toJSON());
