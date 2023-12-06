@@ -27,7 +27,8 @@ export default function Sidebar() {
       });
     } else if (
       location.pathname === "/kelola-kelas" ||
-      location.pathname.includes("/edit-kelas")
+      location.pathname.includes("/edit-kelas") ||
+      location.pathname.includes("/tambah-kelas")
     ) {
       setBackground({
         dashboard: false,
@@ -38,7 +39,7 @@ export default function Sidebar() {
 
   return (
     <>
-      <nav className="sticky top-0 bg-darkblue-05 h-screen  md:flex flex-col justify-center items-center flex-wrap w-auto lg:w-[300px] hidden">
+      <nav className="sticky top-0 bg-darkblue-05 h-screen  md:flex flex-col justify-center items-center flex-wrap w-auto lg:w-[300px] hidden ">
         <img
           src="/images/logo-n-maskot/Logo-png.png"
           alt="logo"

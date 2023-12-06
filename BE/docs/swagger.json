@@ -1,9 +1,9 @@
 {
   "openapi": "3.0.0",
   "info": {
-    "title": "SiNow API Documentation",
+    "title": "SINOW API Documentation",
     "version": "1.0.0",
-    "description": "Halaman ini untuk mendokumentasi API dari aplikasi SiNow"
+    "description": "Halaman ini untuk mendokumentasi API dari aplikasi SINOW"
   },
   "tags": [
     {
@@ -1189,6 +1189,87 @@
                     "message": {
                       "type": "string",
                       "example": "Berhasil mendapatkan data notifikasi"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Token tidak valid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Failed"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Token tidak valid"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Data notifikasi tidak ada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Failed"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Tidak ada notifikasi"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["User"],
+        "summary": "API ini untuk menghapus data notifikasi dari user yang login",
+        "description": "API ini digunakan untuk user menghapus data notifikasi mereka",
+        "security": [
+          {
+            "bearerToken": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Berhasil menghapus data notifikasi",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Success"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Berhasil menghapus data notifikasi"
                     }
                   }
                 }

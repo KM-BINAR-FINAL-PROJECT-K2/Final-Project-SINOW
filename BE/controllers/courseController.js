@@ -1,18 +1,5 @@
-const {
-  Course,
-  User,
-  Category,
-  Chapter,
-  Module,
-  Benefit,
-} = require("../models");
-const {
-  validateCategory,
-  validateLevel,
-  validateType,
-  validateNumericFields,
-  getCourseOrder,
-} = require("../utils/courseValidator");
+const { Course, User, Category, Chapter, Module, Benefit } = require("../models");
+const { validateCategory, validateLevel, validateType, validateNumericFields, getCourseOrder } = require("../utils/courseValidator");
 
 const { Op } = require("sequelize");
 const ApiError = require("../utils/ApiError");
@@ -23,35 +10,12 @@ const createCourse = async (req, res, next) => {
   const user = req.user;
 
   try {
-    let {
-      name,
-      level,
-      rating,
-      categoryId,
-      description,
-      classCode,
-      type,
-      price = 0,
-      promo = 0,
-      courseBy,
-    } = req.body;
+    let { name, level, rating, categoryId, description, classCode, type, price = 0, promo = 0, courseBy } = req.body;
 
-    const missingFields = [
-      "name",
-      "level",
-      "rating",
-      "categoryId",
-      "description",
-      "classCode",
-      "type",
-      "price",
-      "courseBy",
-    ].filter((field) => !req.body[field]);
+    const missingFields = ["name", "level", "rating", "categoryId", "description", "classCode", "type", "price", "courseBy"].filter((field) => !req.body[field]);
 
     if (missingFields.length > 0) {
-      return next(
-        new ApiError(`Field ${missingFields.join(", ")} harus diisi`, 400)
-      );
+      return next(new ApiError(`Field ${missingFields.join(", ")} harus diisi`, 400));
     }
 
     if (Object.keys(req.files).length !== 2) {
@@ -235,18 +199,7 @@ const getCourseById = async (req, res, next) => {
 const updateCourse = async (req, res, next) => {
   try {
     const { id } = req.params;
-    let {
-      name,
-      level,
-      rating,
-      categoryId,
-      description,
-      classCode,
-      type,
-      price,
-      promo,
-      courseBy,
-    } = req.body;
+    let { name, level, rating, categoryId, description, classCode, type, price, promo, courseBy } = req.body;
 
     const course = await Course.findByPk(id);
     if (!course) {
@@ -329,12 +282,7 @@ const updateCourse = async (req, res, next) => {
       }
     }
 
-    const [rowCount, [updatedCourse]] = await Course.update(updateData, {
-      where: {
-        id,
-      },
-      returning: true,
-    });
+    const [rowCount, [updatedCourse]] = await course.update(updateData);
 
     if (rowCount === 0 && !updatedCourse) {
       return next(new ApiError("Tidak ada course yang diupdate", 500));
@@ -359,15 +307,7 @@ const deleteCourse = async (req, res, next) => {
       return next(new ApiError("Course tidak ditemukan", 404));
     }
 
-    const isCourseDeleted = await course.destroy({
-      where: {
-        id,
-      },
-    });
-
-    if (!isCourseDeleted) {
-      return next(new ApiError("Gagal menghapus course", 500));
-    }
+    await course.destroy();
 
     res.status(200).json({
       status: "Success",
