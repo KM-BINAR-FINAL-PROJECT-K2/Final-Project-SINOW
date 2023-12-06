@@ -266,6 +266,31 @@ const openNotification = async (req, res, next) => {
   }
 };
 
+const deleteNotification = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const userId = req.user.id;
+
+    const notification = await Notification.findByPk(id);
+    if (!notification) {
+      return next(new ApiError("Notifikasi tidak ditemukan", 404));
+    }
+
+    if (notification.userId !== userId) {
+      return next(new ApiError("Akses ditolak", 403));
+    }
+
+    notification.destroy();
+
+    res.status(200).json({
+      status: "Success",
+      message: `Berhasil menghapus notifikasi dengan id: ${id}`,
+    });
+  } catch (error) {
+    return next(new ApiError(error.message, 500));
+  }
+};
+
 const createUserCourse = async (req, res, next) => {
   try {
     const { user } = req;
@@ -624,6 +649,7 @@ module.exports = {
   updateMyDetails,
   getUserNotification,
   openNotification,
+  deleteNotification,
   changeMyPassword,
   getMyCourses,
   openCourse,
