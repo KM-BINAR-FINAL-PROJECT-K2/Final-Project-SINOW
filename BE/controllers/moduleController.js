@@ -217,12 +217,7 @@ const updateModule = async (req, res, next) => {
       updateData.duration = uploadedVideo.videoDuration;
     }
 
-    const [rowCount, [updatedModule]] = await Module.update(updateData, {
-      where: {
-        id,
-      },
-      returning: true,
-    });
+    const [rowCount, [updatedModule]] = await module.update(updateData);
 
     if (rowCount === 0 && !updatedModule) {
       return next(new ApiError("Gagal update module", 500));
@@ -246,7 +241,7 @@ const deleteModule = async (req, res, next) => {
       return next(new ApiError("Module tidak ditemukan", 404));
     }
 
-    module.destroy();
+    await module.destroy();
 
     res.status(200).json({
       status: "success",

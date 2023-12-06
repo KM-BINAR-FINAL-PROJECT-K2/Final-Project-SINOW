@@ -81,9 +81,15 @@ module.exports = (sequelize, DataTypes) => {
           });
         },
         beforeDestroy: async (module, options) => {
+          console.log("Sebelum Modul Dihapus:", module.toJSON());
           const chapter = await module.getChapter();
+          console.log("Chapter Modul:", chapter.toJSON());
           const course = await chapter.getCourse();
+          console.log("Course Modul:", course.toJSON());
 
+          await chapter.update({
+            totalDuration: chapter.totalDuration - module.duration,
+          });
           await course.update({
             totalModule: course.totalModule - 1,
             totalDuration: course.totalDuration - module.duration,
@@ -91,8 +97,15 @@ module.exports = (sequelize, DataTypes) => {
         },
         beforeBulkDestroy: async (modules, options) => {
           for (const module of modules) {
+            console.log("Sebelum Modul Dihapus (Bulk):", module.toJSON());
             const chapter = await module.getChapter();
+            console.log("Chapter Modul (Bulk):", chapter.toJSON());
             const course = await chapter.getCourse();
+            console.log("Course Modul (Bulk):", course.toJSON());
+
+            await chapter.update({
+              totalDuration: chapter.totalDuration - module.duration,
+            });
 
             await course.update({
               totalModule: course.totalModule - 1,
