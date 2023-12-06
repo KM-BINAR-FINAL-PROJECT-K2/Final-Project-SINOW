@@ -6,7 +6,7 @@ export default function LoadingScreen() {
   return (
     <>
       <div className="fixed inset-0 overflow-hidden z-[1000] flex justify-center items-center">
-        <div className="absolute w-full mb-24">
+        <div className="absolute w-full mb-24 z-[1000]">
           <div className="flex justify-center items-center h-screen">
             <Lottie
               className="w-[100px]"
@@ -17,7 +17,7 @@ export default function LoadingScreen() {
         </div>
         <h1
           aria-label="Loading ..."
-          className="flex justify-center items-center h-screen text-2xl w-full font-bold text-[#3cc1ff] mt-10"
+          className="flex justify-center items-center h-screen text-2xl w-full font-bold text-[#3cc1ff] mt-10 z-[1000]"
         >
           Loading&nbsp;<span className="typewriter"></span>
         </h1>
