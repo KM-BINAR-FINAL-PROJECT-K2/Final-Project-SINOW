@@ -66,6 +66,9 @@ export default function AddClass() {
 
   useEffect(() => {
     try {
+      if (!form.name) {
+        return;
+      }
       const addClass = async () => {
         await Swal.fire({
           title: "Yakin menambahkan Course baru?",
