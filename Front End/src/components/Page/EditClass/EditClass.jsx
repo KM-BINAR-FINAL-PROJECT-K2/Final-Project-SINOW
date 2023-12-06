@@ -1,14 +1,16 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react/prop-types */
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import Navigation from "../../Template/Navigation/Navigation";
 import Breadcrumb from "../../Organism/Breadcrumb/Breadcrumb";
 // import ImageUploader from "../../Molecule/ImageUploader/ImageUploader";
 import Swal from "sweetalert2";
+import { LoaderContext } from "../../../store/Loader";
 
 export default function EditClass() {
+  const { isLoading, setIsLoading } = useContext(LoaderContext);
   const [editClass, setEditClass] = useState();
   const [categories, setCategories] = useState([]);
   const [form, setForm] = useState({
@@ -65,20 +67,21 @@ export default function EditClass() {
       name,
       level,
       rating,
-      category,
+      categoryId: category,
       description,
       classCode,
       type,
       price,
       promo,
       courseBy,
-      imageUrl,
-      videoPreviewUrl,
+      image: imageUrl,
+      video: videoPreviewUrl,
     });
   };
 
   useEffect(() => {
     try {
+      setIsLoading(true);
       if (!form.name) {
         return;
       }
@@ -149,6 +152,8 @@ export default function EditClass() {
       updateClass();
     } catch (error) {
       console.log(error);
+    } finally {
+      setIsLoading(false);
     }
   }, [form]);
 
