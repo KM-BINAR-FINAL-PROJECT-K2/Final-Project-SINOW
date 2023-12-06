@@ -36,7 +36,7 @@ export default function DashboadAdmin() {
   }, 0);
   return (
     <Navigation>
-      <section className="mx-16 flex justify-around gap-6 flex-wrap mb-[54px]">
+      <section className="mx-8 lg:mx-16 flex justify-around gap-6 flex-wrap mb-[54px]">
         <Card
           color={"bg-darkblue-03"}
           quantity={totalQuantity}
@@ -54,7 +54,7 @@ export default function DashboadAdmin() {
         />
       </section>
 
-      <section className="mx-8 lg:mx-16">
+      <section className="mx-4 lg:mx-16">
         <div className="py-[10px] flex flex-wrap">
           <h2 className="my-[10px] font-semibold text-[20px] flex-wrap flex-1 min-w-[200px]">
             Status Pembayaran
@@ -104,7 +104,7 @@ export default function DashboadAdmin() {
         </div>
       </section>
 
-      <section className="border-red-500 mx-8 n lg:mx-[64px] mb-64 ">
+      <section className="mx-4 n lg:mx-[64px] mb-64">
         <div className="border-blue-500 ">
           <section className="border-yellow-300 overflow-auto">
             {/* Payment Table */}
