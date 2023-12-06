@@ -75,8 +75,8 @@ export default function EditClass() {
       price,
       promo,
       courseBy,
-      // image: imageUrl,
-      // video: videoPreviewUrl,
+      image: imageUrl,
+      video: videoPreviewUrl,
     });
   };
 
