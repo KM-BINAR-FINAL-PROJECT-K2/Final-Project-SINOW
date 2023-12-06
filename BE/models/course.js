@@ -5,6 +5,13 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
 
+      Course.hasMany(models.Chapter, {
+        foreignKey: "courseId",
+        as: "chapters",
+        onDelete: "cascade",
+        hooks: true,
+      });
+
       Course.belongsTo(models.User, {
         foreignKey: "createdBy",
         as: "courseCreator",
@@ -13,11 +20,7 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "categoryId",
         as: "category",
       });
-      Course.hasMany(models.Chapter, {
-        foreignKey: "courseId",
-        as: "chapters",
-        onDelete: "cascade",
-      });
+
       Course.hasMany(models.Benefit, {
         foreignKey: "courseId",
         as: "benefits",

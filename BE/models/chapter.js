@@ -9,13 +9,6 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      Chapter.belongsTo(models.Course, {
-        foreignKey: {
-          name: "courseId",
-          allowNull: false,
-        },
-        onDelete: "cascade",
-      });
       Chapter.hasMany(models.Module, {
         foreignKey: {
           name: "chapterId",
@@ -23,7 +16,16 @@ module.exports = (sequelize, DataTypes) => {
         },
         as: "modules",
         onDelete: "cascade",
+        hooks: true,
       });
+      Chapter.belongsTo(models.Course, {
+        foreignKey: {
+          name: "courseId",
+          allowNull: false,
+        },
+        onDelete: "cascade",
+      });
+
       Chapter.hasMany(models.UserModule, {
         foreignKey: {
           name: "chapterId",
