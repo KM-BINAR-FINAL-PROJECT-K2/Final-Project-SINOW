@@ -67,7 +67,6 @@ module.exports = (sequelize, DataTypes) => {
           }
         },
         afterUpdate: async (module, options) => {
-          console.log("\n\n\n\n\nmasuk ke afterUpdate");
           const chapter = await module.getChapter();
           const course = await chapter.getCourse();
 
@@ -86,20 +85,13 @@ module.exports = (sequelize, DataTypes) => {
           const allChapters = await course.getChapters();
 
           await course.update({
-            totalDuration: allChapters.reduce(
-              (total, chapter) => total + chapter.totalDuration,
-              0
-            ),
+            totalDuration: allChapters.reduce((total, chapter) => total + chapter.totalDuration, 0),
           });
-
-          console.log("\n\n\n\n Proses ini selesai");
         },
         beforeDestroy: async (module, options) => {
-          console.log("Sebelum Modul Dihapus:", module.toJSON());
           const chapter = await module.getChapter();
-          console.log("Chapter Modul:", chapter.toJSON());
+
           const course = await chapter.getCourse();
-          console.log("Course Modul:", course.toJSON());
 
           await chapter.update({
             totalDuration: chapter.totalDuration - module.duration,
@@ -111,11 +103,9 @@ module.exports = (sequelize, DataTypes) => {
         },
         beforeBulkDestroy: async (modules, options) => {
           for (const module of modules) {
-            console.log("Sebelum Modul Dihapus (Bulk):", module.toJSON());
             const chapter = await module.getChapter();
-            console.log("Chapter Modul (Bulk):", chapter.toJSON());
+
             const course = await chapter.getCourse();
-            console.log("Course Modul (Bulk):", course.toJSON());
 
             await chapter.update({
               totalDuration: chapter.totalDuration - module.duration,
