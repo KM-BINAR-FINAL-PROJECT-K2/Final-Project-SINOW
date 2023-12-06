@@ -8,9 +8,13 @@ const createModule = async (req, res, next) => {
   try {
     let { name, no, chapterId } = req.body;
 
-    const missingFields = ["name", "no", "chapterId"].filter((field) => !req.body[field]);
+    const missingFields = ["name", "no", "chapterId"].filter(
+      (field) => !req.body[field]
+    );
     if (missingFields.length > 0) {
-      return next(new ApiError(`Field ${missingFields.join(", ")} harus di isi`, 400));
+      return next(
+        new ApiError(`Field ${missingFields.join(", ")} harus di isi`, 400)
+      );
     }
 
     if (isNaN(no) || isNaN(chapterId)) {
@@ -24,7 +28,12 @@ const createModule = async (req, res, next) => {
 
     const checkChapter = await Chapter.findByPk(chapterId);
     if (!checkChapter) {
-      return next(new ApiError("Chapter tidak ditemukan, silahkan cek daftar chapter untuk melihat chapter yang tersedia", 404));
+      return next(
+        new ApiError(
+          "Chapter tidak ditemukan, silahkan cek daftar chapter untuk melihat chapter yang tersedia",
+          404
+        )
+      );
     }
     const existingModule = await Module.findOne({
       where: {
@@ -171,7 +180,9 @@ const updateModule = async (req, res, next) => {
       });
 
       if (existingModule) {
-        return next(new ApiError("Nama modul sudah ada dalam chapter ini", 400));
+        return next(
+          new ApiError("Nama modul sudah ada dalam chapter ini", 400)
+        );
       }
       updateData.name = name;
     }
@@ -191,7 +202,9 @@ const updateModule = async (req, res, next) => {
       });
 
       if (checkNumber) {
-        return next(new ApiError("Nomor modul sudah digunakan dalam chapter ini", 400));
+        return next(
+          new ApiError("Nomor modul sudah digunakan dalam chapter ini", 400)
+        );
       }
       updateData.no = parsedNo;
     }
@@ -203,7 +216,12 @@ const updateModule = async (req, res, next) => {
 
       const checkChapter = await Chapter.findByPk(chapterId);
       if (!checkChapter) {
-        return next(new ApiError("Chapter tidak ditemukan, silahkan cek daftar chapter untuk melihat chapter yang tersedia", 404));
+        return next(
+          new ApiError(
+            "Chapter tidak ditemukan, silahkan cek daftar chapter untuk melihat chapter yang tersedia",
+            404
+          )
+        );
       }
       updateData.chapterId = chapterId;
     }
@@ -217,16 +235,12 @@ const updateModule = async (req, res, next) => {
       updateData.duration = uploadedVideo.videoDuration;
     }
 
-    const [rowCount, [updatedModule]] = await module.update(updateData);
-
-    if (rowCount === 0 && !updatedModule) {
-      return next(new ApiError("Gagal update module", 500));
-    }
+    await module.update(updateData);
 
     res.status(200).json({
       status: "Success",
       message: `Berhasil mengupdate data module id: ${id}`,
-      data: updatedModule,
+      data: module,
     });
   } catch (error) {
     return next(new ApiError(error, 500));
