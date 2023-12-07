@@ -113,20 +113,13 @@ const updateCategory = async (req, res, next) => {
     }
 
     if (Object.keys(updateData).length !== 0) {
-      const [rowCount, [updatedCategory]] = await Category.update(updateData, {
-        where: {
-          id,
-        },
-        returning: true,
-      });
-      if (rowCount === 0 || !updatedCategory) {
-        return next(new ApiError("gagal upate category", 500));
-      }
+      category.update(updateData);
     }
 
     res.status(200).json({
       status: "Success",
       message: "sukses update category",
+      data: category,
     });
   } catch (error) {
     return next(new ApiError(error, 500));
@@ -134,42 +127,38 @@ const updateCategory = async (req, res, next) => {
 };
 
 const deleteCategory = async (req, res, next) => {
-  const { id } = req.params;
+  try {
+    const { id } = req.params;
 
-  const category = await Category.findByPk(id);
-  if (!category) {
-    return next(new ApiError("Category tidak ditemukan", 404));
+    const category = await Category.findByPk(id);
+    if (!category) {
+      return next(new ApiError("Category tidak ditemukan", 404));
+    }
+
+    const checkCourse = await Course.findOne({
+      where: {
+        categoryId: id,
+      },
+    });
+
+    if (checkCourse) {
+      return next(
+        new ApiError(
+          "Gagal menghapus kategory karena sudah ada course dengan kategory ini",
+          400
+        )
+      );
+    }
+
+    await category.destroy();
+
+    res.status(200).json({
+      status: "Success",
+      message: `Berhasil menghapus data category dengan id: ${id}`,
+    });
+  } catch (error) {
+    return next(new ApiError(error, 500));
   }
-
-  const checkCourse = await Course.findOne({
-    where: {
-      categoryId: id,
-    },
-  });
-
-  if (checkCourse) {
-    return next(
-      new ApiError(
-        "Gagal menghapus kategory karena sudah ada course dengan kategory ini",
-        400
-      )
-    );
-  }
-
-  const isCategoryDeleted = await category.destroy({
-    where: {
-      id,
-    },
-  });
-
-  if (!isCategoryDeleted) {
-    return next(new ApiError("Gagal menghapus category", 500));
-  }
-
-  res.status(200).json({
-    status: "Success",
-    message: `Berhasil menghapus data category dengan id: ${id}`,
-  });
 };
 
 module.exports = {

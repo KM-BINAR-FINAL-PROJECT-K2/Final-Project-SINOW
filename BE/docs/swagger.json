@@ -204,7 +204,27 @@
                     },
                     "message": {
                       "type": "string",
-                      "example": "Data register tidak valid"
+                      "example": "Data registrasi tidak valid: email tidak valid, nomor telepon tidak valid, panjang password kurang dari 8 karakter, email sudah terdaftar, nomor telepon sudah terdaftar"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Terjadi kesalahan pada server",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Error"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Terjadi kesalahan pada server"
                     }
                   }
                 }
@@ -272,7 +292,7 @@
             }
           },
           "400": {
-            "description": "Data verifikasi email tidak valid",
+            "description": "Data verifikasi email tidak valid: email tidak valid, email tidak terdaftar, email tidak memiliki kode OTP yang aktif, panjang OTP tidak 6 karakter, kode OTP tidak valid",
             "content": {
               "application/json": {
                 "schema": {
@@ -285,6 +305,26 @@
                     "message": {
                       "type": "string",
                       "example": "Data verifikasi email tidak valid"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Terjadi kesalahan pada server",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Error"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Terjadi kesalahan pada server"
                     }
                   }
                 }
@@ -338,7 +378,7 @@
             }
           },
           "400": {
-            "description": "Data resend OTP tidak valid",
+            "description": "Data resend OTP tidak valid: email tidak ada, email tidak valid, email tidak terdaftar, Email sudah diverifikasi, tidak memerlukan autentikasi OTP",
             "content": {
               "application/json": {
                 "schema": {
@@ -351,6 +391,26 @@
                     "message": {
                       "type": "string",
                       "example": "Data resend OTP tidak valid"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Terjadi kesalahan pada server",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Error"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Terjadi kesalahan pada server"
                     }
                   }
                 }
@@ -400,7 +460,7 @@
             }
           },
           "400": {
-            "description": "Data reset password tidak valid",
+            "description": "Data reset password tidak valid: Email tidak ada, email tidak valid, email tidak terdaftar",
             "content": {
               "application/json": {
                 "schema": {
@@ -413,6 +473,26 @@
                     "message": {
                       "type": "string",
                       "example": "Data reset password tidak valid"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Terjadi kesalahan pada server",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Error"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Terjadi kesalahan pada server"
                     }
                   }
                 }
@@ -465,7 +545,59 @@
         "responses": {
           "200": {
             "description": "Password sukses direset",
-            "content": {}
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Password berhasil diubah"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Gagal reset password",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Failed"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Gagal reset password: token tidak ada, password tidak valid, password tidak cocok, panjang password kurang dari 8 karakter"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Terjadi kesalahan pada server",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Error"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Terjadi kesalahan pada server"
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -666,6 +798,26 @@
                 }
               }
             }
+          },
+          "500": {
+            "description": "Terjadi kesalahan pada server",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Error"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Terjadi kesalahan pada server"
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -736,6 +888,35 @@
                     "message": {
                       "type": "string",
                       "example": "Berhasil mengupdate data user"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "token": {
+                          "type": "string",
+                          "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6InVzZXIiLCJpYXQiOjE2NjIzNzQ0MTksImV4cCI6MTY2MjM3NDQxOX0.0DjJ8P8D7gZS0wXKc2hK6D9R0b2Y0O3h0z2r8mT8q9k"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Data user tidak valid: email tidak valid, nomor telepon tidak valid, Nomor telepon sudah terdaftar di akun lain",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Failed"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Data user tidak valid"
                     }
                   }
                 }
@@ -762,8 +943,8 @@
               }
             }
           },
-          "400": {
-            "description": "Data user tidak valid",
+          "500": {
+            "description": "Terjadi kesalahan pada server",
             "content": {
               "application/json": {
                 "schema": {
@@ -771,11 +952,11 @@
                   "properties": {
                     "status": {
                       "type": "string",
-                      "example": "Failed"
+                      "example": "Error"
                     },
                     "message": {
                       "type": "string",
-                      "example": "Data user tidak valid"
+                      "example": "Terjadi kesalahan pada server"
                     }
                   }
                 }
@@ -824,7 +1005,7 @@
         },
         "responses": {
           "200": {
-            "description": "Password user sukses diubah",
+            "description": "Password berhasil diubah",
             "content": {
               "application/json": {
                 "schema": {
@@ -844,7 +1025,7 @@
             }
           },
           "400": {
-            "description": "Password user tidak valid",
+            "description": "Password user tidak valid: password lama salah, password kurang dari 8 karakter, password baru tidak sama dengan konfirmasi password baru",
             "content": {
               "application/json": {
                 "schema": {
@@ -877,6 +1058,26 @@
                     "message": {
                       "type": "string",
                       "example": "Token tidak valid"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Terjadi kesalahan pada server",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Error"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Terjadi kesalahan pada server"
                     }
                   }
                 }
@@ -931,6 +1132,26 @@
                     "message": {
                       "type": "string",
                       "example": "Token tidak valid"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Data course user masih kosong",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Failed"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Data course masih kosong"
                     }
                   }
                 }
@@ -996,6 +1217,46 @@
                     "message": {
                       "type": "string",
                       "example": "Token tidak valid"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Data course user tidak ditemukan",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Failed"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Course tidak ditemukan"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Terjadi kesalahan pada server",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Error"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Terjadi kesalahan pada server"
                     }
                   }
                 }
@@ -1075,6 +1336,46 @@
                 }
               }
             }
+          },
+          "404": {
+            "description": "Data module user tidak ditemukan",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Failed"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Data tidak ditemukan: course tidak ditemukan, tidak ada relasi antara user course dengan user module"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Terjadi kesalahan pada server",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Error"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Terjadi kesalahan pada server"
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -1131,7 +1432,7 @@
             }
           },
           "404": {
-            "description": "Data notifikasi tidak ada",
+            "description": "Tidak ada notifikasi",
             "content": {
               "application/json": {
                 "schema": {
@@ -1144,6 +1445,26 @@
                     "message": {
                       "type": "string",
                       "example": "Tidak ada notifikasi"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Terjadi kesalahan pada server",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Error"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Terjadi kesalahan pada server"
                     }
                   }
                 }
@@ -1215,8 +1536,28 @@
               }
             }
           },
+          "403": {
+            "description": "Akses ditolak karena notifikasi bukan punya user yang login",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Failed"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Akses ditolak karena notifikasi bukan punya user yang login"
+                    }
+                  }
+                }
+              }
+            }
+          },
           "404": {
-            "description": "Data notifikasi tidak ada",
+            "description": "Notifikasi tidak ditemukan",
             "content": {
               "application/json": {
                 "schema": {
@@ -1229,6 +1570,26 @@
                     "message": {
                       "type": "string",
                       "example": "Tidak ada notifikasi"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Terjadi kesalahan pada server",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Error"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Terjadi kesalahan pada server"
                     }
                   }
                 }
@@ -1296,8 +1657,28 @@
               }
             }
           },
+          "403": {
+            "description": "Akses ditolak karena notifikasi bukan punya user yang login",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Failed"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Akses ditolak karena notifikasi bukan punya user yang login"
+                    }
+                  }
+                }
+              }
+            }
+          },
           "404": {
-            "description": "Data notifikasi tidak ada",
+            "description": "Notifikasi tidak ditemukan",
             "content": {
               "application/json": {
                 "schema": {
@@ -1310,6 +1691,26 @@
                     "message": {
                       "type": "string",
                       "example": "Tidak ada notifikasi"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Terjadi kesalahan pada server",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Error"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Terjadi kesalahan pada server"
                     }
                   }
                 }
@@ -1459,6 +1860,46 @@
                 }
               }
             }
+          },
+          "403": {
+            "description": "Bukan admin",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Failed"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Kamu tidak berkepentingan disini"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Terjadi kesalahan pada server",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Error"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Terjadi kesalahan pada server"
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       },
@@ -1478,7 +1919,8 @@
             "in": "query",
             "name": "type",
             "schema": {
-              "type": "string"
+              "type": "string",
+              "enum": ["gratis", "premium"]
             }
           },
           {
@@ -1498,14 +1940,16 @@
               "type": "array",
               "items": {
                 "type": "string"
-              }
+              },
+              "example": ["beginner", "intermediate", "advanced"]
             }
           },
           {
             "in": "query",
             "name": "sortBy",
             "schema": {
-              "type": "string"
+              "type": "string",
+              "enum": ["terbaru", "terpopuler", "promo"]
             }
           }
         ],
@@ -1560,6 +2004,26 @@
                     "message": {
                       "type": "string",
                       "example": "Data course tidak ditemukan"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Terjadi kesalahan pada server",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Error"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Terjadi kesalahan pada server"
                     }
                   }
                 }
@@ -1640,6 +2104,26 @@
                     "message": {
                       "type": "string",
                       "example": "Data course tidak ditemukan"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Terjadi kesalahan pada server",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Error"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Terjadi kesalahan pada server"
                     }
                   }
                 }
@@ -1799,6 +2283,26 @@
               }
             }
           },
+          "403": {
+            "description": "Bukan admin",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Failed"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Kamu tidak berkepentingan disini"
+                    }
+                  }
+                }
+              }
+            }
+          },
           "404": {
             "description": "Data course tidak ditemukan",
             "content": {
@@ -1813,6 +2317,26 @@
                     "message": {
                       "type": "string",
                       "example": "Course tidak ditemukan"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Terjadi kesalahan pada server",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Error"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Terjadi kesalahan pada server"
                     }
                   }
                 }
@@ -1856,6 +2380,46 @@
                     "message": {
                       "type": "string",
                       "example": "Berhasil menghapus data course"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Token tidak valid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Failed"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Token tidak valid"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Bukan admin",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Failed"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Kamu tidak berkepentingan disini"
                     }
                   }
                 }

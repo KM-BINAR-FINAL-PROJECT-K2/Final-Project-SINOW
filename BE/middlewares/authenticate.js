@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken");
-const { User } = require("../models");
+const { User, Auth } = require("../models");
 const ApiError = require("../utils/ApiError");
 
 module.exports = async (req, res, next) => {
@@ -20,7 +20,12 @@ module.exports = async (req, res, next) => {
     }
 
     const user = await User.findByPk(decoded.id, {
-      include: ["Auth"],
+      include: [
+        {
+          model: Auth,
+          attributes: ["id", "email", "phoneNumber", "userId"],
+        },
+      ],
     });
 
     if (!user) {
