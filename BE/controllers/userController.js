@@ -35,15 +35,8 @@ const updateMyDetails = async (req, res, next) => {
   try {
     const { name, country, city } = req.body;
     let { email, phoneNumber } = req.body;
-    const { id } = req.user;
-
-    const checkUser = await User.findByPk(id, {
-      include: ["Auth"],
-    });
-
-    if (!checkUser) {
-      return next(new ApiError("User tidak ditemukan", 404));
-    }
+    const user = req.user;
+    const { id } = user;
 
     const updateDataUser = {};
 
@@ -61,9 +54,6 @@ const updateMyDetails = async (req, res, next) => {
 
     if (req.file) {
       const { imageUrl } = await uploadImage(req.file);
-      if (!imageUrl) {
-        return next(new ApiError("Gagal upload image", 400));
-      }
       updateDataUser.photoProfileUrl = imageUrl;
     }
 
@@ -74,7 +64,7 @@ const updateMyDetails = async (req, res, next) => {
       if (!validator.isEmail(email)) {
         return next(new ApiError("Email tidak valid", 400));
       }
-      if (email !== checkUser.Auth.email) {
+      if (email !== user.Auth.email) {
         const isEmailExist = await Auth.findOne({ where: { email } });
         if (isEmailExist) {
           return next(new ApiError("Email sudah terdaftar di lain akun", 400));
@@ -91,13 +81,13 @@ const updateMyDetails = async (req, res, next) => {
         return next(new ApiError("Nomor telepon tidak valid", 400));
       }
 
-      if (phoneNumber !== checkUser.Auth.phoneNumber) {
+      if (phoneNumber !== user.Auth.phoneNumber) {
         const isPhoneNumberExist = await Auth.findOne({
           where: { phoneNumber },
         });
         if (isPhoneNumberExist) {
           return next(
-            new ApiError("Nomor telepon sudah terdaftar di lain akun", 400)
+            new ApiError("Nomor telepon sudah terdaftar di akun lain", 400)
           );
         }
         updateDataAuth.phoneNumber = phoneNumber;
@@ -120,7 +110,7 @@ const updateMyDetails = async (req, res, next) => {
     if (updateDataAuth.email || updateDataAuth.phoneNumber) {
       const [rowCountAuth, [updatedAuth]] = await Auth.update(updateDataAuth, {
         where: {
-          id: checkUser.Auth.id,
+          id: user.Auth.id,
         },
         returning: true,
       });
@@ -129,27 +119,27 @@ const updateMyDetails = async (req, res, next) => {
       }
     }
 
-    const user = await User.findByPk(id, {
+    const newUser = await User.findByPk(id, {
       include: ["Auth"],
     });
 
-    req.user = user;
+    req.user = newUser;
 
     const token = createToken(
-      { id: user.id, name: user.name, role: user.role },
+      { id: newUser.id, name: newUser.name, role: newUser.role },
       next
     );
 
     await createNotification(
       "Notifikasi",
       "Berhasil memperbarui detail akun",
-      id,
+      newUser.id,
       "Detail akun Anda berhasil diperbarui"
     );
 
     res.status(200).json({
       status: "Success",
-      message: `Berhasil mengupdate data user id: ${id}`,
+      message: `Berhasil mengupdate data user id: ${newUser.id}`,
       data: {
         token,
       },
@@ -164,12 +154,26 @@ const changeMyPassword = async (req, res, next) => {
     const { user } = req;
     const { oldPassword, newPassword, confirmNewPassword } = req.body;
 
+    if (!oldPassword || !newPassword || !confirmNewPassword) {
+      return next(
+        new ApiError(
+          "Password lama, password baru, dan konfirmasi password baru harus diisi",
+          400
+        )
+      );
+    }
+
+    if (newPassword.length < 8) {
+      return next(new ApiError("Password min 8 karakter!", 400));
+    } else if (newPassword.length > 12) {
+      return next(new ApiError("Password max 12 karakter!", 400));
+    } else if (newPassword !== confirmNewPassword) {
+      return next(new ApiError("Password tidak cocok", 400));
+    }
+
     const isMatch = await bcrypt.compare(oldPassword, user.Auth.password);
     if (!isMatch) {
-      return next(new ApiError("Password lama tidak sesuai", 400));
-    }
-    if (newPassword !== confirmNewPassword) {
-      return next(new ApiError("Password baru tidak sesuai", 400));
+      return next(new ApiError("Password lama salah", 400));
     }
 
     const hashedPassword = await bcrypt.hash(newPassword, 10);
@@ -525,15 +529,6 @@ const openUserModule = async (req, res, next) => {
       );
     }
 
-    if (!userCourse.isAccessible) {
-      return next(
-        new ApiError(
-          "Anda perlu menyelesaikan pembayaran terlebih dahulu untuk mengakses course ini",
-          403
-        )
-      );
-    }
-
     const totalModuleStudied = mergedUserModules.reduce((count, module) => {
       return module.status === "dipelajari" ? count + 1 : count;
     }, 0);
@@ -553,6 +548,14 @@ const openUserModule = async (req, res, next) => {
     }
 
     if (userModule.status === "terkunci") {
+      if (!userCourse.isAccessible) {
+        return next(
+          new ApiError(
+            "Anda perlu menyelesaikan pembayaran terlebih dahulu untuk mengakses course ini",
+            403
+          )
+        );
+      }
       return next(
         new ApiError(
           "Module ini masih terkunci, selesaikan module yang sebelumnya dulu",
@@ -561,7 +564,7 @@ const openUserModule = async (req, res, next) => {
       );
     }
 
-    if (userModule.status === "terbuka") {
+    if (userModule.status === "terbuka" && userCourse.isAccessible === true) {
       const nextUserModule = mergedUserModules[indexUserModule + 1];
       if (nextUserModule) {
         await nextUserModule.update({
@@ -576,6 +579,7 @@ const openUserModule = async (req, res, next) => {
       await userCourse.update({
         progress: progress,
       });
+
       await userModule.update({
         status: "dipelajari",
       });

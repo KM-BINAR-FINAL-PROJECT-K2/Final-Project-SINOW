@@ -164,7 +164,7 @@ const resendOtp = async (req, res, next) => {
     const { email } = req.body;
 
     if (!email) {
-      return next(new ApiError("Email tidak boleh kosong", 400));
+      return next(new ApiError("Email tidak ada", 400));
     }
 
     if (!validator.isEmail(email)) {
@@ -179,7 +179,7 @@ const resendOtp = async (req, res, next) => {
     if (isEmailExist.isEmailVerified) {
       return next(
         new ApiError(
-          "Email tidak memerlukan autentikasi OTP, silahkan login",
+          "Email sudah diverifikasi, tidak memerlukan autentikasi OTP",
           400
         )
       );
@@ -246,7 +246,9 @@ const verifyEmail = async (req, res, next) => {
     const otp = await OTP.findOne({ where: { userEmail: email } });
 
     if (!otp) {
-      return next(new ApiError("Email tersebut tidak memiliki OTP", 400));
+      return next(
+        new ApiError("Email tersebut tidak memiliki OTP yang aktif", 400)
+      );
     }
 
     if (otp.otpValue !== otpCode) {
@@ -319,7 +321,7 @@ const reqResetPassword = async (req, res, next) => {
     const { email } = req.body;
 
     if (!email) {
-      return next(new ApiError("Email harus diisi", 400));
+      return next(new ApiError("Email tidak ada", 400));
     }
     if (!validator.isEmail(email)) {
       return next(new ApiError("Email tidak valid", 400));
@@ -352,7 +354,7 @@ const resetPassword = async (req, res, next) => {
     const { token } = req.params;
 
     if (!token) {
-      return next(new ApiError("Token harus diisi", 400));
+      return next(new ApiError("Token tidak ada", 400));
     }
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
@@ -370,7 +372,7 @@ const resetPassword = async (req, res, next) => {
     } else if (password.length > 12) {
       return next(new ApiError("Password max 12 karakter!", 400));
     } else if (password !== confirmPassword) {
-      return next(new ApiError("Password tidak cocok!", 400));
+      return next(new ApiError("Password tidak cocok", 400));
     }
 
     const auth = await Auth.findOne({
@@ -385,19 +387,9 @@ const resetPassword = async (req, res, next) => {
 
     const passwordHash = await bcrypt.hash(password, 10);
 
-    const [countRowUpdated] = await Auth.update(
-      {
-        password: passwordHash,
-      },
-      {
-        where: {
-          id: decoded.id,
-        },
-      }
-    );
-    if (countRowUpdated === 0) {
-      return next(new ApiError("Gagal mengganti password", 500));
-    }
+    auth.update({
+      password: passwordHash,
+    });
 
     await createNotification(
       "Notifikasi",
