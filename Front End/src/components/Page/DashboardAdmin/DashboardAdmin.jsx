@@ -4,10 +4,13 @@ import Navigation from "../../Template/Navigation/Navigation";
 import Card from "../../Molecule/Card/Card";
 import PaymentTable from "../../Molecule/PaymentTable/PaymentTable";
 import { LoaderContext } from "../../../store/Loader";
+import FilterButton from "../../Molecule/Filter/FilterButton";
+import { PlaceholderContext } from "../../../store/PlaceholderStore";
 
 export default function DashboadAdmin() {
   const { setIsLoading } = useContext(LoaderContext);
   const [error, setError] = useState("");
+  const { handleSearchButtonClick } = useContext(PlaceholderContext);
   useEffect(() => {
     const getClasses = async () => {
       try {
@@ -61,39 +64,8 @@ export default function DashboadAdmin() {
           </h2>
 
           <div className="flex">
-            <div className="flex items-center justify-center">
-              <img
-                src="/images/prefix-wrapper.png"
-                alt=""
-                className="border-darkblue-05  border-2 rounded-l-[18px] border-r-0 p-[5px] w-[36px] h-[36px]"
-              />
-
-              <select
-                style={{
-                  appearance: "none",
-                }}
-                className="bg-neutral-01 border-2 rounded-r-[18px] border-darkblue-05 border-l-0 inline-block ] py-[5px] px-[10px] w-[80px] h-[36px] mr-[16px] my-[10px] font-semibold text-darkblue-05"
-                name="filter"
-                id="filter"
-              >
-                <option className="font-normal text-neutral-05" value="default">
-                  Filter
-                </option>
-                <option
-                  className="font-normal text-neutral-05"
-                  value="kategori"
-                >
-                  Sudah Bayar
-                </option>
-                <option
-                  className="font-normal text-neutral-05"
-                  value="kelas_premium"
-                >
-                  Belum Bayar
-                </option>
-              </select>
-            </div>
-            <button className="">
+            <FilterButton />
+            <button className="" onClick={handleSearchButtonClick}>
               <img
                 src="/images/search-icon-2.png"
                 alt=""
