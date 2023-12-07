@@ -175,16 +175,12 @@ const updateChapter = async (req, res, next) => {
       updateData.courseId = courseId;
     }
 
-    const [rowCount, [updatedChapter]] = await chapter.update(updateData);
-
-    if (rowCount === 0 && !updatedChapter) {
-      return next(new ApiError("Gagal update data Chapter", 500));
-    }
+    await chapter.update(updateData);
 
     res.status(200).json({
       status: "Success",
       message: `Berhasil mengupdate data chapter id: ${id}`,
-      data: updatedChapter,
+      data: chapter,
     });
   } catch (error) {
     return next(new ApiError(error, 500));

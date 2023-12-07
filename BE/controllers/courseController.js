@@ -282,16 +282,12 @@ const updateCourse = async (req, res, next) => {
       }
     }
 
-    const [rowCount, [updatedCourse]] = await course.update(updateData);
-
-    if (rowCount === 0 && !updatedCourse) {
-      return next(new ApiError("Tidak ada course yang diupdate", 500));
-    }
+    await course.update(updateData);
 
     res.status(200).json({
       status: "Success",
       message: `Berhasil mengupdate data course id: ${id}`,
-      data: updatedCourse,
+      data: course,
     });
   } catch (error) {
     return next(new ApiError(error, 500));
