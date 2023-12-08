@@ -136,14 +136,7 @@ const paymentFinalize = async (req, res, next) => {
 
     res.status(200).json({
       status: "Success",
-      message: "sukses melakukan transaksi",
-      data: {
-        transaction_status,
-        fraud_status,
-        order_id,
-        gross_amount,
-        item_details,
-      },
+      message: "Berhasil menyelesaikan transaksi",
     });
   } catch (error) {
     return next(new ApiError(error.message, 500));
