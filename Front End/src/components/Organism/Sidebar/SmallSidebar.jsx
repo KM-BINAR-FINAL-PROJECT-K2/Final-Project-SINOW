@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Logout from "../../Page/Logout/Logout";
+import ButtonLogout from "../../Page/Logout/Logout";
 export default function SmallSidebar() {
   const [showNav, setShowNav] = useState(false);
   const [showLogout, setShowLogout] = useState(false);
@@ -67,7 +68,7 @@ export default function SmallSidebar() {
           </a>
           <button
             className="inline-block cursor-pointer w-[50px] relative group"
-            onClick={toggleShowLogout}
+            onClick={ButtonLogout}
           >
             <img
               src="/images/exit-icon.png"
@@ -79,7 +80,6 @@ export default function SmallSidebar() {
             </span>
           </button>
         </nav>
-        {showLogout && <Logout toggleShowLogout={toggleShowLogout} />}
       </div>
     </>
   );
