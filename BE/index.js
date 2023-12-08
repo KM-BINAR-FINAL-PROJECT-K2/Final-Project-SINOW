@@ -34,8 +34,4 @@ app.all("*", (req, res, next) => {
 
 app.use(errorController);
 
-const port = process.env.PORT || 3000;
-
-app.listen(port, () => {
-  console.log(`Server berjalan di port: ${port}`);
-});
+module.exports = app;
