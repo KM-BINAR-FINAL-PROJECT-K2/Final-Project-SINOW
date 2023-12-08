@@ -4,6 +4,8 @@ on:
     types: [opened, edited, synchronize]
     branches:
       - main
+    paths:
+      - "BE/**"
 jobs:
   test:
     environment: test
@@ -60,8 +62,10 @@ jobs:
           path: ~/.npm
           key: deps-node-modules-${{ hashFiles('**/package-lock.json') }}
       - name: Install dependencies
+        working-directory: ./BE
         run: npm install
       - name: Lint code
+        working-directory: ./BE
         run: npm run lint
   merge:
     needs: [test, lint]
@@ -69,6 +73,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Merge
+        working-directory: ./BE
         run: echo "Can Be Merge..."
   report:
     needs: merge
@@ -76,6 +81,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Output information
+        working-directory: ./BE
         run: |
           echo "Something went wrong"
           echo "${{ toJSON(github) }}"
