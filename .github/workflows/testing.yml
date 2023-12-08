@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths:
-      - "BE/**"
+      - ./BE/**
 jobs:
   test:
     environment: test
@@ -36,17 +36,23 @@ jobs:
           path: ~/.npm
           key: deps-node-modules-${{ hashFiles('**/package-lock.json') }}
       - name: Install dependencies
+        working-directory: ./BE
         run: npm install
       - name: drop existing DB
+        working-directory: ./BE
         run: npm run db:drop
       - name: Create DB
+        working-directory: ./BE
         run: npm run db:create
       - name: Migration database
+        working-directory: ./BE
         run: npm run db:migrate
       - name: Seed database
+        working-directory: ./BE
         run: npm run db:seed
       - name: Test code
         id: run-tests
+        working-directory: ./BE
         run: npm run test
   lint:
     needs: test
@@ -73,7 +79,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Merge
-        working-directory: ./BE
         run: echo "Can Be Merge..."
   report:
     needs: merge
