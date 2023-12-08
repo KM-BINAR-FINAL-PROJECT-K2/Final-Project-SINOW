@@ -39,7 +39,7 @@ export default function Sidebar() {
 
   return (
     <>
-      <nav className="sticky top-0 bg-darkblue-05 h-screen  md:flex flex-col justify-center items-center flex-wrap w-auto lg:w-[300px] hidden ">
+      <nav className="sticky top-0 bg-sinow-04 h-screen  md:flex flex-col justify-center items-center flex-wrap w-auto lg:w-[300px] hidden ">
         <img
           src="/images/logo-n-maskot/Logo-png.png"
           alt="logo"
@@ -49,9 +49,9 @@ export default function Sidebar() {
           <a
             id="dashboard"
             href="/dashboard"
-            className={`pl-[12px] text-[12px] inline-block lg:text-[16px] font-bold text-neutral-01 font-montserrat hover:bg-darkblue-03 py-[13px]  w-full hover:pl-[18px]  lg:hover:pl-[45px] transition-all duration-300 ${
+            className={`pl-[12px] text-[12px] inline-block lg:text-[16px] font-bold text-neutral-01 font-montserrat hover:bg-sinow-03 py-[13px]  w-full hover:pl-[18px]  lg:hover:pl-[45px] transition-all duration-300 ${
               background.dashboard
-                ? "bg-darkblue-03 pl-[18px] hover:pl-[18px] lg:pl-[45px]"
+                ? "bg-sinow-05 pl-[18px] hover:pl-[18px] lg:pl-[45px]"
                 : "lg:pl-[25px]"
             }`}
           >
@@ -60,7 +60,7 @@ export default function Sidebar() {
           <a
             id="kelola-kelas"
             href="/kelola-kelas"
-            className={`pl-[12px] text-[12px] inline-block lg:text-[16px] font-bold text-neutral-01 font-montserrat hover:bg-darkblue-03 py-[13px]  w-full hover:pl-[18px]  lg:hover:pl-[45px] transition-all duration-300 ${
+            className={`pl-[12px] text-[12px] inline-block lg:text-[16px] font-bold text-neutral-01 font-montserrat hover:bg-sinow-03 py-[13px]  w-full hover:pl-[18px]  lg:hover:pl-[45px] transition-all duration-300 ${
               background.kelolaKelas
                 ? "bg-darkblue-03 pl-[18px] hover:pl-[18px] lg:pl-[45px]"
                 : "lg:pl-[25px]"
@@ -70,7 +70,7 @@ export default function Sidebar() {
           </a>
           <button
             id="keluar"
-            className={`pl-[12px] text-left text-[12px] inline-block lg:text-[16px] font-bold text-neutral-01 font-montserrat hover:bg-darkblue-03 py-[13px] lg:pl-[25px] w-full hover:pl-[18px]  lg:hover:pl-[45px] transition-all duration-300`}
+            className={`pl-[12px] text-left text-[12px] inline-block lg:text-[16px] font-bold text-neutral-01 font-montserrat hover:bg-sinow-03 py-[13px] lg:pl-[25px] w-full hover:pl-[18px]  lg:hover:pl-[45px] transition-all duration-300`}
             onClick={ButtonLogout}
           >
             <p>Keluar</p>
