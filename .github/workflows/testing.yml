@@ -14,16 +14,19 @@ jobs:
       DB_NAME: railway
       DB_PASSWORD: FB3-C-cBE261Gcaab*66352bdgB5d212
       DB_PORT: 36206
-      DB_USERNAME: postgres
+      DB_USER: postgres
       IMAGEKIT_PUBLIC_KEY: public_DVITNf+5XTiO9Y3dKRqIlhuE58Q=
       IMAGEKIT_PRIVATE_KEY: private_fNqHqD5ocFxgaoj8uWVeiJdXf9s=
-      IMAGEKIT_URL_ENDPOINT: https://ik.imagekit.io/dpmd80fxd
-      AUTH_EMAIL: jacksparrow133333@gmail.com
-      AUTH_PASSWORD: ofwf sdep whgd mrbt
+      IMAGEKIT_URL: https://ik.imagekit.io/dpmd80fxd
+      APP_NAME: SiNow
+      APP_EMAIL: jacksparrow133333@gmail.com
+      APP_PASSWORD: ofwf sdep whgd mrbt
       PORT: 3000
       JWT_SECRET: rahasia
-      JWT_EXPIREDIN: 1d
+      JWT_LOGIN_TOKEN_EXPIRES_IN: 1d
+      JWT_ISSUER: abc
       PASSWORD_HASH: admin123
+      BASE_URL: locahost:3000
     steps:
       - name: Get code
         uses: actions/checkout@v3
