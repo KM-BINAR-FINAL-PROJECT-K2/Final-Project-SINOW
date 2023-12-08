@@ -5480,7 +5480,6 @@
           }
         ],
         "requestBody": {
-          "required": true,
           "content": {
             "application/json": {
               "schema": {
@@ -5497,21 +5496,27 @@
                   "fraud_status": {
                     "type": "string",
                     "example": "accept"
-                  },
-
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "id": {
-                        "type": "integer",
-                        "example": 1
-                      },
-                      "price": {
-                        "type": "integer",
-                        "example": 10000
-                      },
-                      "quantity": {}
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Sukses menyelesaikan transaksi",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Success"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Berhasil menyelesaikan transaksi"
                     }
                   }
                 }
