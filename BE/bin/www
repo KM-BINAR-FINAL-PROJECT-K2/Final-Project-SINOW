@@ -1,0 +1,12 @@
+#!/usr/bin/env node
+require("dotenv").config();
+
+const app = require("../index");
+
+databaseValidation();
+
+const { PORT = 3000, BASE_URL } = process.env;
+
+app.listen(PORT, () => {
+  console.log(`Server berjalan di port: ${BASE_URL}:${PORT}`);
+});
