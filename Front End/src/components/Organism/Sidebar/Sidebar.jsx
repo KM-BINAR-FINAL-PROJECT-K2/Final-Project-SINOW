@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import Logout from "../../Page/Logout/Logout";
-
+import ButtonLogout from "../../Page/Logout/Logout";
 export default function Sidebar() {
   const location = useLocation();
   const [background, setBackground] = useState({
@@ -71,13 +71,12 @@ export default function Sidebar() {
           <button
             id="keluar"
             className={`pl-[12px] text-left text-[12px] inline-block lg:text-[16px] font-bold text-neutral-01 font-montserrat hover:bg-darkblue-03 py-[13px] lg:pl-[25px] w-full hover:pl-[18px]  lg:hover:pl-[45px] transition-all duration-300`}
-            onClick={toggleShowLogout}
+            onClick={ButtonLogout}
           >
             <p>Keluar</p>
           </button>
         </div>
       </nav>
-      {showLogout && <Logout toggleShowLogout={toggleShowLogout} />}
     </>
   );
 }
