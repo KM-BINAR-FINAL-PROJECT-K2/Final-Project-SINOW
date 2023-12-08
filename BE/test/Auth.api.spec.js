@@ -1,6 +1,6 @@
 /* eslint-disable */
 const request = require('supertest')
-const app = require('../app/index')
+const app = require('../index')
 require('dotenv').config()
 
 describe('API Register', () => {
