@@ -1,0 +1,26 @@
+* {
+  box-sizing: border-box;
+}
+/* thiết lập style thẻ chứa skillbar */
+.container {
+  width: 100%; /* Toàn màn hình */
+  background-color: #ddd; /* thiết lập background */
+}
+.skills {
+  text-align: right; /* canh chữ cho chữ */
+  padding-top: 5px; /* thêm top padding */
+  padding-bottom: 5px; /* thêmbottom padding */
+  color: #000; /* thiết lập màu chữ */
+}
+.beginner {
+  width: 33%;
+  background-color: #73ca5c;
+}
+.intermediate {
+  width: 66%;
+  background-color: #73ca5c;
+}
+.advanced {
+  width: 99%;
+  background-color: #73ca5c;
+}
