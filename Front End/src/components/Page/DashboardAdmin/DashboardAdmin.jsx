@@ -4,7 +4,7 @@ import Navigation from "../../Template/Navigation/Navigation";
 import Card from "../../Molecule/Card/Card";
 import PaymentTable from "../../Molecule/PaymentTable/PaymentTable";
 import { LoaderContext } from "../../../store/Loader";
-import FilterButton from "../../Molecule/Filter/FilterButton";
+import FilterKelolaDashboard from "../../Molecule/Filter/FilterKelolaDashboard";
 import { PlaceholderContext } from "../../../store/PlaceholderStore";
 
 export default function DashboadAdmin() {
@@ -64,7 +64,7 @@ export default function DashboadAdmin() {
           </h2>
 
           <div className="flex">
-            <FilterButton />
+            <FilterKelolaDashboard />
             <button className="" onClick={handleSearchButtonClick}>
               <img
                 src="/images/search-icon-2.png"

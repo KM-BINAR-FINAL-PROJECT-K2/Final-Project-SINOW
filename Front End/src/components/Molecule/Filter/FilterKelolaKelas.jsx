@@ -1,20 +1,17 @@
 import { Fragment } from "react";
 import { Popover, Transition } from "@headlessui/react";
-import Filter_1 from "/images/prefix-wrapper-white.png";
-import Filter_2 from "/images/prefix-wrapper.png";
 
-const solutions = [
-  {
-    name: "SUDAH BAYAR",
-    href: "#",
-  },
-  {
-    name: "BELUM BAYAR",
-    href: "#",
-  },
-];
-
-export default function Example({ FilterLogo }) {
+export default function FilterKelolaKelas() {
+  const solutions = [
+    {
+      name: "GRATIS",
+      value: "gratis",
+    },
+    {
+      name: "PREMIUM",
+      value: "premium",
+    },
+  ];
   return (
     <Popover className="relative">
       <Popover.Button

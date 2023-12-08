@@ -14,7 +14,7 @@ import { ClassContext } from "../../../store/ClassStore";
 import { KeyContext } from "../../../store/ActiveKey";
 import { ErrorContext } from "../../../store/Error";
 import { PlaceholderContext } from "../../../store/PlaceholderStore";
-import FilterButton from "../../Molecule/Filter/FilterButton";
+import FilterKelolaKelas from "../../Molecule/Filter/FilterKelolaKelas";
 export default function CRUD() {
   const { setIsLoading } = useContext(LoaderContext);
   const { showInfoClass } = useContext(InfoClassContext);
@@ -97,7 +97,7 @@ export default function CRUD() {
                   </span>
                 </div>
               </a>
-              <FilterButton />
+              <FilterKelolaKelas />
               <button className="" onClick={handleSearchButtonClick}>
                 <img
                   src="/images/search-icon-2.png"
