@@ -1,5 +1,5 @@
-'use strict'
 const { Model } = require('sequelize')
+
 module.exports = (sequelize, DataTypes) => {
   class Module extends Model {
     static associate(models) {
@@ -38,7 +38,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       hooks: {
-        afterCreate: async (module, options) => {
+        afterCreate: async (module) => {
           const chapter = await module.getChapter()
           const course = await chapter.getCourse()
 
@@ -51,7 +51,8 @@ module.exports = (sequelize, DataTypes) => {
             totalDuration: course.totalDuration + module.duration,
           })
         },
-        afterBulkCreate: async (modules, options) => {
+        afterBulkCreate: async (modules) => {
+          /* eslint-disable no-await-in-loop, no-restricted-syntax */
           for (const module of modules) {
             const chapter = await module.getChapter()
             const course = await chapter.getCourse()
@@ -66,7 +67,7 @@ module.exports = (sequelize, DataTypes) => {
             })
           }
         },
-        afterUpdate: async (module, options) => {
+        afterUpdate: async (module) => {
           const chapter = await module.getChapter()
           const course = await chapter.getCourse()
 
@@ -86,12 +87,12 @@ module.exports = (sequelize, DataTypes) => {
 
           await course.update({
             totalDuration: allChapters.reduce(
-              (total, chapter) => total + chapter.totalDuration,
+              (total, chapterItem) => total + chapterItem.totalDuration,
               0,
             ),
           })
         },
-        beforeDestroy: async (module, options) => {
+        beforeDestroy: async (module) => {
           const chapter = await module.getChapter()
 
           const course = await chapter.getCourse()
@@ -104,7 +105,7 @@ module.exports = (sequelize, DataTypes) => {
             totalDuration: course.totalDuration - module.duration,
           })
         },
-        beforeBulkDestroy: async (modules, options) => {
+        beforeBulkDestroy: async (modules) => {
           for (const module of modules) {
             const chapter = await module.getChapter()
 

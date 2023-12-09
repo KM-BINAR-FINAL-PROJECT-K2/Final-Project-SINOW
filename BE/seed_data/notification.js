@@ -1,6 +1,6 @@
 const data = []
 
-for (let i = 11; i < 20; i++) {
+for (let i = 11; i < 20; i += 1) {
   data.push({
     type: 'Promosi',
     title: 'Dapatkan potongan 50% untuk kategori UI/UX',

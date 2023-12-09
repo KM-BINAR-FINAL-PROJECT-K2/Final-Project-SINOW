@@ -1,3 +1,5 @@
+const { Op } = require('sequelize')
+
 const {
   Course,
   User,
@@ -14,16 +16,15 @@ const {
   getCourseOrder,
 } = require('../utils/courseValidator')
 
-const { Op } = require('sequelize')
 const ApiError = require('../utils/ApiError')
 
 const { uploadImage, uploadVideo } = require('../utils/imagekitUploader')
 
 const createCourse = async (req, res, next) => {
-  const user = req.user
+  const { user } = req
 
   try {
-    let {
+    const {
       name,
       level,
       rating,
@@ -91,13 +92,13 @@ const createCourse = async (req, res, next) => {
       price: type === 'gratis' ? 0 : price,
       promo: Math.floor(promo),
       totalUser: 0,
-      imageUrl: imageUrl,
+      imageUrl,
       videoPreviewUrl: videoUrl,
       courseBy,
       createdBy: user.id,
     })
 
-    res.status(201).json({
+    return res.status(201).json({
       status: 'Success',
       message: 'Berhasiil menambahkan data course',
       data: course,
@@ -109,7 +110,9 @@ const createCourse = async (req, res, next) => {
 
 const getAllCourse = async (req, res, next) => {
   try {
-    const { search, category, level, type, sortBy } = req.query
+    const {
+      search, category, level, type, sortBy,
+    } = req.query
     const where = {}
 
     if (search) {
@@ -168,7 +171,7 @@ const getAllCourse = async (req, res, next) => {
       return next(new ApiError('Course tidak ada', 404))
     }
 
-    res.status(200).json({
+    return res.status(200).json({
       status: 'Success',
       message: 'Berhasil mendapatkan data course',
       data: courses,
@@ -222,7 +225,7 @@ const getCourseById = async (req, res, next) => {
       return next(new ApiError('Data course tidak ditemukan', 404))
     }
 
-    res.status(200).json({
+    return res.status(200).json({
       status: 'Success',
       message: `Berhasil mendapatkan data course id: ${id}`,
       data: course,
@@ -235,7 +238,7 @@ const getCourseById = async (req, res, next) => {
 const updateCourse = async (req, res, next) => {
   try {
     const { id } = req.params
-    let {
+    const {
       name,
       level,
       rating,
@@ -295,7 +298,7 @@ const updateCourse = async (req, res, next) => {
         if (!price || price <= 0) {
           return next(new ApiError('Harga course harus lebih dari 0', 400))
         }
-        if (isNaN(price)) {
+        if (Number.isNaN(price)) {
           return next(new ApiError('Harga yang dimasukkan bukan angka', 400))
         }
         updateData.price = price
@@ -331,7 +334,7 @@ const updateCourse = async (req, res, next) => {
 
     await course.update(updateData)
 
-    res.status(200).json({
+    return res.status(200).json({
       status: 'Success',
       message: `Berhasil mengupdate data course id: ${id}`,
       data: course,
@@ -352,7 +355,7 @@ const deleteCourse = async (req, res, next) => {
 
     await course.destroy()
 
-    res.status(200).json({
+    return res.status(200).json({
       status: 'Success',
       message: `Berhasil menghapus data course dengan id: ${id}`,
     })

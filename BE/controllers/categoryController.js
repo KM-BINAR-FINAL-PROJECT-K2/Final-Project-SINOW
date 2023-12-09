@@ -1,12 +1,13 @@
-const { Category, Course } = require('../models')
 const { Op } = require('sequelize')
+
+const { Category, Course } = require('../models')
 const ApiError = require('../utils/ApiError')
 
 const { uploadImage } = require('../utils/imagekitUploader')
 
 const createCategory = async (req, res, next) => {
   try {
-    let { name } = req.body
+    const { name } = req.body
 
     if (!name) {
       return next(new ApiError('Name harus diisi', 400))
@@ -33,7 +34,7 @@ const createCategory = async (req, res, next) => {
       imageUrl,
     })
 
-    res.status(201).json({
+    return res.status(201).json({
       status: 'Success',
       message: 'Berhasil menambahkan data category',
       data: category,
@@ -63,13 +64,13 @@ const getAllCategory = async (req, res, next) => {
       return next(new ApiError('Category tidak ditemukan', 404))
     }
 
-    res.status(200).json({
+    return res.status(200).json({
       status: 'Success',
       message: 'sukses mengambil data category',
       data: categories,
     })
   } catch (error) {
-    return next(new ApiError((error.message = 500)))
+    return next(new ApiError((error.message, 500)))
   }
 }
 
@@ -80,19 +81,19 @@ const getCategoryById = async (req, res, next) => {
       return next(new ApiError('Category tidak ditemukan', 404))
     }
 
-    res.status(200).json({
+    return res.status(200).json({
       status: 'Success',
       message: 'sukses mengambil data category',
       data: category,
     })
   } catch (error) {
-    return next(new ApiError((error.message = 500)))
+    return next(new ApiError((error.message, 500)))
   }
 }
 
 const updateCategory = async (req, res, next) => {
   try {
-    let { name } = req.body
+    const { name } = req.body
     const { id } = req.params
 
     const updateData = {}
@@ -116,7 +117,7 @@ const updateCategory = async (req, res, next) => {
       category.update(updateData)
     }
 
-    res.status(200).json({
+    return res.status(200).json({
       status: 'Success',
       message: 'sukses update category',
       data: category,
@@ -152,7 +153,7 @@ const deleteCategory = async (req, res, next) => {
 
     await category.destroy()
 
-    res.status(200).json({
+    return res.status(200).json({
       status: 'Success',
       message: `Berhasil menghapus data category dengan id: ${id}`,
     })

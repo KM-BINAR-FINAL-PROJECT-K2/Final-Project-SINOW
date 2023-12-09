@@ -1,8 +1,6 @@
-'use strict'
-
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
-  async up(queryInterface, Sequelize) {
+  async up(queryInterface) {
     const users = [
       {
         name: 'Toto',
@@ -89,14 +87,13 @@ module.exports = {
       returning: true,
     })
 
-    const password =
-      '$2a$10$VOZdAZlTEN6tuhmMU1g1xOJ9OPvlJutSqSa0m1AT7bJC2PZgJRzVa'
+    const password = '$2a$10$VOZdAZlTEN6tuhmMU1g1xOJ9OPvlJutSqSa0m1AT7bJC2PZgJRzVa'
 
-    let lastThreeDigit = 200
-    const auths = insertUsers.map((user) => ({
+    const lastThreeDigit = 200
+    const auths = insertUsers.map((user, index) => ({
       email: `${user.name}@sinow.com`.toLowerCase(),
-      phoneNumber: `81234567${lastThreeDigit++}`,
-      password: password,
+      phoneNumber: `81234567${lastThreeDigit + index}`,
+      password,
       userId: user.id,
       createdAt: new Date(),
       updatedAt: new Date(),
@@ -106,7 +103,7 @@ module.exports = {
     await queryInterface.bulkInsert('Auths', auths)
   },
 
-  async down(queryInterface, Sequelize) {
+  async down(queryInterface) {
     await queryInterface.bulkDelete('Users', null, {})
     await queryInterface.bulkDelete('Auths', null, {})
   },

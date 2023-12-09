@@ -1,6 +1,6 @@
+const { Op } = require('sequelize')
 const { Notification, User } = require('../models')
 const ApiError = require('../utils/ApiError')
-const { Op } = require('sequelize')
 
 const createNotificationForAllUsers = async (req, res, next) => {
   try {
@@ -25,7 +25,7 @@ const createNotificationForAllUsers = async (req, res, next) => {
 
     await Notification.bulkCreate(notificationsData)
 
-    res.status(201).json({
+    return res.status(201).json({
       status: 'Success',
       message: 'Notifications berhasil dibuat',
     })
@@ -36,16 +36,18 @@ const createNotificationForAllUsers = async (req, res, next) => {
 
 const getAllNotifications = async (req, res, next) => {
   try {
-    const { limit = 100, type, title, userId } = req.query
+    const {
+      limit = 100, type, title, userId,
+    } = req.query
 
-    if (isNaN(limit) || limit <= 0) {
+    if (Number.isNaN(limit) || limit <= 0) {
       return next(new ApiError('Batas jumlah notifikasi tidak valid', 400))
     }
     if (limit > 500) {
       return next(new ApiError('Batas notifikasi maksimal adalah 500', 400))
     }
 
-    if (userId && (isNaN(userId) || userId <= 0)) {
+    if (userId && (Number.isNaN(userId) || userId <= 0)) {
       return next(new ApiError('ID pengguna tidak valid', 400))
     }
 
@@ -77,7 +79,7 @@ const getAllNotifications = async (req, res, next) => {
       return next(new ApiError('Tidak ada notifikasi', 404))
     }
 
-    res.status(200).json({
+    return res.status(200).json({
       status: 'Success',
       data: notifications,
     })
@@ -124,7 +126,7 @@ const updateNotification = async (req, res, next) => {
       return next(new ApiError('Notifikasi tidak ditemukan', 404))
     }
 
-    res.status(200).json({
+    return res.status(200).json({
       status: 'Success',
       message: 'Notifikasi diperbarui',
     })
@@ -147,7 +149,7 @@ const deleteNotificationById = async (req, res, next) => {
       return next(new ApiError('Notifikasi tidak ditemukan', 404))
     }
 
-    res.status(200).json({
+    return res.status(200).json({
       status: 'Success',
       message: `Berhasil menghapus notifikasi dengan id: ${id}`,
     })
@@ -169,7 +171,7 @@ const deleteNotificationByTitle = async (req, res, next) => {
       return next(new ApiError('Notifikasi tidak ditemukan', 404))
     }
 
-    res.status(200).json({
+    return res.status(200).json({
       status: 'Success',
       message: `Berhasil menghapus notifikasi dengan id: ${title}`,
     })

@@ -1,5 +1,5 @@
-'use strict'
 const { Model } = require('sequelize')
+
 module.exports = (sequelize, DataTypes) => {
   class UserCourse extends Model {
     /**
@@ -33,14 +33,14 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       hooks: {
-        beforeCreate: async (userCourse, options) => {
+        beforeCreate: async (userCourse) => {
           const course = await userCourse.getCourse()
 
           await course.update({
             totalUser: course.totalUser + 1,
           })
         },
-        beforeDestroy: async (userCourse, options) => {
+        beforeDestroy: async (userCourse) => {
           const course = await userCourse.getCourse()
 
           await course.update({

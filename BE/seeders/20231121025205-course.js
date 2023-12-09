@@ -1,21 +1,21 @@
-'use strict'
-
 /** @type {import('sequelize-cli').Migration} */
 
 const categories = require('../seed_data/categories')
 
 const randomUsers = (usersData) => {
   const users = usersData[0]
-  for (let i = users.length - 1; i > 0; i--) {
+  for (let i = users.length - 1; i > 0; i -= 1) {
     const j = Math.floor(Math.random() * (i + 1))
-    ;[users[i], users[j]] = [users[j], users[i]]
+    const temp = users[i]
+    users[i] = users[j]
+    users[j] = temp
   }
   const pickUser = users[Math.floor(Math.random() * users.length)]
   return pickUser.id
 }
 
 module.exports = {
-  async up(queryInterface, Sequelize) {
+  async up(queryInterface) {
     await queryInterface.bulkInsert('Categories', categories, {})
 
     const users = await queryInterface.sequelize.query(
@@ -256,7 +256,7 @@ module.exports = {
     await queryInterface.bulkInsert('Courses', courses, {})
   },
 
-  async down(queryInterface, Sequelize) {
+  async down(queryInterface) {
     await queryInterface.bulkDelete('Categories', null, {})
     await queryInterface.bulkDelete('Courses', null, {})
   },

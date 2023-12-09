@@ -1,12 +1,13 @@
+const { Op } = require('sequelize')
 const { Module, Chapter, User } = require('../models')
 const ApiError = require('../utils/ApiError')
-const { Op } = require('sequelize')
 
 const { uploadVideo } = require('../utils/imagekitUploader')
 
 const createModule = async (req, res, next) => {
   try {
-    let { name, no, chapterId } = req.body
+    let { no } = req.body
+    const { name, chapterId } = req.body
 
     const missingFields = ['name', 'no', 'chapterId'].filter(
       (field) => !req.body[field],
@@ -17,7 +18,7 @@ const createModule = async (req, res, next) => {
       )
     }
 
-    if (isNaN(no) || isNaN(chapterId)) {
+    if (Number.isNaN(no) || Number.isNaN(chapterId)) {
       return next(new ApiError('Nomor dan chapterId harus berupa angka', 400))
     }
     no = parseInt(no, 10)
@@ -77,7 +78,7 @@ const createModule = async (req, res, next) => {
       return next(new ApiError('Gagal membuat module', 500))
     }
 
-    res.status(201).json({
+    return res.status(201).json({
       status: 'success',
       message: 'Sukses membuat module',
       data: module,
@@ -113,7 +114,7 @@ const getAllModule = async (req, res, next) => {
       return next(new ApiError('Module tidak ditemukan', 404))
     }
 
-    res.status(200).json({
+    return res.status(200).json({
       status: 'success',
       message: 'Berhasil mendapatkan data modules',
       data: modules,
@@ -148,7 +149,7 @@ const getModuleById = async (req, res, next) => {
       return next(new ApiError('Module tidak ditemukan', 404))
     }
 
-    res.status(200).json({
+    return res.status(200).json({
       status: 'success',
       message: `Berhasil mendapatkan data module id: ${id};`,
       data: module,
@@ -161,7 +162,7 @@ const getModuleById = async (req, res, next) => {
 const updateModule = async (req, res, next) => {
   try {
     const { id } = req.params
-    let { name, no, chapterId } = req.body
+    const { name, no, chapterId } = req.body
 
     const module = await Module.findByPk(id)
     if (!module) {
@@ -175,7 +176,7 @@ const updateModule = async (req, res, next) => {
         where: {
           name,
           chapterId,
-          id: { [Op.not]: id }, // Memastikan ID modul yang dicek tidak sama dengan modul yang sedang diupdate
+          id: { [Op.not]: id },
         },
       })
 
@@ -187,7 +188,7 @@ const updateModule = async (req, res, next) => {
 
     if (no) {
       const parsedNo = parseInt(no, 10)
-      if (isNaN(parsedNo)) {
+      if (Number.isNaN(parsedNo)) {
         return next(new ApiError('Nomor modul harus berupa angka', 400))
       }
 
@@ -208,7 +209,7 @@ const updateModule = async (req, res, next) => {
     }
 
     if (chapterId) {
-      if (isNaN(chapterId)) {
+      if (Number.isNaN(chapterId)) {
         return next(new ApiError('Chapter ID harus berupa angka', 400))
       }
 
@@ -235,7 +236,7 @@ const updateModule = async (req, res, next) => {
 
     await module.update(updateData)
 
-    res.status(200).json({
+    return res.status(200).json({
       status: 'Success',
       message: `Berhasil mengupdate data module id: ${id}`,
       data: module,
@@ -255,7 +256,7 @@ const deleteModule = async (req, res, next) => {
 
     await module.destroy()
 
-    res.status(200).json({
+    return res.status(200).json({
       status: 'success',
       message: `Berhasil menghapus data module id: ${id};`,
       data: module,

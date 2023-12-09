@@ -4,7 +4,6 @@ const express = require('express')
 const cors = require('cors')
 const morgan = require('morgan')
 
-const ApiError = require('./utils/ApiError')
 const errorController = require('./controllers/errorController')
 const router = require('./routes')
 
@@ -19,18 +18,15 @@ app.use(router)
 
 app.use('/', (req, res, next) => {
   if (req.originalUrl === '/') {
-    res.status(301).redirect(`${process.env.BASE_URL}/api-docs`)
-  } else {
-    next()
+    return res.status(301).redirect(`${process.env.BASE_URL}/api-docs`)
   }
+  return next()
 })
 
-app.all('*', (req, res, next) => {
-  res.status(404).json({
-    status: 'Failed',
-    message: `Halaman tidak ditemukan, silahkan cek dokumentasi ${process.env.BASE_URL}/api-docs/`,
-  })
-})
+app.all('*', (req, res) => res.status(404).json({
+  status: 'Failed',
+  message: `Halaman tidak ditemukan, silahkan cek dokumentasi ${process.env.BASE_URL}/api-docs/`,
+}))
 
 app.use(errorController)
 
