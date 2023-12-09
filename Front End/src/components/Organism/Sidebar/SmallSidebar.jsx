@@ -1,5 +1,4 @@
 import { useState } from "react";
-import Logout from "../../Page/Logout/Logout";
 import ButtonLogout from "../../Page/Logout/Logout";
 export default function SmallSidebar() {
   const [showNav, setShowNav] = useState(false);

@@ -93,12 +93,17 @@ export default function EditClass() {
           color: "#3C3C3C",
           imageWidth: 200,
           showDenyButton: true,
-          showCancelButton: true,
-          confirmButtonText: "Save",
-          confirmButtonColor: "#6148FF",
+          // showCancelButton: true,
+          confirmButtonText: "Simpan",
+          confirmButtonColor: "#73CA5C",
           denyButtonColor: "#FF0000",
-          cancelButtonColor: "#73CA5C",
-          denyButtonText: `Don't save`,
+          // cancelButtonColor: "#73CA5C",
+          denyButtonText: `Batal`,
+          customClass: {
+            actions: "gap-3",
+            confirmButton: "px-8",
+            denyButton: "px-10",
+          },
         }).then(async (result) => {
           if (result.isConfirmed) {
             try {
@@ -147,6 +152,9 @@ export default function EditClass() {
               imageWidth: 200,
               confirmButtonText: "Kembali",
               confirmButtonColor: "#73CA5C",
+              customClass: {
+                confirmButton: "px-10",
+              },
             });
           }
         });

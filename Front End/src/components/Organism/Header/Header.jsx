@@ -57,9 +57,9 @@ export default function Header() {
   }, [adminToken]);
 
   return (
-    <header className="bg-sinow-05 pt-[26px] pb-[20px] md:pt-[25px] md:pb-[25px] pl-10 pr-[35px] lg:pr-[87px] flex justify-between drop-shadow-sm mb-[79px] sticky top-0 gap-5 flex-wrap z-[600]">
-      <h1 className=" font-bold text-[24px] text-white flex-1 py-2 ">
-        Selamat Datang, {name}
+    <header className="bg-sinow-05 pt-[26px] pb-[20px] md:pt-[25px] md:pb-[25px] pl-10 pr-[35px] lg:pr-[87px] flex justify-between drop-shadow-sm mb-[79px] sticky top-0 gap-5 flex-wrap z-[600] shadow-lg">
+      <h1 className=" font-normal text-[24px] text-white flex-1 py-2 ">
+        Selamat Datang, <b>{name}</b>
       </h1>
       <div className=" flex items-center flex-wrap">
         <input
@@ -67,7 +67,7 @@ export default function Header() {
           ref={searchInputRef}
           name="search"
           id="search"
-          className="py-[13px] px-[20px] w-[200px] md:w-[300px] md:py-[15px] md:px-[15px] mr-[10px]  rounded-l-lg focus:outline-none  text-black text-[12px]"
+          className="py-[13px] px-[20px] w-[270px] md:w-[300px] md:py-[15px] md:px-[15px] mr-[10px]  rounded-l-lg focus:outline-none  text-black text-[12px]"
           placeholder={inputPlaceholder}
           onBlur={handleInputBlur}
           onClick={handleSearchButtonClick}

@@ -76,12 +76,15 @@ export default function AddClass() {
           color: "#3C3C3C",
           imageWidth: 200,
           showDenyButton: true,
-          showCancelButton: true,
-          confirmButtonText: "Ya, Simpan",
-          confirmButtonColor: "#6148FF",
+          confirmButtonText: "Simpan",
+          confirmButtonColor: "#73CA5C",
           denyButtonColor: "#FF0000",
-          cancelButtonColor: "#73CA5C",
-          denyButtonText: `Tidak, Batal`,
+          denyButtonText: `Batal`,
+          customClass: {
+            actions: "gap-3",
+            confirmButton: "px-8",
+            denyButton: "px-10",
+          },
         }).then(async (result) => {
           if (result.isConfirmed) {
             try {

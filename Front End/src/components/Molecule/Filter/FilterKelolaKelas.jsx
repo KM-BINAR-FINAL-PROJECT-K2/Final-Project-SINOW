@@ -16,9 +16,9 @@ export default function FilterKelolaKelas() {
   return (
     <Popover className="relative">
       <Popover.Button
-        className={`bg-neutral-01 text-darkblue-05  border-darkblue-05 hover:bg-darkblue-05 hover:text-white  border-2 rounded-[18px] py-[3px] px-[10px] w-[100px] h-[34px] mr-[16px] my-[10px] inline-flex items-center gap-x-2  text-sm font-semibold leading-6  justify-center`}
+        className={`bg-white text-darkblue-05  border-darkblue-05 hover:bg-darkblue-05 hover:text-white  border-2 rounded-[6px] py-[3px] px-[10px] w-[100px] h-[34px] mr-[16px] my-[10px] inline-flex items-center gap-x-2  text-sm font-semibold leading-6  justify-center`}
       >
-        <MdFilterAlt className="ffill-current h-[24px] w-[24px] transition-colors duration-100 ease-in-out group-hover:text-white" />
+        <MdFilterAlt className="fill-current h-[24px] w-[24px] transition-colors duration-100 ease-in-out group-hover:text-white" />
         <span>Filter</span>
       </Popover.Button>
 

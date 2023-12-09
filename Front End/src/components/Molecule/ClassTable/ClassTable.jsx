@@ -14,7 +14,7 @@ export default function ClassTable() {
   const { toggleShowInfo } = useContext(InfoClassContext);
   const { toggleShowWarning } = useContext(RemoveClassContext);
   return (
-    <table className="w-full table-auto">
+    <table className="w-full snap-mandatory snap-x table-auto">
       <thead className="sticky top-0 bg-lightblue-05 z-10">
         <tr className="bg-lightblue-05 text-left ">
           <th className="py-2 text-[12px] px-4 font-semibold w-1/7">
@@ -111,20 +111,20 @@ export default function ClassTable() {
               </td>
               <td className="px-4 text-[10px] font-bold ">
                 <a
-                  className="m-2 py-[3px] font-bold text-neutral-01 inline-block rounded-[10px] w-[50px] bg-darkblue-05 text-center leading-[14px]"
+                  className="m-2 py-[3px] font-bold text-neutral-01 inline-block rounded-[4px] w-[50px] hover:bg-neutral-02 bg-alert-success text-center leading-[14px] shadow-md"
                   href={`/edit-kelas/${classItem.id}`}
                 >
                   Ubah
                 </a>
                 <button
-                  className="m-2 py-[3px] font-bold text-neutral-01 inline-block rounded-[10px] bg-alert-danger w-[50px] text-center leading-[14px]"
+                  className="m-2 py-[3px] font-bold text-neutral-01 inline-block rounded-[4px] hover:bg-neutral-02 bg-alert-danger w-[50px] text-center leading-[14px] shadow-md"
                   onClick={() => toggleShowWarning(classItem.id)}
                 >
                   Hapus
                 </button>
                 <button
                   onClick={() => toggleShowInfo(classItem.id)}
-                  className="m-2 py-[3px] font-bold text-neutral-01 inline-block rounded-[10px] bg-alert-success w-[50px] text-center leading-[14px]"
+                  className="m-2 py-[3px] font-bold text-neutral-01 inline-block rounded-[4px] hover:bg-neutral-02 bg-sinow-03 w-[50px] text-center leading-[14px] shadow-md"
                 >
                   Info
                 </button>

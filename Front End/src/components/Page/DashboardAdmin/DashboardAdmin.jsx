@@ -6,7 +6,7 @@ import PaymentTable from "../../Molecule/PaymentTable/PaymentTable";
 import { LoaderContext } from "../../../store/Loader";
 import FilterKelolaDashboard from "../../Molecule/Filter/FilterKelolaDashboard";
 import { PlaceholderContext } from "../../../store/PlaceholderStore";
-
+import { ImSearch } from "react-icons/im";
 export default function DashboadAdmin() {
   const { setIsLoading } = useContext(LoaderContext);
   const [error, setError] = useState("");
@@ -39,7 +39,7 @@ export default function DashboadAdmin() {
   }, 0);
   return (
     <Navigation>
-      <section className="mx-8 lg:mx-16 flex justify-around gap-6 flex-wrap mb-[54px]">
+      <section className="mx-8 lg:mx-16 flex justify-around gap-16 flex-wrap mb-[54px]">
         <Card
           color={"bg-darkblue-03"}
           quantity={totalQuantity}
@@ -66,11 +66,7 @@ export default function DashboadAdmin() {
           <div className="flex">
             <FilterKelolaDashboard />
             <button className="" onClick={handleSearchButtonClick}>
-              <img
-                src="/images/search-icon-2.png"
-                alt=""
-                className=" w-[24px] h-[24px] inline-block"
-              />
+              <ImSearch className="fill-darkblue-05 h-[24px] w-[24px]" />
             </button>
           </div>
         </div>

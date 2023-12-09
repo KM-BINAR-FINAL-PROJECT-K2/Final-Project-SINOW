@@ -15,6 +15,8 @@ import { KeyContext } from "../../../store/ActiveKey";
 import { ErrorContext } from "../../../store/Error";
 import { PlaceholderContext } from "../../../store/PlaceholderStore";
 import FilterKelolaKelas from "../../Molecule/Filter/FilterKelolaKelas";
+import { IoIosAddCircle } from "react-icons/io";
+import { ImSearch } from "react-icons/im";
 export default function CRUD() {
   const { setIsLoading } = useContext(LoaderContext);
   const { showInfoClass } = useContext(InfoClassContext);
@@ -56,7 +58,7 @@ export default function CRUD() {
   return (
     <>
       <Navigation>
-        <section className="mx-8 lg:mx-16 flex justify-around gap-6 flex-wrap mb-[54px]">
+        <section className="mx-8 lg:mx-16 flex justify-around gap-16 flex-wrap mb-[54px]">
           <Card
             color={"bg-darkblue-03"}
             quantity={totalQuantity}
@@ -83,15 +85,11 @@ export default function CRUD() {
             </h2>
             <div className="flex">
               <a
-                className="bg-darkblue-05 inline-block rounded-[16px] py-[5px] px-[10px] w-[125px] h-[34px] mr-[16px] my-[10px]"
+                className="bg-darkblue-05 hover:bg-darkblue-03 inline-block rounded-[6px] py-[5px] px-[10px] w-[120px] h-[34px] mr-[16px] my-[10px] shadow-md"
                 href="/tambah-kelas"
               >
-                <div className="flex gap-[8px] items-center justify-center">
-                  <img
-                    src="/images/gala-add.png"
-                    alt=""
-                    className="w-[24px] h-[24px]"
-                  />
+                <div className="flex gap-[7px] items-center justify-center">
+                  <IoIosAddCircle className="fill-white h-[24px] w-[24px]" />
                   <span className="text-[16px] font-semibold text-neutral-01">
                     Tambah
                   </span>
@@ -99,11 +97,7 @@ export default function CRUD() {
               </a>
               <FilterKelolaKelas />
               <button className="" onClick={handleSearchButtonClick}>
-                <img
-                  src="/images/search-icon-2.png"
-                  alt=""
-                  className=" w-[24px] h-[24px] inline-block"
-                />
+                <ImSearch className="fill-darkblue-05 h-[24px] w-[24px]" />
               </button>
             </div>
           </div>
