@@ -2516,7 +2516,7 @@
             }
           },
           "400": {
-            "description": "Data module tidak valid",
+            "description": "Data module tidak valid (duplikat data / format input tidak sesuai)",
             "content": {
               "application/json": {
                 "schema": {
@@ -2528,7 +2528,7 @@
                     },
                     "message": {
                       "type": "string",
-                      "example": "Field nama harus di isi/ Nomor dan courseId harus berupa angka / harus menyertakan video"
+                      "example": "Field nama harus di isi / Nomor dan courseId harus berupa angka / harus menyertakan video"
                     }
                   }
                 }
@@ -2589,6 +2589,26 @@
                     "message": {
                       "type": "string",
                       "example": "Chapter tidak ditemukan, silahkan cek daftar chapter untuk melihat chapter yang tersedia"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Terjadi kesalahan pada server",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Error"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Terjadi kesalahan pada server"
                     }
                   }
                 }
@@ -2705,6 +2725,26 @@
                     "message": {
                       "type": "string",
                       "example": "Data module tidak ditemukan"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Terjadi kesalahan pada server",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Error"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Terjadi kesalahan pada server"
                     }
                   }
                 }
@@ -2838,6 +2878,26 @@
                 }
               }
             }
+          },
+          "500": {
+            "description": "Terjadi kesalahan pada server",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Error"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Terjadi kesalahan pada server"
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       },
@@ -2914,7 +2974,7 @@
             }
           },
           "400": {
-            "description": "Data module tidak valid, dapat disebabkan duplikat nama module di dalam chapter",
+            "description": "Data module tidak valid (duplikat data / format input tidak sesuai)",
             "content": {
               "application/json": {
                 "schema": {
@@ -2926,7 +2986,7 @@
                     },
                     "message": {
                       "type": "string",
-                      "example": "Data module tidak valid"
+                      "example": "Nama modul sudah ada dalam chapter ini / Nomor modul harus berupa angka"
                     }
                   }
                 }
@@ -2987,6 +3047,26 @@
                     "message": {
                       "type": "string",
                       "example": "module tidak ditemukan"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Terjadi kesalahan pada server",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Error"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Terjadi kesalahan pada server"
                     }
                   }
                 }
@@ -3090,6 +3170,26 @@
                     "message": {
                       "type": "string",
                       "example": "module tidak ditemukan"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Terjadi kesalahan pada server",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Error"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Terjadi kesalahan pada server"
                     }
                   }
                 }
@@ -3236,6 +3336,26 @@
                 }
               }
             }
+          },
+          "500": {
+            "description": "Terjadi kesalahan pada server",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Error"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Terjadi kesalahan pada server"
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       },
@@ -3331,6 +3451,26 @@
                     "message": {
                       "type": "string",
                       "example": "Data chapter tidak ditemukan"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Terjadi kesalahan pada server",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Error"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Terjadi kesalahan pada server"
                     }
                   }
                 }
@@ -3521,7 +3661,7 @@
             }
           },
           "400": {
-            "description": "Data chapter tidak valid",
+            "description": "Data chapter tidak valid (duplikat data / format input tidak sesuai)",
             "content": {
               "application/json": {
                 "schema": {
@@ -3594,6 +3734,26 @@
                     "message": {
                       "type": "string",
                       "example": "chapter tidak ditemukan"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Terjadi kesalahan pada server",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Error"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Terjadi kesalahan pada server"
                     }
                   }
                 }
@@ -3702,6 +3862,26 @@
                 }
               }
             }
+          },
+          "500": {
+            "description": "Terjadi kesalahan pada server",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Error"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Terjadi kesalahan pada server"
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -3758,7 +3938,7 @@
             }
           },
           "400": {
-            "description": "Data category tidak valid, bisa disebabkan field kosong atau duplikat nama",
+            "description": "Data category tidak valid (duplikat data / format input tidak sesuai)",
             "content": {
               "application/json": {
                 "schema": {
@@ -4033,7 +4213,7 @@
             }
           },
           "400": {
-            "description": "Data category tidak valid",
+            "description": "Data category tidak valid (duplikat data)",
             "content": {
               "application/json": {
                 "schema": {
@@ -4106,6 +4286,26 @@
                     "message": {
                       "type": "string",
                       "example": "category tidak ditemukan"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Terjadi kesalahan pada server",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Error"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Terjadi kesalahan pada server"
                     }
                   }
                 }
@@ -4209,6 +4409,26 @@
                     "message": {
                       "type": "string",
                       "example": "category tidak ditemukan"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Terjadi kesalahan pada server",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Error"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Terjadi kesalahan pada server"
                     }
                   }
                 }
@@ -4942,6 +5162,26 @@
                 }
               }
             }
+          },
+          "500": {
+            "description": "Terjadi kesalahan pada server",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Error"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Terjadi kesalahan pada server"
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       },
@@ -5227,6 +5467,26 @@
                 }
               }
             }
+          },
+          "500": {
+            "description": "Terjadi kesalahan pada server",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Error"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Terjadi kesalahan pada server"
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       },
@@ -5325,6 +5585,26 @@
                     "message": {
                       "type": "string",
                       "example": "benefit tidak ditemukan"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Terjadi kesalahan pada server",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Error"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Terjadi kesalahan pada server"
                     }
                   }
                 }
