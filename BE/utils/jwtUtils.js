@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken')
-const ApiError = require('../utils/ApiError')
+const ApiError = require('./ApiError')
 
 const createToken = (payload, next) => {
   if (!payload.id || !payload.name || !payload.role) {

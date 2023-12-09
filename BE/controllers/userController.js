@@ -1,4 +1,5 @@
-const jwt = require('jsonwebtoken')
+const validator = require('validator')
+const bcrypt = require('bcrypt')
 const {
   User,
   Auth,
@@ -12,16 +13,63 @@ const {
   UserModule,
 } = require('../models')
 const ApiError = require('../utils/ApiError')
-const validator = require('validator')
-const bcrypt = require('bcrypt')
 const { createNotification } = require('../utils/notificationUtils')
 const { createToken } = require('../utils/jwtUtils')
 
 const { uploadImage } = require('../utils/imagekitUploader')
 
+const userCourseRelation = {
+  include: [
+    {
+      model: Course,
+      include: [
+        {
+          model: Category,
+          attributes: ['id', 'name'],
+          as: 'category',
+        },
+        {
+          model: User,
+          as: 'courseCreator',
+          attributes: ['id', 'name'],
+        },
+        {
+          model: Benefit,
+          as: 'benefits',
+          attributes: ['id', 'description'],
+        },
+        {
+          model: Chapter,
+          as: 'chapters',
+          attributes: ['id', 'no', 'name'],
+          include: [
+            {
+              model: UserModule,
+              as: 'userModules',
+              attributes: ['id', 'status'],
+              include: [
+                {
+                  model: Module,
+                  as: 'moduleData',
+                  attributes: ['id', 'no', 'name'],
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    },
+  ],
+  order: [
+    ['Course', 'id', 'ASC'],
+    ['Course', 'chapters', 'no', 'ASC'],
+    ['Course', 'chapters', 'userModules', 'moduleData', 'no', 'ASC'],
+  ],
+}
+
 const myDetails = async (req, res, next) => {
   try {
-    res.status(200).json({
+    return res.status(200).json({
       status: 'Success',
       message: 'Berhasil mengambil detail user',
       data: req.user,
@@ -35,7 +83,7 @@ const updateMyDetails = async (req, res, next) => {
   try {
     const { name, country, city } = req.body
     let { email, phoneNumber } = req.body
-    const user = req.user
+    const { user } = req
     const { id } = user
 
     const updateDataUser = {}
@@ -135,9 +183,10 @@ const updateMyDetails = async (req, res, next) => {
       'Berhasil memperbarui detail akun',
       newUser.id,
       'Detail akun Anda berhasil diperbarui',
+      next,
     )
 
-    res.status(200).json({
+    return res.status(200).json({
       status: 'Success',
       message: `Berhasil mengupdate data user id: ${newUser.id}`,
       data: {
@@ -165,9 +214,11 @@ const changeMyPassword = async (req, res, next) => {
 
     if (newPassword.length < 8) {
       return next(new ApiError('Password min 8 karakter!', 400))
-    } else if (newPassword.length > 12) {
+    }
+    if (newPassword.length > 12) {
       return next(new ApiError('Password max 12 karakter!', 400))
-    } else if (newPassword !== confirmNewPassword) {
+    }
+    if (newPassword !== confirmNewPassword) {
       return next(new ApiError('Password tidak cocok', 400))
     }
 
@@ -198,8 +249,9 @@ const changeMyPassword = async (req, res, next) => {
       'Password Berhasil Diubah',
       user.id,
       `Halo ${user.name},\n\nPassword akun Anda telah diubah. Jika Anda merasa tidak melakukan perubahan ini, segera hubungi dukungan pelanggan kami.\n\nTerima kasih,\nTim SINOW 🫡`,
+      next,
     )
-    res.status(200).json({
+    return res.status(200).json({
       status: 'Success',
       message: `Password berhasil diubah `,
     })
@@ -221,7 +273,7 @@ const getUserNotification = async (req, res, next) => {
       return next(new ApiError('Tidak ada notifikasi', 404))
     }
 
-    res.status(200).json({
+    return res.status(200).json({
       status: 'Success',
       data: userNotifications,
     })
@@ -260,7 +312,7 @@ const openNotification = async (req, res, next) => {
       return next(new ApiError('Gagal mengupdate notifikasi'))
     }
 
-    res.status(200).json({
+    return res.status(200).json({
       status: 'Success',
       message: 'Berhasil membuka notifikasi',
       data: updatedNotification,
@@ -286,7 +338,7 @@ const deleteNotification = async (req, res, next) => {
 
     notification.destroy()
 
-    res.status(200).json({
+    return res.status(200).json({
       status: 'Success',
       message: `Berhasil menghapus notifikasi dengan id: ${id}`,
     })
@@ -308,7 +360,7 @@ const createUserCourse = async (req, res, next) => {
     })
 
     if (checkUserCourse) {
-      res.status(200).json({
+      return res.status(200).json({
         status: 'Success',
         message: 'User sudah mengikuti course ini',
       })
@@ -319,7 +371,7 @@ const createUserCourse = async (req, res, next) => {
     const userCourse = await UserCourse.create({
       userId: user.id,
       courseId,
-      isAccessible: course.type === 'gratis' ? true : false,
+      isAccessible: course.type === 'gratis',
       progresss: 0,
       lastSeen: new Date(),
     })
@@ -328,7 +380,7 @@ const createUserCourse = async (req, res, next) => {
       return next(new ApiError('Gagal membuat user course', 500))
     }
 
-    res.status(200).json({
+    return res.status(200).json({
       status: 'Success',
       message: 'Berhasil mengikuti course',
     })
@@ -357,7 +409,7 @@ const getMyCourses = async (req, res, next) => {
       return next(new ApiError('Data course masih kosong', 404))
     }
 
-    res.status(200).json({
+    return res.status(200).json({
       status: 'Success',
       message: 'Berhasil mengambil data course',
       data: course,
@@ -445,7 +497,7 @@ const openCourse = async (req, res, next) => {
                         : 'terkunci',
                   })
                 } catch (error) {
-                  return next(new ApiError(error.message, 500))
+                  throw next(new ApiError(error.message, 500))
                 }
               }),
             )
@@ -459,7 +511,7 @@ const openCourse = async (req, res, next) => {
       order: userCourseRelation.order,
     })
 
-    res.status(200).json({
+    return res.status(200).json({
       status: 'Success',
       message: 'Berhasil mengikuti course',
       data: {
@@ -515,12 +567,12 @@ const openUserModule = async (req, res, next) => {
       return next(new ApiError('User Course tidak ditemukan', 404))
     }
 
-    const mergedUserModules = userCourse.Course.chapters.flatMap((chapter) => {
-      return chapter.userModules
-    })
+    const mergedUserModules = userCourse.Course.chapters.flatMap(
+      (chapter) => chapter.userModules,
+    )
 
     const indexUserModule = mergedUserModules.findIndex(
-      (module) => module.id === parseInt(userModuleId),
+      (module) => module.id === parseInt(userModuleId, 10),
     )
 
     if (indexUserModule === -1) {
@@ -532,9 +584,10 @@ const openUserModule = async (req, res, next) => {
       )
     }
 
-    const totalModuleStudied = mergedUserModules.reduce((count, module) => {
-      return module.status === 'dipelajari' ? count + 1 : count
-    }, 0)
+    const totalModuleStudied = mergedUserModules.reduce(
+      (count, module) => (module.status === 'dipelajari' ? count + 1 : count),
+      0,
+    )
 
     const userModule = await UserModule.findByPk(userModuleId, {
       include: [
@@ -580,7 +633,7 @@ const openUserModule = async (req, res, next) => {
       )
 
       await userCourse.update({
-        progress: progress,
+        progress,
       })
 
       await userModule.update({
@@ -590,7 +643,7 @@ const openUserModule = async (req, res, next) => {
       await userModule.reload()
     }
 
-    res.status(200).json({
+    return res.status(200).json({
       status: 'Success',
       message: 'Berhasil membuka module',
       data: {
@@ -600,55 +653,6 @@ const openUserModule = async (req, res, next) => {
   } catch (error) {
     return next(new ApiError(error.message, 500))
   }
-}
-
-const userCourseRelation = {
-  include: [
-    {
-      model: Course,
-      include: [
-        {
-          model: Category,
-          attributes: ['id', 'name'],
-          as: 'category',
-        },
-        {
-          model: User,
-          as: 'courseCreator',
-          attributes: ['id', 'name'],
-        },
-        {
-          model: Benefit,
-          as: 'benefits',
-          attributes: ['id', 'description'],
-        },
-        {
-          model: Chapter,
-          as: 'chapters',
-          attributes: ['id', 'no', 'name'],
-          include: [
-            {
-              model: UserModule,
-              as: 'userModules',
-              attributes: ['id', 'status'],
-              include: [
-                {
-                  model: Module,
-                  as: 'moduleData',
-                  attributes: ['id', 'no', 'name'],
-                },
-              ],
-            },
-          ],
-        },
-      ],
-    },
-  ],
-  order: [
-    ['Course', 'id', 'ASC'],
-    ['Course', 'chapters', 'no', 'ASC'],
-    ['Course', 'chapters', 'userModules', 'moduleData', 'no', 'ASC'],
-  ],
 }
 
 module.exports = {
@@ -661,4 +665,5 @@ module.exports = {
   getMyCourses,
   openCourse,
   openUserModule,
+  createUserCourse,
 }

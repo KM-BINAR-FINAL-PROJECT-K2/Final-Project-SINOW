@@ -1,4 +1,3 @@
-'use strict'
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
@@ -28,12 +27,6 @@ module.exports = {
         type: Sequelize.INTEGER,
       },
       createdAt: {
-        type: Sequelize.DATE,
-      },
-      updatedAt: {
-        type: Sequelize.DATE,
-      },
-      createdAt: {
         allowNull: false,
         type: Sequelize.DATE,
       },
@@ -43,7 +36,7 @@ module.exports = {
       },
     })
   },
-  async down(queryInterface, Sequelize) {
+  async down(queryInterface) {
     await queryInterface.dropTable('Modules')
   },
 }

@@ -1,5 +1,7 @@
-const { Transaction, Course } = require('../models')
+/* eslint-disable camelcase */
+
 const Midtrans = require('midtrans-client')
+const { Transaction, Course } = require('../models')
 const ApiError = require('../utils/ApiError')
 const generateSHA512 = require('../utils/generateSHA512')
 
@@ -15,7 +17,7 @@ const getAllTransaction = async (req, res, next) => {
     if (!transactions || transactions.length === 0) {
       return next(new ApiError('Data transaction masih kosong', 404))
     }
-    res.status(200).json({
+    return res.status(200).json({
       status: 'Success',
       message: 'sukses mengambil data purchase',
       data: transactions,
@@ -28,7 +30,7 @@ const getAllTransaction = async (req, res, next) => {
 const createTransaction = async (req, res, next) => {
   try {
     const { courseId } = req.body
-    const user = req.user
+    const { user } = req
 
     if (!courseId) {
       return next(new ApiError('Course ID harus diisi', 400))
@@ -42,7 +44,7 @@ const createTransaction = async (req, res, next) => {
     })
 
     if (checkTransaction) {
-      return next(new ApiError("Anda sudah membeli course ini", 400));
+      return next(new ApiError('Anda sudah membeli course ini', 400))
     }
 
     const course = await Course.findByPk(courseId)
@@ -90,7 +92,7 @@ const createTransaction = async (req, res, next) => {
 
     const midtransResponseData = await snap.createTransaction(parameter)
 
-    res.status(201).json({
+    return res.status(201).json({
       status: 'Success',
       message: 'sukses membuat transaksi',
       data: midtransResponseData,
@@ -111,7 +113,14 @@ const paymentFinalize = async (req, res, next) => {
       signature_key,
     } = req.body
 
-    if(!transaction_status || !fraud_status || !order_id || !status_code || !gross_amount || !signature_key) {
+    if (
+      !transaction_status
+      || !fraud_status
+      || !order_id
+      || !status_code
+      || !gross_amount
+      || !signature_key
+    ) {
       return next(new ApiError('Semua field harus diisi', 400))
     }
 
@@ -137,8 +146,8 @@ const paymentFinalize = async (req, res, next) => {
     }
 
     if (
-      transaction_status === 'capture' ||
-      transaction_status === 'settlement'
+      transaction_status === 'capture'
+      || transaction_status === 'settlement'
     ) {
       if (fraud_status === 'accept') {
         transaction.status = 'SUDAH BAYAR'
@@ -159,7 +168,7 @@ const paymentFinalize = async (req, res, next) => {
       await transaction.save()
     }
 
-    res.status(200).json({
+    return res.status(200).json({
       status: 'Success',
       message: 'Berhasil menyelesaikan transaksi',
       data: transaction,

@@ -1,10 +1,12 @@
+const { Op } = require('sequelize')
+
 const { Module, Chapter, Course } = require('../models')
 const ApiError = require('../utils/ApiError')
-const { Op } = require('sequelize')
 
 const createChapter = async (req, res, next) => {
   try {
-    let { no, name, courseId } = req.body
+    let { no } = req.body
+    const { name, courseId } = req.body
 
     const missingFields = ['no', 'name', 'courseId'].filter(
       (field) => !req.body[field],
@@ -15,7 +17,7 @@ const createChapter = async (req, res, next) => {
       )
     }
 
-    if (isNaN(no) || isNaN(courseId)) {
+    if (Number.isNaN(no) || Number.isNaN(courseId)) {
       return next(
         new ApiError('Nomor chapter dan courseId harus berupa angka', 400),
       )
@@ -67,7 +69,7 @@ const createChapter = async (req, res, next) => {
       totalDuration: 0,
     })
 
-    res.status(201).json({
+    return res.status(201).json({
       status: 'Success',
       message: 'Sukses menambahkan data chapter',
       data: chapter,
@@ -93,7 +95,7 @@ const getAllChapter = async (req, res, next) => {
       return next(new ApiError('Chapter tidak ditemukan', 404))
     }
 
-    res.status(200).json({
+    return res.status(200).json({
       status: 'Success',
       message: 'Berhasil mendapatkan data chapter',
       data: chapters,
@@ -118,7 +120,7 @@ const getChapterById = async (req, res, next) => {
       return next(new ApiError('Chapter tidak ditemukan', 404))
     }
 
-    res.status(200).json({
+    return res.status(200).json({
       status: 'Success',
       message: `Berhasil mendapatkan data Chapter id: ${id};`,
       data: chapter,
@@ -131,7 +133,7 @@ const getChapterById = async (req, res, next) => {
 const updateChapter = async (req, res, next) => {
   try {
     const { id } = req.params
-    let { no, name, courseId } = req.body
+    const { no, name, courseId } = req.body
 
     const chapter = await Chapter.findByPk(id)
     if (!chapter) {
@@ -142,7 +144,7 @@ const updateChapter = async (req, res, next) => {
 
     if (no) {
       const parsedNo = parseInt(no, 10)
-      if (isNaN(parsedNo)) {
+      if (Number.isNaN(parsedNo)) {
         return next(new ApiError('Nomor chapter harus berupa angka', 400))
       }
 
@@ -167,7 +169,7 @@ const updateChapter = async (req, res, next) => {
         where: {
           name,
           courseId,
-          id: { [Op.not]: id }, // Memastikan ID chapter yang dicek tidak sama dengan chapter yang sedang diupdate
+          id: { [Op.not]: id },
         },
       })
 
@@ -180,7 +182,7 @@ const updateChapter = async (req, res, next) => {
     }
 
     if (courseId) {
-      if (isNaN(courseId)) {
+      if (Number.isNaN(courseId)) {
         return next(new ApiError('Chapter ID harus berupa angka', 400))
       }
       const checkCourse = await Course.findByPk(courseId)
@@ -197,7 +199,7 @@ const updateChapter = async (req, res, next) => {
 
     await chapter.update(updateData)
 
-    res.status(200).json({
+    return res.status(200).json({
       status: 'Success',
       message: `Berhasil mengupdate data chapter id: ${id}`,
       data: chapter,
@@ -223,7 +225,7 @@ const deleteChapter = async (req, res, next) => {
     }
     await chapter.destroy()
 
-    res.status(200).json({
+    return res.status(200).json({
       status: 'Success',
       message: `Berhasil menghapus data Chapter id: ${id};`,
       data: chapter,

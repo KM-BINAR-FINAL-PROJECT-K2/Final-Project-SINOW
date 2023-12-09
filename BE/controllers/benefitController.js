@@ -1,10 +1,11 @@
+const { Op } = require('sequelize')
+
 const { Benefit, Course } = require('../models')
 const ApiError = require('../utils/ApiError')
-const { Op } = require('sequelize')
 
 const createBenefit = async (req, res, next) => {
   try {
-    let { description, courseId } = req.body
+    const { description, courseId } = req.body
 
     const missingFields = ['description', 'courseId'].filter(
       (field) => !req.body[field],
@@ -25,7 +26,7 @@ const createBenefit = async (req, res, next) => {
       return next(new ApiError('Benefit sudah ada', 400))
     }
 
-    if (isNaN(courseId)) {
+    if (Number.isNaN(courseId)) {
       return next(new ApiError('Course ID harus berupa angka', 400))
     }
 
@@ -44,7 +45,7 @@ const createBenefit = async (req, res, next) => {
       courseId,
     })
 
-    res.status(201).json({
+    return res.status(201).json({
       status: 'Success',
       message: 'Sukses menambahkan data benefit',
       data: benefit,
@@ -64,7 +65,7 @@ const getAllBenefit = async (req, res, next) => {
       return next(new ApiError('Benefit tidak ditemukan', 404))
     }
 
-    res.status(200).json({
+    return res.status(200).json({
       status: 'Success',
       message: 'Berhasil mendapatkan data benefit',
       data: benefits,
@@ -82,7 +83,7 @@ const getBenefitById = async (req, res, next) => {
       return next(new ApiError('Benefit tidak ditemukan', 404))
     }
 
-    res.status(200).json({
+    return res.status(200).json({
       status: 'Success',
       message: `Berhasil mendapatkan data Benefit id: ${id};`,
       data: benefit,
@@ -95,7 +96,7 @@ const getBenefitById = async (req, res, next) => {
 const updateBenefit = async (req, res, next) => {
   try {
     const { id } = req.params
-    let { description, courseId } = req.body
+    const { description, courseId } = req.body
 
     const benefit = await Benefit.findByPk(id)
     if (!benefit) {
@@ -109,7 +110,7 @@ const updateBenefit = async (req, res, next) => {
         where: {
           description,
           courseId,
-          id: { [Op.not]: id }, // Memastikan ID benefit yang dicek tidak sama dengan benefit yang sedang diupdate
+          id: { [Op.not]: id },
         },
       })
 
@@ -120,7 +121,7 @@ const updateBenefit = async (req, res, next) => {
     }
 
     if (courseId) {
-      if (isNaN(courseId)) {
+      if (Number.isNaN(courseId)) {
         return next(new ApiError('Chapter ID harus berupa angka', 400))
       }
 
@@ -147,7 +148,7 @@ const updateBenefit = async (req, res, next) => {
       return next(new ApiError('Gagal update data Benefit', 500))
     }
 
-    res.status(200).json({
+    return res.status(200).json({
       status: 'Success',
       message: `Berhasil mengupdate data benefit id: ${id}`,
       data: updatedBenefit,
@@ -175,7 +176,7 @@ const deleteBenefit = async (req, res, next) => {
       return next(new ApiError('Gagal menghapus Benefit', 500))
     }
 
-    res.status(200).json({
+    return res.status(200).json({
       status: 'Success',
       message: `Berhasil menghapus data Benefit id: ${id};`,
       data: benefit,

@@ -34,7 +34,7 @@ module.exports = async (req, res, next) => {
 
     req.user = user
 
-    next()
+    return next()
   } catch (error) {
     return next(new ApiError(error.message, 401))
   }

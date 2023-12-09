@@ -1,6 +1,15 @@
 const imagekit = require('../lib/imagekit')
 const ApiError = require('./ApiError')
 
+const isVideoFile = (file) => file.mimetype.startsWith('video/')
+
+const isImageFile = (file) => file.mimetype.startsWith('image/')
+
+const getExtension = (file) => {
+  const split = file.originalname.split('.')
+  return split[split.length - 1]
+}
+
 const uploadVideo = async (file, next) => {
   try {
     if (!isVideoFile(file)) {
@@ -21,7 +30,7 @@ const uploadVideo = async (file, next) => {
       videoUrl: uploadedVideo.url,
       videoDuration: uploadedVideo.duration,
     }
-  } catch {
+  } catch (error) {
     return next(new ApiError(error.message, 500))
   }
 }
@@ -45,21 +54,9 @@ const uploadImage = async (file, next) => {
     return {
       imageUrl: uploadedImage.url,
     }
-  } catch {
+  } catch (error) {
     return next(new ApiError(error.message, 500))
   }
-}
-const isVideoFile = (file) => {
-  return file.mimetype.startsWith('video/')
-}
-
-const isImageFile = (file) => {
-  return file.mimetype.startsWith('image/')
-}
-
-const getExtension = (file) => {
-  const split = file.originalname.split('.')
-  return split[split.length - 1]
 }
 
 module.exports = {

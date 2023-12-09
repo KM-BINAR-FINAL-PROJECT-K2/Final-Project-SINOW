@@ -1,7 +1,7 @@
 const randomString = require('randomstring')
 const nodemailer = require('nodemailer')
-const ApiError = require('./ApiError')
 const jwt = require('jsonwebtoken')
+const ApiError = require('./ApiError')
 const verificationEmailHTML = require('../lib/verificationEmailHTML')
 const resetPasswordHTML = require('../lib/resetPasswordHTML')
 
@@ -16,8 +16,7 @@ const transporter = nodemailer.createTransport({
   },
 })
 
-const generateOTP = () =>
-  randomString.generate({ length: 6, charset: 'numeric' })
+const generateOTP = () => randomString.generate({ length: 6, charset: 'numeric' })
 
 const sendMail = async (mailOptions, next) => {
   try {
@@ -25,6 +24,7 @@ const sendMail = async (mailOptions, next) => {
   } catch (error) {
     return next(new ApiError(error, 500))
   }
+  return true
 }
 
 const sendOTPVerificationEmail = async (email, next) => {
@@ -65,6 +65,7 @@ const sendResetPasswordEmail = async (auth, next) => {
   } catch (error) {
     return next(new ApiError(error, 500))
   }
+  return true
 }
 
 module.exports = { sendOTPVerificationEmail, sendResetPasswordEmail }

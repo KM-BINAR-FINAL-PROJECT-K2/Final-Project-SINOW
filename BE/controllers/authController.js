@@ -1,8 +1,10 @@
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
-const { User, Auth, OTP, sequelize } = require('../models')
-const ApiError = require('../utils/ApiError')
 const validator = require('validator')
+const {
+  User, Auth, OTP, sequelize,
+} = require('../models')
+const ApiError = require('../utils/ApiError')
 const { createNotification } = require('../utils/notificationUtils')
 const { createToken } = require('../utils/jwtUtils')
 const {
@@ -49,7 +51,7 @@ const login = async (req, res, next) => {
       role: user.User.role,
     })
 
-    res.status(200).json({
+    return res.status(200).json({
       status: 'Success',
       message: 'Berhasil login',
       data: {
@@ -63,7 +65,9 @@ const login = async (req, res, next) => {
 
 const register = async (req, res, next) => {
   try {
-    let { name, email, phoneNumber, password } = req.body
+    let { email, phoneNumber } = req.body
+
+    const { name, password } = req.body
 
     if (!name || !email || !phoneNumber || !password) {
       return next(
@@ -149,7 +153,7 @@ const register = async (req, res, next) => {
       userId: newUser.id,
     })
 
-    res.status(201).json({
+    return res.status(201).json({
       status: 'Success',
       message:
         'Registrasi berhasil & OTP berhasil dikirim ke email anda, silahkan verifikasi OTP sebelum login',
@@ -210,7 +214,7 @@ const resendOtp = async (req, res, next) => {
       return next(new ApiError('Gagal membuat OTP', 500))
     }
 
-    res.status(200).json({
+    return res.status(200).json({
       status: 'Success',
       message: 'Kode OTP berhasil dikirim ulang ke email',
     })
@@ -282,6 +286,7 @@ const verifyEmail = async (req, res, next) => {
         'Yeay! Akun mu berhasil dibuat',
         updatedAuth.userId,
         `Selamat Bergabung di SINOW!\n\nKami dengan senang hati menyambut Anda di SINOW, tempat terbaik untuk belajar melalui kursus daring. Sekarang Anda memiliki akses penuh ke ribuan kursus berkualitas dari berbagai bidang IT.\n\nDengan SINOW, belajar menjadi lebih fleksibel dan mudah. Temukan kursus yang sesuai dengan minat dan tujuan karir Anda, ikuti perkembangan terbaru dalam industri IT, dan tingkatkan keterampilan Anda dengan materi pembelajaran terkini.\n\nJangan lewatkan kesempatan untuk:\n\n📚 Menjelajahi kursus-kursus unggulan dari instruktur terbaik.\n🎓 Mendapatkan\n🌐 Bergabung dengan komunitas pembelajar aktif dan berbagi pengetahuan.\n🚀 Memulai perjalanan pendidikan online Anda menuju kesuksesan.\n\nSelamat belajar,\nTim SINOW 🫡`,
+        next,
       )
 
       await OTP.destroy({
@@ -304,7 +309,7 @@ const verifyEmail = async (req, res, next) => {
       next,
     )
 
-    res.status(200).json({
+    return res.status(200).json({
       status: 'Success',
       message: 'Berhasil verifikasi email',
       data: {
@@ -340,7 +345,7 @@ const reqResetPassword = async (req, res, next) => {
 
     await sendResetPasswordEmail(auth, next)
 
-    res.status(200).json({
+    return res.status(200).json({
       status: 'Success',
       message: 'Tautan reset password berhasil dikirim ke email',
     })
@@ -367,11 +372,14 @@ const resetPassword = async (req, res, next) => {
 
     if (!confirmPassword) {
       return next(new ApiError('Konfirmasi password harus diisi', 400))
-    } else if (password.length < 8) {
+    }
+    if (password.length < 8) {
       return next(new ApiError('Password min 8 karakter!', 400))
-    } else if (password.length > 12) {
+    }
+    if (password.length > 12) {
       return next(new ApiError('Password max 12 karakter!', 400))
-    } else if (password !== confirmPassword) {
+    }
+    if (password !== confirmPassword) {
       return next(new ApiError('Password tidak cocok', 400))
     }
 
@@ -396,9 +404,10 @@ const resetPassword = async (req, res, next) => {
       'Password Berhasil Diubah',
       decoded.id,
       `Halo,\n\nPassword akun Anda telah berhasil diubah. Jika Anda merasa tidak melakukan perubahan ini, segera hubungi dukungan pelanggan kami.\n\nTerima kasih,\nTim SINOW 🫡`,
+      next,
     )
 
-    res.status(200).json({
+    return res.status(200).json({
       status: 'Success',
       message: 'Password berhasil diubah',
     })
@@ -409,9 +418,9 @@ const resetPassword = async (req, res, next) => {
 
 const checkToken = async (req, res, next) => {
   try {
-    const user = req.user
+    const { user } = req
 
-    res.status(200).json({
+    return res.status(200).json({
       status: 'Success',
       message: 'Token valid',
       data: user,

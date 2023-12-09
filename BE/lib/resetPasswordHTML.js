@@ -1,5 +1,4 @@
-module.exports = (token) => {
-  return `
+module.exports = (token) => `
     <!DOCTYPE html>
     <html>
       <head>
@@ -260,4 +259,3 @@ module.exports = (token) => {
       </body>
     </html>
   `
-}
