@@ -1207,6 +1207,26 @@
               }
             }
           },
+          "201": {
+            "description": "Berhasil mengikuti course",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Success"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Berhasil mengikuti course"
+                    }
+                  }
+                }
+              }
+            }
+          },
           "401": {
             "description": "Token tidak valid",
             "content": {
