@@ -152,7 +152,7 @@
                   "name": {
                     "type": "string",
                     "description": "Nama user",
-                    "example": "Fadhlan"
+                    "example": "John Doe"
                   },
                   "email": {
                     "type": "string",
@@ -353,7 +353,7 @@
                   "email": {
                     "type": "string",
                     "description": "Email user",
-                    "example": "2110631170138@student.unsika.ac.id"
+                    "example": "johndoe@example.com"
                   }
                 }
               }
@@ -2796,7 +2796,7 @@
                             },
                             "name": {
                               "type": "string",
-                              "example": "Fadhlan"
+                              "example": "John Doe"
                             }
                           }
                         },
