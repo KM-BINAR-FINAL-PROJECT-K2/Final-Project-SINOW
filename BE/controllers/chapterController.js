@@ -71,7 +71,7 @@ const createChapter = async (req, res, next) => {
 
     return res.status(201).json({
       status: 'Success',
-      message: 'Sukses menambahkan data chapter',
+      message: 'Berhasil menambahkan data chapter',
       data: chapter,
     })
   } catch (error) {
@@ -151,7 +151,7 @@ const updateChapter = async (req, res, next) => {
       const checkNumber = await Chapter.findOne({
         where: {
           no: parsedNo,
-          courseId,
+          courseId: courseId || chapter.courseId,
           id: { [Op.not]: id },
         },
       })
@@ -168,7 +168,7 @@ const updateChapter = async (req, res, next) => {
       const existingChapter = await Chapter.findOne({
         where: {
           name,
-          courseId,
+          courseId: courseId || chapter.courseId,
           id: { [Op.not]: id },
         },
       })
@@ -228,7 +228,6 @@ const deleteChapter = async (req, res, next) => {
     return res.status(200).json({
       status: 'Success',
       message: `Berhasil menghapus data Chapter id: ${id};`,
-      data: chapter,
     })
   } catch (error) {
     return next(new ApiError(error.message, 500))

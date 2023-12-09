@@ -74,13 +74,9 @@ const createModule = async (req, res, next) => {
       createdBy: req.user.id,
     })
 
-    if (!module) {
-      return next(new ApiError('Gagal membuat module', 500))
-    }
-
     return res.status(201).json({
       status: 'success',
-      message: 'Sukses membuat module',
+      message: 'Berhasil menambahkan data module',
       data: module,
     })
   } catch (error) {
@@ -175,7 +171,7 @@ const updateModule = async (req, res, next) => {
       const existingModule = await Module.findOne({
         where: {
           name,
-          chapterId,
+          chapterId: chapterId || module.chapterId,
           id: { [Op.not]: id },
         },
       })
@@ -195,7 +191,7 @@ const updateModule = async (req, res, next) => {
       const checkNumber = await Module.findOne({
         where: {
           no: parsedNo,
-          chapterId,
+          chapterId: chapterId || module.chapterId,
           id: { [Op.not]: id },
         },
       })
@@ -228,7 +224,7 @@ const updateModule = async (req, res, next) => {
     if (req.file) {
       const uploadedVideo = await uploadVideo(req.file)
       if (!uploadedVideo || Object.keys(uploadedVideo).length === 0) {
-        return next(new ApiError('Gagal upload file', 500))
+        return next(new ApiError('Gagal upload video', 400))
       }
       updateData.videoUrl = uploadedVideo.videoUrl
       updateData.duration = uploadedVideo.videoDuration

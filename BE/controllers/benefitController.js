@@ -47,7 +47,7 @@ const createBenefit = async (req, res, next) => {
 
     return res.status(201).json({
       status: 'Success',
-      message: 'Sukses menambahkan data benefit',
+      message: 'Berhasil menambahkan data benefit',
       data: benefit,
     })
   } catch (error) {
@@ -109,7 +109,7 @@ const updateBenefit = async (req, res, next) => {
       const existingBenefit = await Benefit.findOne({
         where: {
           description,
-          courseId,
+          courseId: courseId || benefit.courseId,
           id: { [Op.not]: id },
         },
       })
@@ -137,21 +137,12 @@ const updateBenefit = async (req, res, next) => {
       updateData.courseId = courseId
     }
 
-    const [rowCount, [updatedBenefit]] = await Benefit.update(updateData, {
-      where: {
-        id,
-      },
-      returning: true,
-    })
-
-    if (rowCount === 0 && !updatedBenefit) {
-      return next(new ApiError('Gagal update data Benefit', 500))
-    }
+    await benefit.update(updateData)
 
     return res.status(200).json({
       status: 'Success',
       message: `Berhasil mengupdate data benefit id: ${id}`,
-      data: updatedBenefit,
+      data: benefit,
     })
   } catch (error) {
     return next(new ApiError(error, 500))
@@ -166,20 +157,11 @@ const deleteBenefit = async (req, res, next) => {
       return next(new ApiError('Benefit tidak ditemukan', 404))
     }
 
-    const isBenefitrDeleted = await Benefit.destroy({
-      where: {
-        id,
-      },
-    })
-
-    if (!isBenefitrDeleted) {
-      return next(new ApiError('Gagal menghapus Benefit', 500))
-    }
+    await benefit.destroy()
 
     return res.status(200).json({
       status: 'Success',
       message: `Berhasil menghapus data Benefit id: ${id};`,
-      data: benefit,
     })
   } catch (error) {
     return next(new ApiError(error.message, 500))
