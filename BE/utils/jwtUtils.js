@@ -1,9 +1,9 @@
-const jwt = require("jsonwebtoken");
-const ApiError = require("../utils/ApiError");
+const jwt = require('jsonwebtoken')
+const ApiError = require('../utils/ApiError')
 
 const createToken = (payload, next) => {
   if (!payload.id || !payload.name || !payload.role) {
-    return next(new ApiError("Payload tidak valid", 400));
+    return next(new ApiError('Payload tidak valid', 400))
   }
   try {
     const token = jwt.sign(
@@ -16,15 +16,15 @@ const createToken = (payload, next) => {
       {
         issuer: process.env.JWT_ISSUER,
         expiresIn: process.env.JWT_LOGIN_TOKEN_EXPIRES_IN,
-      }
-    );
+      },
+    )
 
-    return token;
+    return token
   } catch (error) {
-    return next(new ApiError(error.message, 500));
+    return next(new ApiError(error.message, 500))
   }
-};
+}
 
 module.exports = {
   createToken,
-};
+}

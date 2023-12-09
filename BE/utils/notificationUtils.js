@@ -1,5 +1,5 @@
-const { Notification } = require("../models");
-const ApiError = require("../utils/ApiError");
+const { Notification } = require('../models')
+const ApiError = require('../utils/ApiError')
 
 const createNotification = async (type, title, userId, content) => {
   try {
@@ -9,12 +9,12 @@ const createNotification = async (type, title, userId, content) => {
       content: content,
       userId: userId,
       isRead: false,
-    });
+    })
   } catch (err) {
-    return next(new ApiError(err.message, 500));
+    return next(new ApiError(err.message, 500))
   }
-};
+}
 
 module.exports = {
   createNotification,
-};
+}

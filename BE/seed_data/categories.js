@@ -1,58 +1,58 @@
 module.exports = [
   {
-    name: "UI/UX Design",
+    name: 'UI/UX Design',
     imageUrl:
-      "https://github.com/dyanpk/AssetFinalProject/blob/master/asset/cat_uiux.png?raw=true",
+      'https://github.com/dyanpk/AssetFinalProject/blob/master/asset/cat_uiux.png?raw=true',
     createdAt: new Date(),
     updatedAt: new Date(),
   },
   {
-    name: "Product Management",
+    name: 'Product Management',
     imageUrl:
-      "https://github.com/dyanpk/AssetFinalProject/blob/master/asset/cat_product_management.png?raw=true",
+      'https://github.com/dyanpk/AssetFinalProject/blob/master/asset/cat_product_management.png?raw=true',
     createdAt: new Date(),
     updatedAt: new Date(),
   },
   {
-    name: "Web Development",
+    name: 'Web Development',
     imageUrl:
-      "https://github.com/dyanpk/AssetFinalProject/blob/master/asset/cat_web_development.png?raw=true",
+      'https://github.com/dyanpk/AssetFinalProject/blob/master/asset/cat_web_development.png?raw=true',
     createdAt: new Date(),
     updatedAt: new Date(),
   },
   {
-    name: "Android Development",
+    name: 'Android Development',
     imageUrl:
-      "https://github.com/dyanpk/AssetFinalProject/blob/master/asset/cat_android_development.png?raw=true",
+      'https://github.com/dyanpk/AssetFinalProject/blob/master/asset/cat_android_development.png?raw=true',
     createdAt: new Date(),
     updatedAt: new Date(),
   },
   {
-    name: "iOS Development",
+    name: 'iOS Development',
     imageUrl:
-      "https://github.com/dyanpk/AssetFinalProject/blob/master/asset/cat_ios_development.png?raw=true",
+      'https://github.com/dyanpk/AssetFinalProject/blob/master/asset/cat_ios_development.png?raw=true',
     createdAt: new Date(),
     updatedAt: new Date(),
   },
   {
-    name: "Data Science",
+    name: 'Data Science',
     imageUrl:
-      "https://github.com/dyanpk/AssetFinalProject/blob/master/asset/cat_data_science.png?raw=true",
+      'https://github.com/dyanpk/AssetFinalProject/blob/master/asset/cat_data_science.png?raw=true',
     createdAt: new Date(),
     updatedAt: new Date(),
   },
   {
-    name: "Business Intelligence",
+    name: 'Business Intelligence',
     imageUrl:
-      "https://github.com/dyanpk/AssetFinalProject/blob/master/asset/cat_business_intelligence.png?raw=true",
+      'https://github.com/dyanpk/AssetFinalProject/blob/master/asset/cat_business_intelligence.png?raw=true',
     createdAt: new Date(),
     updatedAt: new Date(),
   },
   {
-    name: "Digital Marketing",
+    name: 'Digital Marketing',
     imageUrl:
-      "https://github.com/dyanpk/AssetFinalProject/blob/master/asset/cat_digital_marketing.png?raw=true",
+      'https://github.com/dyanpk/AssetFinalProject/blob/master/asset/cat_digital_marketing.png?raw=true',
     createdAt: new Date(),
     updatedAt: new Date(),
   },
-];
+]

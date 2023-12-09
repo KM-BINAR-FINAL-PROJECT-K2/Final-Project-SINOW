@@ -259,5 +259,5 @@ module.exports = (token) => {
         </table>
       </body>
     </html>
-  `;
-};
+  `
+}

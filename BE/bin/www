@@ -1,10 +1,10 @@
 #!/usr/bin/env node
-require("dotenv").config();
+require('dotenv').config()
 
-const app = require("../index");
+const app = require('../index')
 
-const { PORT = 3000, BASE_URL } = process.env;
+const { PORT = 3000, BASE_URL } = process.env
 
 app.listen(PORT, () => {
-  console.log(`Server berjalan di port: ${BASE_URL}:${PORT}`);
-});
+  console.log(`Server berjalan di port: ${BASE_URL}:${PORT}`)
+})
