@@ -1,32 +1,32 @@
-const router = require("express").Router();
+const router = require('express').Router()
 
-const User = require("../controllers/userController");
-const authenticate = require("../middlewares/authenticate");
-const uploader = require("../middlewares/uploader");
+const User = require('../controllers/userController')
+const authenticate = require('../middlewares/authenticate')
+const uploader = require('../middlewares/uploader')
 
-router.get("/", authenticate, User.myDetails);
+router.get('/', authenticate, User.myDetails)
 router.patch(
-  "/update",
+  '/update',
   authenticate,
-  uploader.single("image"),
-  User.updateMyDetails
-);
+  uploader.single('image'),
+  User.updateMyDetails,
+)
 
-router.patch("/change-password", authenticate, User.changeMyPassword);
+router.patch('/change-password', authenticate, User.changeMyPassword)
 
-router.get("/notifications", authenticate, User.getUserNotification);
+router.get('/notifications', authenticate, User.getUserNotification)
 
-router.get("/notifications/:id", authenticate, User.openNotification);
+router.get('/notifications/:id', authenticate, User.openNotification)
 
-router.delete("/notifications/:id", authenticate, User.deleteNotification);
+router.delete('/notifications/:id', authenticate, User.deleteNotification)
 
-router.get("/my-courses", authenticate, User.getMyCourses);
-router.get("/my-courses/:courseId", authenticate, User.openCourse);
+router.get('/my-courses', authenticate, User.getMyCourses)
+router.get('/my-courses/:courseId', authenticate, User.openCourse)
 
 router.get(
-  "/my-courses/:courseId/modules/:userModuleId",
+  '/my-courses/:courseId/modules/:userModuleId',
   authenticate,
-  User.openUserModule
-);
+  User.openUserModule,
+)
 
-module.exports = router;
+module.exports = router

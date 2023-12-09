@@ -5345,6 +5345,26 @@
               }
             }
           },
+          "400": {
+            "description": "Data transaksi tidak valid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Failed"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Bukan course premium"
+                    }
+                  }
+                }
+              }
+            }
+          },
           "401": {
             "description": "Token tidak valid",
             "content": {
@@ -5413,7 +5433,7 @@
           }
         },
         "responses": {
-          "200": {
+          "201": {
             "description": "Sukses menambahkan transaksi",
             "content": {
               "application/json": {
@@ -5489,13 +5509,25 @@
                     "type": "string",
                     "example": "capture"
                   },
+                  "fraud_status": {
+                    "type": "string",
+                    "example": "accept"
+                  },
                   "order_id": {
                     "type": "integer",
                     "example": 1
                   },
-                  "fraud_status": {
+                  "status_code": {
+                    "type": "integer",
+                    "example": 200
+                  },
+                  "gross_amount": {
+                    "type": "integer",
+                    "example": 10000
+                  },
+                  "signature_key": {
                     "type": "string",
-                    "example": "accept"
+                    "example": "signature"
                   }
                 }
               }

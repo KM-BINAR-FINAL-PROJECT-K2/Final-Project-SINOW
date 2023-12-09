@@ -1,30 +1,30 @@
-"use strict";
-const { Model } = require("sequelize");
+'use strict'
+const { Model } = require('sequelize')
 module.exports = (sequelize, DataTypes) => {
   class UserModule extends Model {
     static associate(models) {
       // define association here
       UserModule.belongsTo(models.User, {
         foreignKey: {
-          name: "userId",
+          name: 'userId',
           allowNull: false,
         },
-        as: "user",
-      });
+        as: 'user',
+      })
       UserModule.belongsTo(models.Module, {
         foreignKey: {
-          name: "moduleId",
+          name: 'moduleId',
           allowNull: false,
         },
-        as: "moduleData",
-      });
+        as: 'moduleData',
+      })
       UserModule.belongsTo(models.Chapter, {
         foreignKey: {
-          name: "chapterId",
+          name: 'chapterId',
           allowNull: false,
         },
-        as: "chapter",
-      });
+        as: 'chapter',
+      })
     }
   }
   UserModule.init(
@@ -34,13 +34,13 @@ module.exports = (sequelize, DataTypes) => {
       chapterId: DataTypes.INTEGER,
       status: {
         type: DataTypes.STRING,
-        defaultValue: "terkunci",
+        defaultValue: 'terkunci',
       },
     },
     {
       sequelize,
-      modelName: "UserModule",
-    }
-  );
-  return UserModule;
-};
+      modelName: 'UserModule',
+    },
+  )
+  return UserModule
+}

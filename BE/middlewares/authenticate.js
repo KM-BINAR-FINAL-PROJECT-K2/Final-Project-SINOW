@@ -1,41 +1,41 @@
-const jwt = require("jsonwebtoken");
-const { User, Auth } = require("../models");
-const ApiError = require("../utils/ApiError");
+const jwt = require('jsonwebtoken')
+const { User, Auth } = require('../models')
+const ApiError = require('../utils/ApiError')
 
 module.exports = async (req, res, next) => {
   try {
-    const bearerToken = req.headers.authorization;
+    const bearerToken = req.headers.authorization
 
     if (!bearerToken) {
-      return next(new ApiError("Tidak ada token", 401));
+      return next(new ApiError('Tidak ada token', 401))
     }
 
-    const token = bearerToken.split(" ")[1];
+    const token = bearerToken.split(' ')[1]
 
-    let decoded;
+    let decoded
     try {
-      decoded = jwt.verify(token, process.env.JWT_SECRET);
+      decoded = jwt.verify(token, process.env.JWT_SECRET)
     } catch {
-      return next(new ApiError("Token tidak valid", 401));
+      return next(new ApiError('Token tidak valid', 401))
     }
 
     const user = await User.findByPk(decoded.id, {
       include: [
         {
           model: Auth,
-          attributes: ["id", "email", "phoneNumber", "userId"],
+          attributes: ['id', 'email', 'phoneNumber', 'userId'],
         },
       ],
-    });
+    })
 
     if (!user) {
-      return next(new ApiError("Token tidak valid", 404));
+      return next(new ApiError('Token tidak valid', 404))
     }
 
-    req.user = user;
+    req.user = user
 
-    next();
+    next()
   } catch (error) {
-    return next(new ApiError(error.message, 401));
+    return next(new ApiError(error.message, 401))
   }
-};
+}

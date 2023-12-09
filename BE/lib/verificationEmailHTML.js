@@ -252,5 +252,5 @@ module.exports = (otpCode) => {
     </body>
     </html>
 
-    `;
-};
+    `
+}

@@ -9,13 +9,13 @@ describe('API Register', () => {
       email: 'imamtaufiq133@gmail.com',
       password: '12345678',
       name: 'imam',
-      phoneNumber: '01234567'
+      phoneNumber: '01234567',
     }
-    const response = await request(app)
-      .post('/api/v1/auth/register')
-      .send(user)
+    const response = await request(app).post('/api/v1/auth/register').send(user)
     expect(response.statusCode).toBe(201)
     expect(response.body.status).toBe('Success')
-    expect(response.body.message).toBe('Registrasi berhasil & OTP berhasil dikirim ke email anda, silahkan verifikasi OTP sebelum login')
+    expect(response.body.message).toBe(
+      'Registrasi berhasil & OTP berhasil dikirim ke email anda, silahkan verifikasi OTP sebelum login',
+    )
   })
 })
