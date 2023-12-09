@@ -18,53 +18,59 @@ const { createToken } = require('../utils/jwtUtils')
 
 const { uploadImage } = require('../utils/imagekitUploader')
 
-const userCourseRelation = {
-  include: [
-    {
-      model: Course,
-      include: [
-        {
-          model: Category,
-          attributes: ['id', 'name'],
-          as: 'category',
-        },
-        {
-          model: User,
-          as: 'courseCreator',
-          attributes: ['id', 'name'],
-        },
-        {
-          model: Benefit,
-          as: 'benefits',
-          attributes: ['id', 'description'],
-        },
-        {
-          model: Chapter,
-          as: 'chapters',
-          attributes: ['id', 'no', 'name'],
-          include: [
-            {
-              model: UserModule,
-              as: 'userModules',
-              attributes: ['id', 'status'],
-              include: [
-                {
-                  model: Module,
-                  as: 'moduleData',
-                  attributes: ['id', 'no', 'name'],
+const userCourseRelation = (id) => {
+  const data = {
+    include: [
+      {
+        model: Course,
+        include: [
+          {
+            model: Category,
+            attributes: ['id', 'name'],
+            as: 'category',
+          },
+          {
+            model: User,
+            as: 'courseCreator',
+            attributes: ['id', 'name'],
+          },
+          {
+            model: Benefit,
+            as: 'benefits',
+            attributes: ['id', 'description'],
+          },
+          {
+            model: Chapter,
+            as: 'chapters',
+            attributes: ['id', 'no', 'name'],
+            include: [
+              {
+                model: UserModule,
+                as: 'userModules',
+                attributes: ['id', 'status'],
+                where: {
+                  userId: id,
                 },
-              ],
-            },
-          ],
-        },
-      ],
-    },
-  ],
-  order: [
-    ['Course', 'id', 'ASC'],
-    ['Course', 'chapters', 'no', 'ASC'],
-    ['Course', 'chapters', 'userModules', 'moduleData', 'no', 'ASC'],
-  ],
+                include: [
+                  {
+                    model: Module,
+                    as: 'moduleData',
+                    attributes: ['id', 'no', 'name'],
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      },
+    ],
+    order: [
+      ['Course', 'id', 'ASC'],
+      ['Course', 'chapters', 'no', 'ASC'],
+      ['Course', 'chapters', 'userModules', 'moduleData', 'no', 'ASC'],
+    ],
+  }
+  return data
 }
 
 const myDetails = async (req, res, next) => {
@@ -442,8 +448,8 @@ const openCourse = async (req, res, next) => {
         progress: 0,
         lastSeen: new Date(),
       },
-      include: userCourseRelation.include,
-      order: userCourseRelation.order,
+      include: userCourseRelation(user.id).include,
+      order: userCourseRelation(user.id).order,
     })
 
     if (!created) {
@@ -507,11 +513,11 @@ const openCourse = async (req, res, next) => {
     }
 
     const newUserCourse = await UserCourse.findByPk(userCourse.id, {
-      include: userCourseRelation.include,
-      order: userCourseRelation.order,
+      include: userCourseRelation(user.id).include,
+      order: userCourseRelation(user.id).order,
     })
 
-    return res.status(200).json({
+    return res.status(201).json({
       status: 'Success',
       message: 'Berhasil mengikuti course',
       data: {
