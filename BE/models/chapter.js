@@ -1,5 +1,5 @@
-"use strict";
-const { Model } = require("sequelize");
+const { Model } = require('sequelize')
+
 module.exports = (sequelize, DataTypes) => {
   class Chapter extends Model {
     /**
@@ -11,28 +11,28 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       Chapter.hasMany(models.Module, {
         foreignKey: {
-          name: "chapterId",
+          name: 'chapterId',
           allowNull: false,
         },
-        as: "modules",
-        onDelete: "cascade",
+        as: 'modules',
+        onDelete: 'cascade',
         hooks: true,
-      });
+      })
       Chapter.belongsTo(models.Course, {
         foreignKey: {
-          name: "courseId",
+          name: 'courseId',
           allowNull: false,
         },
-        onDelete: "cascade",
-      });
+        onDelete: 'cascade',
+      })
 
       Chapter.hasMany(models.UserModule, {
         foreignKey: {
-          name: "chapterId",
+          name: 'chapterId',
           allowNull: false,
         },
-        as: "userModules",
-      });
+        as: 'userModules',
+      })
     }
   }
   Chapter.init(
@@ -47,8 +47,8 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       sequelize,
-      modelName: "Chapter",
-    }
-  );
-  return Chapter;
-};
+      modelName: 'Chapter',
+    },
+  )
+  return Chapter
+}

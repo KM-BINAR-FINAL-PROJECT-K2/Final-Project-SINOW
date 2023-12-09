@@ -1,0 +1,94 @@
+name: Lint and Test Before Merge
+on:
+  workflow_dispatch:
+  pull_request:
+    types: [opened, edited, synchronize]
+    branches:
+      - main
+jobs:
+  test:
+    environment: test
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    env:
+      DB_HOST: ${{secrets.DB_HOST}}
+      DB_NAME: ${{secrets.DB_NAME}}
+      DB_PASSWORD: ${{secrets.DB_PASSWORD}}
+      DB_PORT: ${{secrets.DB_PORT}}
+      DB_USER: ${{secrets.DB_USER}}
+      IMAGEKIT_PUBLIC_KEY: ${{secrets.IMAGEKIT_PUBLIC_KEY}}
+      IMAGEKIT_PRIVATE_KEY: ${{secrets.IMAGEKIT_PRIVATE_KEY}}
+      IMAGEKIT_URL: ${{secrets.IMAGEKIT_URL}}
+      APP_NAME: ${{secrets.APP_NAME}}
+      APP_EMAIL: ${{secrets.APP_EMAIL}}
+      APP_PASSWORD: ${{secrets.APP_PASSWORD}}
+      PORT: ${{secrets.PORT}}
+      JWT_SECRET: ${{secrets.JWT_SECRET}}
+      JWT_LOGIN_TOKEN_EXPIRES_IN: ${{secrets.JWT_LOGIN_TOKEN_EXPIRES_IN}}
+      JWT_ISSUER: ${{secrets.JWT_ISSUER}}
+      PASSWORD_HASH: ${{secrets.PASSWORD_HASH}}
+      BASE_URL: ${{secrets.BASE_URL}}
+    steps:
+      - name: Get code
+        uses: actions/checkout@v3
+      - name: Cache dependencies
+        id: cache
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: deps-node-modules-${{ hashFiles('**/package-lock.json') }}
+      - name: Install dependencies
+        working-directory: ./BE
+        run: npm install
+      - name: drop existing DB
+        working-directory: ./BE
+        run: npm run db:drop
+      - name: Create DB
+        working-directory: ./BE
+        run: npm run db:create
+      - name: Migration database
+        working-directory: ./BE
+        run: npm run db:migrate
+      - name: Seed database
+        working-directory: ./BE
+        run: npm run db:seed
+      - name: Test code
+        id: run-tests
+        working-directory: ./BE
+        run: npm run test
+  lint:
+    needs: test
+    environment: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get code
+        uses: actions/checkout@v3
+      - name: Cache dependencies
+        id: cache
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: deps-node-modules-${{ hashFiles('**/package-lock.json') }}
+      - name: Install dependencies
+        working-directory: ./BE
+        run: npm install
+      - name: Lint code
+        working-directory: ./BE
+        run: npm run lint
+  merge:
+    needs: [test, lint]
+    environment: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Merge
+        run: echo "Can Be Merge..."
+  report:
+    needs: merge
+    if: failure()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Output information
+        working-directory: ./BE
+        run: |
+          echo "Something went wrong"
+          echo "${{ toJSON(github) }}"

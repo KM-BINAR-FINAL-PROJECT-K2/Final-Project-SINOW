@@ -1,145 +1,149 @@
-const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
-const { User, Auth, OTP, sequelize } = require("../models");
-const ApiError = require("../utils/ApiError");
-const validator = require("validator");
-const { createNotification } = require("../utils/notificationUtils");
-const { createToken } = require("../utils/jwtUtils");
+const bcrypt = require('bcrypt')
+const jwt = require('jsonwebtoken')
+const validator = require('validator')
+const {
+  User, Auth, OTP, sequelize,
+} = require('../models')
+const ApiError = require('../utils/ApiError')
+const { createNotification } = require('../utils/notificationUtils')
+const { createToken } = require('../utils/jwtUtils')
 const {
   sendOTPVerificationEmail,
   sendResetPasswordEmail,
-} = require("../utils/sendMailUtils");
+} = require('../utils/sendMailUtils')
 
 const login = async (req, res, next) => {
   try {
-    const { email, password } = req.body;
+    const { email, password } = req.body
 
     if (!validator.isEmail(email)) {
-      return next(new ApiError("Email tidak valid", 400));
+      return next(new ApiError('Email tidak valid', 400))
     }
 
     if (!email || !password) {
-      return next(new ApiError("Email dan password harus diisi", 400));
+      return next(new ApiError('Email dan password harus diisi', 400))
     }
 
     const user = await Auth.findOne({
       where: {
         email,
       },
-      include: ["User"],
-    });
+      include: ['User'],
+    })
 
     if (!user) {
-      return next(new ApiError("Email tidak terdaftar", 400));
+      return next(new ApiError('Email tidak terdaftar', 400))
     }
 
     if (!user.isEmailVerified) {
-      return next(new ApiError("Email belum diverifikasi", 400));
+      return next(new ApiError('Email belum diverifikasi', 400))
     }
 
-    const isMatch = await bcrypt.compare(password, user.password);
+    const isMatch = await bcrypt.compare(password, user.password)
 
     if (!isMatch) {
-      return next(new ApiError("Password salah", 400));
+      return next(new ApiError('Password salah', 400))
     }
 
     const token = createToken({
       id: user.userId,
       name: user.User.name,
       role: user.User.role,
-    });
+    })
 
-    res.status(200).json({
-      status: "Success",
-      message: "Berhasil login",
+    return res.status(200).json({
+      status: 'Success',
+      message: 'Berhasil login',
       data: {
         token,
       },
-    });
+    })
   } catch (error) {
-    return next(new ApiError(error.message, 500));
+    return next(new ApiError(error.message, 500))
   }
-};
+}
 
 const register = async (req, res, next) => {
   try {
-    let { name, email, phoneNumber, password } = req.body;
+    let { email, phoneNumber } = req.body
+
+    const { name, password } = req.body
 
     if (!name || !email || !phoneNumber || !password) {
       return next(
         new ApiError(
-          "Kolom nama,email, nomor telepon,dan password harus diisi",
-          400
-        )
-      );
+          'Kolom nama,email, nomor telepon,dan password harus diisi',
+          400,
+        ),
+      )
     }
 
-    email = email.toLowerCase();
+    email = email.toLowerCase()
 
     if (!validator.isEmail(email)) {
-      return next(new ApiError("Email tidak valid", 400));
+      return next(new ApiError('Email tidak valid', 400))
     }
 
     if (!validator.isMobilePhone(phoneNumber)) {
-      return next(new ApiError("Nomor telepon tidak valid", 400));
+      return next(new ApiError('Nomor telepon tidak valid', 400))
     }
 
-    if (`${phoneNumber}`.startsWith("0")) {
-      phoneNumber = `${phoneNumber.slice(1)}`;
+    if (`${phoneNumber}`.startsWith('0')) {
+      phoneNumber = `${phoneNumber.slice(1)}`
     }
 
     if (password.length < 8) {
-      return next(new ApiError("Password min 8 karakter", 400));
+      return next(new ApiError('Password min 8 karakter', 400))
     }
 
     if (password.length > 12) {
-      return next(new ApiError("Password max 12 karakter", 400));
+      return next(new ApiError('Password max 12 karakter', 400))
     }
 
-    const isEmailExist = await Auth.findOne({ where: { email } });
+    const isEmailExist = await Auth.findOne({ where: { email } })
 
     if (isEmailExist) {
-      return next(new ApiError("Email sudah terdaftar", 400));
+      return next(new ApiError('Email sudah terdaftar', 400))
     }
 
     const isPhoneNumberExist = await Auth.findOne({
       where: { phoneNumber },
-    });
+    })
 
     if (isPhoneNumberExist) {
-      return next(new ApiError("Nomor telepon sudah terdaftar", 400));
+      return next(new ApiError('Nomor telepon sudah terdaftar', 400))
     }
 
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const hashedPassword = await bcrypt.hash(password, 10)
 
     const newUser = await User.create({
       name,
-      role: "user",
-    });
+      role: 'user',
+    })
 
-    const otpCode = await sendOTPVerificationEmail(email, next);
+    const otpCode = await sendOTPVerificationEmail(email, next)
 
     const checkOtp = await OTP.findOne({
       where: {
         userEmail: email,
       },
-    });
+    })
 
     if (checkOtp) {
       await OTP.destroy({
         where: {
           userEmail: email,
         },
-      });
+      })
     }
 
     const otp = await OTP.create({
       userEmail: email,
       otpValue: otpCode,
-    });
+    })
 
     if (!otp) {
-      return next(new ApiError("Gagal membuat OTP", 500));
+      return next(new ApiError('Gagal membuat OTP', 500))
     }
 
     await Auth.create({
@@ -147,115 +151,115 @@ const register = async (req, res, next) => {
       phoneNumber,
       password: hashedPassword,
       userId: newUser.id,
-    });
+    })
 
-    res.status(201).json({
-      status: "Success",
+    return res.status(201).json({
+      status: 'Success',
       message:
-        "Registrasi berhasil & OTP berhasil dikirim ke email anda, silahkan verifikasi OTP sebelum login",
-    });
+        'Registrasi berhasil & OTP berhasil dikirim ke email anda, silahkan verifikasi OTP sebelum login',
+    })
   } catch (error) {
-    return next(new ApiError(error.message, 500));
+    return next(new ApiError(error.message, 500))
   }
-};
+}
 
 const resendOtp = async (req, res, next) => {
   try {
-    const { email } = req.body;
+    const { email } = req.body
 
     if (!email) {
-      return next(new ApiError("Email tidak ada", 400));
+      return next(new ApiError('Email tidak ada', 400))
     }
 
     if (!validator.isEmail(email)) {
-      return next(new ApiError("Email tidak valid", 400));
+      return next(new ApiError('Email tidak valid', 400))
     }
 
-    const isEmailExist = await Auth.findOne({ where: { email } });
+    const isEmailExist = await Auth.findOne({ where: { email } })
     if (!isEmailExist) {
-      return next(new ApiError("Email tidak terdaftar", 400));
+      return next(new ApiError('Email tidak terdaftar', 400))
     }
 
     if (isEmailExist.isEmailVerified) {
       return next(
         new ApiError(
-          "Email sudah diverifikasi, tidak memerlukan autentikasi OTP",
-          400
-        )
-      );
+          'Email sudah diverifikasi, tidak memerlukan autentikasi OTP',
+          400,
+        ),
+      )
     }
 
     const checkOtp = await OTP.findOne({
       where: {
         userEmail: email,
       },
-    });
+    })
 
     if (checkOtp) {
       await OTP.destroy({
         where: {
           userEmail: email,
         },
-      });
+      })
     }
 
-    const otpCode = await sendOTPVerificationEmail(email, next);
+    const otpCode = await sendOTPVerificationEmail(email, next)
 
     const otp = await OTP.create({
       userEmail: email,
       otpValue: otpCode,
-    });
+    })
 
     if (!otp) {
-      return next(new ApiError("Gagal membuat OTP", 500));
+      return next(new ApiError('Gagal membuat OTP', 500))
     }
 
-    res.status(200).json({
-      status: "Success",
-      message: "Kode OTP berhasil dikirim ulang ke email",
-    });
+    return res.status(200).json({
+      status: 'Success',
+      message: 'Kode OTP berhasil dikirim ulang ke email',
+    })
   } catch (error) {
-    return next(new ApiError(error.message, 500));
+    return next(new ApiError(error.message, 500))
   }
-};
+}
 
 const verifyEmail = async (req, res, next) => {
   try {
-    const { email, otpCode } = req.body;
+    const { email, otpCode } = req.body
 
     if (!email || !validator.isEmail(email)) {
-      return next(new ApiError("Email harus diisi dengan format email", 400));
+      return next(new ApiError('Email harus diisi dengan format email', 400))
     }
 
     if (!otpCode || !validator.isNumeric(otpCode) || otpCode.length !== 6) {
       return next(
-        new ApiError("Kode OTP harus terdiri dari 6 digit numerik", 400)
-      );
+        new ApiError('Kode OTP harus terdiri dari 6 digit numerik', 400),
+      )
     }
 
     const checkAuth = await Auth.findOne({
       where: {
         email,
       },
-    });
+    })
 
     if (!checkAuth) {
-      return next(new ApiError("Email tidak terdaftar", 400));
+      return next(new ApiError('Email tidak terdaftar', 400))
     }
 
-    const otp = await OTP.findOne({ where: { userEmail: email } });
+    const otp = await OTP.findOne({ where: { userEmail: email } })
 
     if (!otp) {
       return next(
-        new ApiError("Email tersebut tidak memiliki OTP yang aktif", 400)
-      );
+        new ApiError('Email tersebut tidak memiliki OTP yang aktif', 400),
+      )
     }
 
     if (otp.otpValue !== otpCode) {
-      return next(new ApiError("OTP tidak valid", 400));
+      return next(new ApiError('OTP tidak valid', 400))
     }
 
-    let updatedAuth;
+    let updatedAuth
 
     await sequelize.transaction(async (t) => {
       await Auth.update(
@@ -267,32 +271,33 @@ const verifyEmail = async (req, res, next) => {
             email,
           },
           transaction: t,
-        }
-      );
+        },
+      )
 
       updatedAuth = await Auth.findOne({
         where: {
           email,
         },
-        include: ["User"],
-      });
+        include: ['User'],
+      })
 
       await createNotification(
-        "Notifikasi",
-        "Yeay! Akun mu berhasil dibuat",
+        'Notifikasi',
+        'Yeay! Akun mu berhasil dibuat',
         updatedAuth.userId,
-        `Selamat Bergabung di SINOW!\n\nKami dengan senang hati menyambut Anda di SINOW, tempat terbaik untuk belajar melalui kursus daring. Sekarang Anda memiliki akses penuh ke ribuan kursus berkualitas dari berbagai bidang IT.\n\nDengan SINOW, belajar menjadi lebih fleksibel dan mudah. Temukan kursus yang sesuai dengan minat dan tujuan karir Anda, ikuti perkembangan terbaru dalam industri IT, dan tingkatkan keterampilan Anda dengan materi pembelajaran terkini.\n\nJangan lewatkan kesempatan untuk:\n\n📚 Menjelajahi kursus-kursus unggulan dari instruktur terbaik.\n🎓 Mendapatkan\n🌐 Bergabung dengan komunitas pembelajar aktif dan berbagi pengetahuan.\n🚀 Memulai perjalanan pendidikan online Anda menuju kesuksesan.\n\nSelamat belajar,\nTim SINOW 🫡`
-      );
+        `Selamat Bergabung di SINOW!\n\nKami dengan senang hati menyambut Anda di SINOW, tempat terbaik untuk belajar melalui kursus daring. Sekarang Anda memiliki akses penuh ke ribuan kursus berkualitas dari berbagai bidang IT.\n\nDengan SINOW, belajar menjadi lebih fleksibel dan mudah. Temukan kursus yang sesuai dengan minat dan tujuan karir Anda, ikuti perkembangan terbaru dalam industri IT, dan tingkatkan keterampilan Anda dengan materi pembelajaran terkini.\n\nJangan lewatkan kesempatan untuk:\n\n📚 Menjelajahi kursus-kursus unggulan dari instruktur terbaik.\n🎓 Mendapatkan\n🌐 Bergabung dengan komunitas pembelajar aktif dan berbagi pengetahuan.\n🚀 Memulai perjalanan pendidikan online Anda menuju kesuksesan.\n\nSelamat belajar,\nTim SINOW 🫡`,
+        next,
+      )
 
       await OTP.destroy({
         where: {
           userEmail: email,
         },
         transaction: t,
-      });
-    });
+      })
+    })
     if (!updatedAuth) {
-      return next(new ApiError("gagal memverifikasi OTP"));
+      return next(new ApiError('gagal memverifikasi OTP'))
     }
 
     const token = createToken(
@@ -301,125 +306,129 @@ const verifyEmail = async (req, res, next) => {
         name: updatedAuth.User.name,
         role: updatedAuth.User.role,
       },
-      next
-    );
+      next,
+    )
 
-    res.status(200).json({
-      status: "Success",
-      message: "Berhasil verifikasi email",
+    return res.status(200).json({
+      status: 'Success',
+      message: 'Berhasil verifikasi email',
       data: {
         token,
       },
-    });
+    })
   } catch (error) {
-    return next(new ApiError(error.message, 500));
+    return next(new ApiError(error.message, 500))
   }
-};
+}
 
 const reqResetPassword = async (req, res, next) => {
   try {
-    const { email } = req.body;
+    const { email } = req.body
 
     if (!email) {
-      return next(new ApiError("Email tidak ada", 400));
+      return next(new ApiError('Email tidak ada', 400))
     }
     if (!validator.isEmail(email)) {
-      return next(new ApiError("Email tidak valid", 400));
+      return next(new ApiError('Email tidak valid', 400))
     }
 
     const auth = await Auth.findOne({
       where: {
         email,
       },
-      include: ["User"],
-    });
+      include: ['User'],
+    })
 
     if (!auth) {
-      return next(new ApiError("Email tidak terdaftar", 400));
+      return next(new ApiError('Email tidak terdaftar', 400))
     }
 
-    await sendResetPasswordEmail(auth, next);
+    await sendResetPasswordEmail(auth, next)
 
-    res.status(200).json({
-      status: "Success",
-      message: "Tautan reset password berhasil dikirim ke email",
-    });
+    return res.status(200).json({
+      status: 'Success',
+      message: 'Tautan reset password berhasil dikirim ke email',
+    })
   } catch (error) {
-    return next(new ApiError(error.message, 500));
+    return next(new ApiError(error.message, 500))
   }
-};
+}
 
 const resetPassword = async (req, res, next) => {
   try {
-    const { token } = req.params;
+    const { token } = req.params
 
     if (!token) {
-      return next(new ApiError("Token tidak ada", 400));
+      return next(new ApiError('Token tidak ada', 400))
     }
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const decoded = jwt.verify(token, process.env.JWT_SECRET)
 
-    const { password, confirmPassword } = req.body;
+    const { password, confirmPassword } = req.body
 
     if (!password) {
-      return next(new ApiError("Password harus diisi", 400));
+      return next(new ApiError('Password harus diisi', 400))
     }
 
     if (!confirmPassword) {
-      return next(new ApiError("Konfirmasi password harus diisi", 400));
-    } else if (password.length < 8) {
-      return next(new ApiError("Password min 8 karakter!", 400));
-    } else if (password.length > 12) {
-      return next(new ApiError("Password max 12 karakter!", 400));
-    } else if (password !== confirmPassword) {
-      return next(new ApiError("Password tidak cocok", 400));
+      return next(new ApiError('Konfirmasi password harus diisi', 400))
+    }
+    if (password.length < 8) {
+      return next(new ApiError('Password min 8 karakter!', 400))
+    }
+    if (password.length > 12) {
+      return next(new ApiError('Password max 12 karakter!', 400))
+    }
+    if (password !== confirmPassword) {
+      return next(new ApiError('Password tidak cocok', 400))
     }
 
     const auth = await Auth.findOne({
       where: {
         id: decoded.id,
       },
-    });
+    })
 
     if (!auth) {
-      return next(new ApiError("Token tidak valid", 400));
+      return next(new ApiError('Token tidak valid', 400))
     }
 
-    const passwordHash = await bcrypt.hash(password, 10);
+    const passwordHash = await bcrypt.hash(password, 10)
 
     auth.update({
       password: passwordHash,
-    });
+    })
 
     await createNotification(
-      "Notifikasi",
-      "Password Berhasil Diubah",
+      'Notifikasi',
+      'Password Berhasil Diubah',
       decoded.id,
-      `Halo,\n\nPassword akun Anda telah berhasil diubah. Jika Anda merasa tidak melakukan perubahan ini, segera hubungi dukungan pelanggan kami.\n\nTerima kasih,\nTim SINOW 🫡`
-    );
+      `Halo,\n\nPassword akun Anda telah berhasil diubah. Jika Anda merasa tidak melakukan perubahan ini, segera hubungi dukungan pelanggan kami.\n\nTerima kasih,\nTim SINOW 🫡`,
+      next,
+    )
 
-    res.status(200).json({
-      status: "Success",
-      message: "Password berhasil diubah",
-    });
+    return res.status(200).json({
+      status: 'Success',
+      message: 'Password berhasil diubah',
+    })
   } catch (error) {
-    return next(new ApiError(error, 500));
+    return next(new ApiError(error, 500))
   }
-};
+}
 
 const checkToken = async (req, res, next) => {
   try {
-    const user = req.user;
+    const { user } = req
 
-    res.status(200).json({
-      status: "Success",
-      message: "Token valid",
+    return res.status(200).json({
+      status: 'Success',
+      message: 'Token valid',
       data: user,
-    });
+    })
   } catch (error) {
-    return next(new ApiError(error.message, 500));
+    return next(new ApiError(error.message, 500))
   }
-};
+}
 
 module.exports = {
   login,
@@ -429,4 +438,4 @@ module.exports = {
   reqResetPassword,
   resetPassword,
   checkToken,
-};
+}

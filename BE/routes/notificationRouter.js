@@ -1,40 +1,40 @@
-const router = require("express").Router();
-const Notification = require("../controllers/notificationController");
-const authenticate = require("../middlewares/authenticate");
-const checkRole = require("../middlewares/checkRole");
+const router = require('express').Router()
+const Notification = require('../controllers/notificationController')
+const authenticate = require('../middlewares/authenticate')
+const checkRole = require('../middlewares/checkRole')
 
 router.post(
-  "/",
+  '/',
   authenticate,
-  checkRole("admin"),
-  Notification.createNotificationForAllUsers
-);
+  checkRole('admin'),
+  Notification.createNotificationForAllUsers,
+)
 
 router.get(
-  "/",
+  '/',
   authenticate,
-  checkRole("admin"),
-  Notification.getAllNotifications
-);
+  checkRole('admin'),
+  Notification.getAllNotifications,
+)
 
 router.put(
-  "/:id",
+  '/:id',
   authenticate,
-  checkRole("admin"),
-  Notification.updateNotification
-);
+  checkRole('admin'),
+  Notification.updateNotification,
+)
 
 router.delete(
-  "/:id",
+  '/:id',
   authenticate,
-  checkRole("admin"),
-  Notification.deleteNotificationById
-);
+  checkRole('admin'),
+  Notification.deleteNotificationById,
+)
 router.delete(
-  "/title/:title",
+  '/title/:title',
   authenticate,
-  checkRole("admin"),
-  Notification.deleteNotificationByTitle
-);
+  checkRole('admin'),
+  Notification.deleteNotificationByTitle,
+)
 
-module.exports = router;
+module.exports = router

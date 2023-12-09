@@ -1,5 +1,4 @@
-module.exports = (otpCode) => {
-  return `
+module.exports = (otpCode) => `
     <!DOCTYPE html>
     <html>
     <head>
@@ -252,5 +251,4 @@ module.exports = (otpCode) => {
     </body>
     </html>
 
-    `;
-};
+    `

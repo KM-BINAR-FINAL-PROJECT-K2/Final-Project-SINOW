@@ -1,14 +1,12 @@
-"use strict";
-
-const benefits = require("../seed_data/benefits");
+const benefits = require('../seed_data/benefits')
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
-  async up(queryInterface, Sequelize) {
-    await queryInterface.bulkInsert("Benefits", benefits, {});
+  async up(queryInterface) {
+    await queryInterface.bulkInsert('Benefits', benefits, {})
   },
 
-  async down(queryInterface, Sequelize) {
-    await queryInterface.bulkDelete("Benefits", null, {});
+  async down(queryInterface) {
+    await queryInterface.bulkDelete('Benefits', null, {})
   },
-};
+}

@@ -1,30 +1,30 @@
-"use strict";
-const { Model } = require("sequelize");
+const { Model } = require('sequelize')
+
 module.exports = (sequelize, DataTypes) => {
   class Module extends Model {
     static associate(models) {
       // define association here
       Module.belongsToMany(models.User, {
-        through: "UserModules",
-        foreignKey: "moduleId",
-        otherKey: "userId",
-        as: "users",
-      });
+        through: 'UserModules',
+        foreignKey: 'moduleId',
+        otherKey: 'userId',
+        as: 'users',
+      })
       Module.belongsTo(models.User, {
         foreignKey: {
-          name: "createdBy",
+          name: 'createdBy',
           allowNull: false,
         },
-        as: "moduleCreator",
-      });
+        as: 'moduleCreator',
+      })
       Module.belongsTo(models.Chapter, {
         foreignKey: {
-          name: "chapterId",
+          name: 'chapterId',
           allowNull: false,
         },
-        as: "chapter",
-        onDelete: "cascade",
-      });
+        as: 'chapter',
+        onDelete: 'cascade',
+      })
     }
   }
   Module.init(
@@ -38,89 +38,93 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       hooks: {
-        afterCreate: async (module, options) => {
-          const chapter = await module.getChapter();
-          const course = await chapter.getCourse();
+        afterCreate: async (module) => {
+          const chapter = await module.getChapter()
+          const course = await chapter.getCourse()
 
           await chapter.update({
             totalDuration: chapter.totalDuration + module.duration,
-          });
+          })
 
           await course.update({
             totalModule: course.totalModule + 1,
             totalDuration: course.totalDuration + module.duration,
-          });
+          })
         },
-        afterBulkCreate: async (modules, options) => {
+        afterBulkCreate: async (modules) => {
+          /* eslint-disable no-await-in-loop, no-restricted-syntax */
           for (const module of modules) {
-            const chapter = await module.getChapter();
-            const course = await chapter.getCourse();
+            const chapter = await module.getChapter()
+            const course = await chapter.getCourse()
 
             await chapter.update({
               totalDuration: chapter.totalDuration + module.duration,
-            });
+            })
 
             await course.update({
               totalModule: course.totalModule + 1,
               totalDuration: course.totalDuration + module.duration,
-            });
+            })
           }
         },
-        afterUpdate: async (module, options) => {
-          const chapter = await module.getChapter();
-          const course = await chapter.getCourse();
+        afterUpdate: async (module) => {
+          const chapter = await module.getChapter()
+          const course = await chapter.getCourse()
 
-          const totalModuleDuration = await Module.sum("duration", {
+          const totalModuleDuration = await Module.sum('duration', {
             where: {
               chapterId: module.chapterId,
             },
-          });
+          })
 
           await chapter.update({
             totalDuration: totalModuleDuration,
-          });
+          })
 
-          await chapter.reload();
+          await chapter.reload()
 
-          const allChapters = await course.getChapters();
+          const allChapters = await course.getChapters()
 
           await course.update({
-            totalDuration: allChapters.reduce((total, chapter) => total + chapter.totalDuration, 0),
-          });
+            totalDuration: allChapters.reduce(
+              (total, chapterItem) => total + chapterItem.totalDuration,
+              0,
+            ),
+          })
         },
-        beforeDestroy: async (module, options) => {
-          const chapter = await module.getChapter();
+        beforeDestroy: async (module) => {
+          const chapter = await module.getChapter()
 
-          const course = await chapter.getCourse();
+          const course = await chapter.getCourse()
 
           await chapter.update({
             totalDuration: chapter.totalDuration - module.duration,
-          });
+          })
           await course.update({
             totalModule: course.totalModule - 1,
             totalDuration: course.totalDuration - module.duration,
-          });
+          })
         },
-        beforeBulkDestroy: async (modules, options) => {
+        beforeBulkDestroy: async (modules) => {
           for (const module of modules) {
-            const chapter = await module.getChapter();
+            const chapter = await module.getChapter()
 
-            const course = await chapter.getCourse();
+            const course = await chapter.getCourse()
 
             await chapter.update({
               totalDuration: chapter.totalDuration - module.duration,
-            });
+            })
 
             await course.update({
               totalModule: course.totalModule - 1,
               totalDuration: course.totalDuration - module.duration,
-            });
+            })
           }
         },
       },
       sequelize,
-      modelName: "Module",
-    }
-  );
-  return Module;
-};
+      modelName: 'Module',
+    },
+  )
+  return Module
+}

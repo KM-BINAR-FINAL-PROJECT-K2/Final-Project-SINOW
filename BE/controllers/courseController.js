@@ -1,46 +1,83 @@
-const { Course, User, Category, Chapter, Module, Benefit } = require("../models");
-const { validateCategory, validateLevel, validateType, validateNumericFields, getCourseOrder } = require("../utils/courseValidator");
+const { Op } = require('sequelize')
 
-const { Op } = require("sequelize");
-const ApiError = require("../utils/ApiError");
+const {
+  Course,
+  User,
+  Category,
+  Chapter,
+  Module,
+  Benefit,
+} = require('../models')
+const {
+  validateCategory,
+  validateLevel,
+  validateType,
+  validateNumericFields,
+  getCourseOrder,
+} = require('../utils/courseValidator')
 
-const { uploadImage, uploadVideo } = require("../utils/imagekitUploader");
+const ApiError = require('../utils/ApiError')
+
+const { uploadImage, uploadVideo } = require('../utils/imagekitUploader')
 
 const createCourse = async (req, res, next) => {
-  const user = req.user;
+  const { user } = req
 
   try {
-    let { name, level, rating, categoryId, description, classCode, type, price = 0, promo = 0, courseBy } = req.body;
+    const {
+      name,
+      level,
+      rating,
+      categoryId,
+      description,
+      classCode,
+      type,
+      price = 0,
+      promo = 0,
+      courseBy,
+    } = req.body
 
-    const missingFields = ["name", "level", "rating", "categoryId", "description", "classCode", "type", "price", "courseBy"].filter((field) => !req.body[field]);
+    const missingFields = [
+      'name',
+      'level',
+      'rating',
+      'categoryId',
+      'description',
+      'classCode',
+      'type',
+      'price',
+      'courseBy',
+    ].filter((field) => !req.body[field])
 
     if (missingFields.length > 0) {
-      return next(new ApiError(`Field ${missingFields.join(", ")} harus diisi`, 400));
+      return next(
+        new ApiError(`Field ${missingFields.join(', ')} harus diisi`, 400),
+      )
     }
 
     if (Object.keys(req.files).length !== 2) {
-      return next(new ApiError("Harus menyertakan gambar dan video", 400));
+      return next(new ApiError('Harus menyertakan gambar dan video', 400))
     }
 
-    validateLevel(level, next);
-    validateType(type, next);
-    validateNumericFields({ rating, price, promo }, next);
-    await validateCategory(categoryId, next);
+    validateLevel(level, next)
+    validateType(type, next)
+    validateNumericFields({ rating, price, promo }, next)
+    await validateCategory(categoryId, next)
 
     if (rating < 0 || rating > 5) {
-      return next(new ApiError("Rating harus antara 0 dan 5", 400));
+      return next(new ApiError('Rating harus antara 0 dan 5', 400))
     }
 
     if (promo < 0 || promo > 100) {
-      return next(new ApiError("Diskon harus antara 0 dan 100", 400));
+      return next(new ApiError('Diskon harus antara 0 dan 100', 400))
     }
 
-    if (type === "premium" && price <= 0) {
-      return next(new ApiError("Harga harus lebih dari 0", 400));
+    if (type === 'premium' && price <= 0) {
+      return next(new ApiError('Harga harus lebih dari 0', 400))
     }
 
-    const { imageUrl } = await uploadImage(req.files.image[0], next);
-    const { videoUrl } = await uploadVideo(req.files.video[0], next);
+    const { imageUrl } = await uploadImage(req.files.image[0], next)
+    const { videoUrl } = await uploadVideo(req.files.video[0], next)
 
     const course = await Course.create({
       name,
@@ -52,267 +89,280 @@ const createCourse = async (req, res, next) => {
       totalDuration: 0,
       totalModule: 0,
       type,
-      price: type === "gratis" ? 0 : price,
+      price: type === 'gratis' ? 0 : price,
       promo: Math.floor(promo),
       totalUser: 0,
-      imageUrl: imageUrl,
+      imageUrl,
       videoPreviewUrl: videoUrl,
       courseBy,
       createdBy: user.id,
-    });
+    })
 
-    res.status(201).json({
-      status: "Success",
-      message: "Berhasiil menambahkan data course",
+    return res.status(201).json({
+      status: 'Success',
+      message: 'Berhasiil menambahkan data course',
       data: course,
-    });
+    })
   } catch (error) {
-    return next(new ApiError(error.message, 500));
+    return next(new ApiError(error.message, 500))
   }
-};
+}
 
 const getAllCourse = async (req, res, next) => {
   try {
-    const { search, category, level, type, sortBy } = req.query;
-    const where = {};
+    const {
+      search, category, level, type, sortBy,
+    } = req.query
+    const where = {}
 
     if (search) {
       where.name = {
         [Op.iLike]: `%${search}%`,
-      };
+      }
     }
 
     if (category) {
       if (Array.isArray(category)) {
         where.categoryId = {
           [Op.in]: category.map((cat) => parseInt(cat, 10)), // Mengonversi string ke integer
-        };
+        }
       } else {
-        where.categoryId = parseInt(category, 10); // Mengonversi string ke integer
+        where.categoryId = parseInt(category, 10) // Mengonversi string ke integer
       }
     }
 
     if (level) {
-      validateLevel(level, next);
+      validateLevel(level, next)
       where.level = {
         [Op.in]: Array.isArray(level) ? level : [level],
-      };
+      }
     }
 
     if (type) {
-      validateType(type, next);
-      where.type = type;
+      validateType(type, next)
+      where.type = type
     }
 
-    const courseOrder = getCourseOrder(sortBy, next);
+    const courseOrder = getCourseOrder(sortBy, next)
 
     const courses = await Course.findAll({
       include: [
         {
           model: Category,
-          attributes: ["id", "name"],
-          as: "category",
+          attributes: ['id', 'name'],
+          as: 'category',
         },
         {
           model: User,
-          as: "courseCreator",
-          attributes: ["id", "name"],
+          as: 'courseCreator',
+          attributes: ['id', 'name'],
         },
         {
           model: Benefit,
-          as: "benefits",
-          attributes: ["id", "courseId", "description"],
+          as: 'benefits',
+          attributes: ['id', 'courseId', 'description'],
         },
       ],
       where,
-      order: [courseOrder.length === 0 ? ["id", "ASC"] : courseOrder],
-    });
+      order: [courseOrder.length === 0 ? ['id', 'ASC'] : courseOrder],
+    })
 
     if (!courses || courses.length === 0) {
-      return next(new ApiError("Course tidak ada", 404));
+      return next(new ApiError('Course tidak ada', 404))
     }
 
-    res.status(200).json({
-      status: "Success",
-      message: "Berhasil mendapatkan data course",
+    return res.status(200).json({
+      status: 'Success',
+      message: 'Berhasil mendapatkan data course',
       data: courses,
-    });
+    })
   } catch (error) {
-    return next(new ApiError(error, 500));
+    return next(new ApiError(error, 500))
   }
-};
+}
 
 const getCourseById = async (req, res, next) => {
   try {
-    const { id } = req.params;
+    const { id } = req.params
     const course = await Course.findByPk(id, {
       include: [
         {
           model: Category,
-          attributes: ["id", "name"],
-          as: "category",
+          attributes: ['id', 'name'],
+          as: 'category',
         },
         {
           model: User,
-          as: "courseCreator",
-          attributes: ["id", "name"],
+          as: 'courseCreator',
+          attributes: ['id', 'name'],
         },
         {
           model: Benefit,
-          as: "benefits",
-          attributes: ["id", "description"],
+          as: 'benefits',
+          attributes: ['id', 'description'],
         },
         {
           model: Chapter,
-          as: "chapters",
-          attributes: ["id", "no", "name"],
+          as: 'chapters',
+          attributes: ['id', 'no', 'name'],
           include: [
             {
               model: Module,
-              as: "modules",
-              attributes: ["id", "no", "name", "videoUrl", "duration"],
+              as: 'modules',
+              attributes: ['id', 'no', 'name', 'videoUrl', 'duration'],
             },
           ],
         },
       ],
       order: [
-        ["id", "ASC"],
-        ["chapters", "no", "ASC"],
-        ["chapters", "modules", "no", "ASC"],
+        ['id', 'ASC'],
+        ['chapters', 'no', 'ASC'],
+        ['chapters', 'modules', 'no', 'ASC'],
       ],
-    });
+    })
 
     if (!course) {
-      return next(new ApiError("Data course tidak ditemukan", 404));
+      return next(new ApiError('Data course tidak ditemukan', 404))
     }
 
-    res.status(200).json({
-      status: "Success",
+    return res.status(200).json({
+      status: 'Success',
       message: `Berhasil mendapatkan data course id: ${id}`,
       data: course,
-    });
+    })
   } catch (error) {
-    return next(new ApiError(error, 500));
+    return next(new ApiError(error, 500))
   }
-};
+}
 
 const updateCourse = async (req, res, next) => {
   try {
-    const { id } = req.params;
-    let { name, level, rating, categoryId, description, classCode, type, price, promo, courseBy } = req.body;
+    const { id } = req.params
+    const {
+      name,
+      level,
+      rating,
+      categoryId,
+      description,
+      classCode,
+      type,
+      price,
+      promo,
+      courseBy,
+    } = req.body
 
-    const course = await Course.findByPk(id);
+    const course = await Course.findByPk(id)
     if (!course) {
-      return next(new ApiError("Course tidak ditemukan", 404));
+      return next(new ApiError('Course tidak ditemukan', 404))
     }
 
-    const updateData = {};
+    const updateData = {}
 
     if (name) {
-      updateData.name = name;
+      updateData.name = name
     }
 
     if (level) {
-      validateLevel(level, next);
-      updateData.level = level;
+      validateLevel(level, next)
+      updateData.level = level
     }
 
     if (rating) {
-      validateNumericFields({ rating }, next);
-      updateData.rating = rating;
+      validateNumericFields({ rating }, next)
+      updateData.rating = rating
     }
 
     if (categoryId) {
-      validateCategory(categoryId, next);
-      updateData.categoryId = categoryId;
+      validateCategory(categoryId, next)
+      updateData.categoryId = categoryId
     }
 
     if (courseBy) {
-      updateData.courseBy = courseBy;
+      updateData.courseBy = courseBy
     }
 
     if (description) {
-      updateData.description = description;
+      updateData.description = description
     }
 
     if (classCode) {
-      updateData.classCode = classCode;
+      updateData.classCode = classCode
     }
 
     if (type) {
-      validateType(type, next);
-      if (type === "gratis") {
-        updateData.price = 0;
+      validateType(type, next)
+      if (type === 'gratis') {
+        updateData.price = 0
       }
-      if (type === "premium") {
+      if (type === 'premium') {
         if (!price || price <= 0) {
-          return next(new ApiError("Harga course harus lebih dari 0", 400));
+          return next(new ApiError('Harga course harus lebih dari 0', 400))
         }
-        if (isNaN(price)) {
-          return next(new ApiError("Harga yang dimasukkan bukan angka", 400));
+        if (Number.isNaN(price)) {
+          return next(new ApiError('Harga yang dimasukkan bukan angka', 400))
         }
-        updateData.price = price;
+        updateData.price = price
       }
-      updateData.type = type;
+      updateData.type = type
     }
 
     if (promo) {
       if (promo < 0 || promo > 100) {
-        return next(new ApiError("Diskon harus antara 0 dan 100", 400));
+        return next(new ApiError('Diskon harus antara 0 dan 100', 400))
       }
-      validateNumericFields({ promo }, next);
-      updateData.promo = promo;
+      validateNumericFields({ promo }, next)
+      updateData.promo = promo
     }
 
     if (req.files || Object.keys(req.files).length > 0) {
       if (req.files.image) {
-        const { imageUrl } = await uploadImage(req.files.image[0]);
+        const { imageUrl } = await uploadImage(req.files.image[0])
         if (!imageUrl) {
-          return next(new ApiError("Gagal upload image", 400));
+          return next(new ApiError('Gagal upload image', 400))
         }
-        updateData.imageUrl = imageUrl;
+        updateData.imageUrl = imageUrl
       }
 
       if (req.files.video) {
-        const { videoUrl } = await uploadVideo(req.files.video[0]);
+        const { videoUrl } = await uploadVideo(req.files.video[0])
         if (!videoUrl) {
-          return next(new ApiError("Gagal upload video", 400));
+          return next(new ApiError('Gagal upload video', 400))
         }
-        updateData.videoUrl = videoUrl;
+        updateData.videoUrl = videoUrl
       }
     }
 
-    await course.update(updateData);
+    await course.update(updateData)
 
-    res.status(200).json({
-      status: "Success",
+    return res.status(200).json({
+      status: 'Success',
       message: `Berhasil mengupdate data course id: ${id}`,
       data: course,
-    });
+    })
   } catch (error) {
-    return next(new ApiError(error, 500));
+    return next(new ApiError(error, 500))
   }
-};
+}
 
 const deleteCourse = async (req, res, next) => {
   try {
-    const { id } = req.params;
+    const { id } = req.params
 
-    const course = await Course.findByPk(id);
+    const course = await Course.findByPk(id)
     if (!course) {
-      return next(new ApiError("Course tidak ditemukan", 404));
+      return next(new ApiError('Course tidak ditemukan', 404))
     }
 
-    await course.destroy();
+    await course.destroy()
 
-    res.status(200).json({
-      status: "Success",
+    return res.status(200).json({
+      status: 'Success',
       message: `Berhasil menghapus data course dengan id: ${id}`,
-    });
+    })
   } catch (error) {
-    return next(new ApiError(error, 500));
+    return next(new ApiError(error, 500))
   }
-};
+}
 
 module.exports = {
   createCourse,
@@ -320,4 +370,4 @@ module.exports = {
   getCourseById,
   deleteCourse,
   updateCourse,
-};
+}

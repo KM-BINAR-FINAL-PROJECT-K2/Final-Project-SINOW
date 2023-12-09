@@ -1,5 +1,5 @@
-"use strict";
-const { Model } = require("sequelize");
+const { Model } = require('sequelize')
+
 module.exports = (sequelize, DataTypes) => {
   class UserCourse extends Model {
     /**
@@ -11,16 +11,16 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       UserCourse.belongsTo(models.User, {
         foreignKey: {
-          name: "userId",
+          name: 'userId',
           allowNull: false,
         },
-      });
+      })
       UserCourse.belongsTo(models.Course, {
         foreignKey: {
-          name: "courseId",
+          name: 'courseId',
           allowNull: false,
         },
-      });
+      })
     }
   }
   UserCourse.init(
@@ -33,24 +33,24 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       hooks: {
-        beforeCreate: async (userCourse, options) => {
-          const course = await userCourse.getCourse();
+        beforeCreate: async (userCourse) => {
+          const course = await userCourse.getCourse()
 
           await course.update({
             totalUser: course.totalUser + 1,
-          });
+          })
         },
-        beforeDestroy: async (userCourse, options) => {
-          const course = await userCourse.getCourse();
+        beforeDestroy: async (userCourse) => {
+          const course = await userCourse.getCourse()
 
           await course.update({
             totalUser: course.totalUser - 1,
-          });
+          })
         },
       },
       sequelize,
-      modelName: "UserCourse",
-    }
-  );
-  return UserCourse;
-};
+      modelName: 'UserCourse',
+    },
+  )
+  return UserCourse
+}

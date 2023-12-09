@@ -35,6 +35,10 @@
       "description": "API ini untuk mengelola notification resources"
     },
     {
+      "name": "Transaction",
+      "description": "API ini untuk mengelola transaction resources"
+    },
+    {
       "name": "Benefit",
       "description": "API ini untuk mengelola benefit resources"
     }
@@ -148,7 +152,7 @@
                   "name": {
                     "type": "string",
                     "description": "Nama user",
-                    "example": "Fadhlan"
+                    "example": "John Doe"
                   },
                   "email": {
                     "type": "string",
@@ -349,7 +353,7 @@
                   "email": {
                     "type": "string",
                     "description": "Email user",
-                    "example": "2110631170138@student.unsika.ac.id"
+                    "example": "johndoe@example.com"
                   }
                 }
               }
@@ -1197,6 +1201,26 @@
                     "message": {
                       "type": "string",
                       "example": "Berhasil mendapatkan detail data course user"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "Berhasil mengikuti course",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Success"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Berhasil mengikuti course"
                     }
                   }
                 }
@@ -2772,7 +2796,7 @@
                             },
                             "name": {
                               "type": "string",
-                              "example": "Fadhlan"
+                              "example": "John Doe"
                             }
                           }
                         },
@@ -5301,6 +5325,250 @@
                     "message": {
                       "type": "string",
                       "example": "benefit tidak ditemukan"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/transactions": {
+      "get": {
+        "tags": ["Transaction"],
+        "summary": "API untuk menampilkan semua transaksi",
+        "description": "API ini digunakan untuk user mendapatkan semua data transaksi",
+        "security": [
+          {
+            "bearerToken": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Sukses mendapatkan semua data transaksi",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Success"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Berhasil mendapatkan data transaksi"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Data transaksi tidak valid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Failed"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Bukan course premium"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Token tidak valid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Failed"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Token tidak valid"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Data transaksi masih kosong",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Failed"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Data transaksi masih kosong"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Transaction"],
+        "summary": "API untuk menambahkan transaksi",
+        "description": "API ini digunakan untuk user menambahkan transaksi",
+        "security": [
+          {
+            "bearerToken": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "course_id": {
+                    "type": "integer",
+                    "example": 1
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Sukses menambahkan transaksi",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Success"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Berhasil menambahkan transaksi"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "token": {
+                          "type": "string",
+                          "example": "739696cb-cb1e-44f7-9973-f4301f45f2h4"
+                        },
+                        "redirect_url": {
+                          "type": "string",
+                          "example": "https://app.sandbox.midtrans.com/snap/v3/redirection/739696cb-cb1e-44f7-9973-f4301f45f2h4"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Token tidak valid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Failed"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Token tidak valid"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/transactions/finalize": {
+      "post": {
+        "tags": ["Transaction"],
+        "summary": "API untuk menyelesaikan transaksi",
+        "description": "API ini digunakan untuk user menyelesaikan transaksi",
+        "security": [
+          {
+            "bearerToken": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "transaction_status": {
+                    "type": "string",
+                    "example": "capture"
+                  },
+                  "fraud_status": {
+                    "type": "string",
+                    "example": "accept"
+                  },
+                  "order_id": {
+                    "type": "integer",
+                    "example": 1
+                  },
+                  "status_code": {
+                    "type": "integer",
+                    "example": 200
+                  },
+                  "gross_amount": {
+                    "type": "integer",
+                    "example": 10000
+                  },
+                  "signature_key": {
+                    "type": "string",
+                    "example": "signature"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Sukses menyelesaikan transaksi",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Success"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Berhasil menyelesaikan transaksi"
                     }
                   }
                 }
