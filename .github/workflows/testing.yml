@@ -42,16 +42,16 @@ jobs:
         run: npm install
       - name: drop existing DB
         working-directory: ./BE
-        run: npm run db:drop
+        run: npm run db:drop:test
       - name: Create DB
         working-directory: ./BE
-        run: npm run db:create
+        run: npm run db:create:test
       - name: Migration database
         working-directory: ./BE
-        run: npm run db:migrate
+        run: npm run db:migrate:test
       - name: Seed database
         working-directory: ./BE
-        run: npm run db:seed
+        run: npm run db:seed:test
       - name: Test code
         id: run-tests
         working-directory: ./BE
