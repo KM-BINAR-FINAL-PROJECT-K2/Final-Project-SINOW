@@ -40,14 +40,14 @@ const getAllNotifications = async (req, res, next) => {
       limit = 100, type, title, userId,
     } = req.query
 
-    if (Number.isNaN(limit) || limit <= 0) {
+    if (Number.isNaN(Number(limit)) || limit <= 0) {
       return next(new ApiError('Batas jumlah notifikasi tidak valid', 400))
     }
     if (limit > 500) {
       return next(new ApiError('Batas notifikasi maksimal adalah 500', 400))
     }
 
-    if (userId && (Number.isNaN(userId) || userId <= 0)) {
+    if (userId && (Number.isNaN(Number(userId)) || userId <= 0)) {
       return next(new ApiError('ID pengguna tidak valid', 400))
     }
 
