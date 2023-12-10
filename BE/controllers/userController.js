@@ -207,7 +207,14 @@ const updateMyDetails = async (req, res, next) => {
 const changeMyPassword = async (req, res, next) => {
   try {
     const { user } = req
+
     const { oldPassword, newPassword, confirmNewPassword } = req.body
+
+    const auth = await Auth.findOne({
+      where: {
+        userId: user.id,
+      },
+    })
 
     if (!oldPassword || !newPassword || !confirmNewPassword) {
       return next(
@@ -228,7 +235,8 @@ const changeMyPassword = async (req, res, next) => {
       return next(new ApiError('Password tidak cocok', 400))
     }
 
-    const isMatch = await bcrypt.compare(oldPassword, user.Auth.password)
+    const isMatch = await bcrypt.compare(oldPassword, auth.password)
+
     if (!isMatch) {
       return next(new ApiError('Password lama salah', 400))
     }
@@ -539,33 +547,7 @@ const openUserModule = async (req, res, next) => {
         userId: user.id,
         courseId,
       },
-      include: [
-        {
-          model: Course,
-          attributes: ['id', 'type'],
-          include: [
-            {
-              model: Chapter,
-              as: 'chapters',
-              attributes: ['id'],
-              include: [
-                {
-                  model: UserModule,
-                  as: 'userModules',
-                  attributes: ['id', 'status'],
-                  include: [
-                    {
-                      model: Module,
-                      as: 'moduleData',
-                      attributes: ['no', 'name'],
-                    },
-                  ],
-                },
-              ],
-            },
-          ],
-        },
-      ],
+      include: userCourseRelation(user.id).include,
       order: [['Course', 'chapters', 'userModules', 'moduleData', 'no', 'ASC']],
     })
 
@@ -626,7 +608,10 @@ const openUserModule = async (req, res, next) => {
       )
     }
 
-    if (userModule.status === 'terbuka' && userCourse.isAccessible === true) {
+    if (
+      (userModule.status === 'terbuka' || userModule.status === 'dipelajari')
+      && userCourse.isAccessible === true
+    ) {
       const nextUserModule = mergedUserModules[indexUserModule + 1]
       if (nextUserModule) {
         await nextUserModule.update({

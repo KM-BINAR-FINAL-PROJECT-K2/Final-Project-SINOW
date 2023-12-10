@@ -26,7 +26,7 @@ const createBenefit = async (req, res, next) => {
       return next(new ApiError('Benefit sudah ada', 400))
     }
 
-    if (Number.isNaN(courseId)) {
+    if (Number.isNaN(Number(courseId))) {
       return next(new ApiError('Course ID harus berupa angka', 400))
     }
 
@@ -121,7 +121,7 @@ const updateBenefit = async (req, res, next) => {
     }
 
     if (courseId) {
-      if (Number.isNaN(courseId)) {
+      if (Number.isNaN(Number(courseId))) {
         return next(new ApiError('Chapter ID harus berupa angka', 400))
       }
 

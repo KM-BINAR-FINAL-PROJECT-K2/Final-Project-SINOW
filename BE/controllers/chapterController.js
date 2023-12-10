@@ -17,7 +17,7 @@ const createChapter = async (req, res, next) => {
       )
     }
 
-    if (Number.isNaN(no) || Number.isNaN(courseId)) {
+    if (Number.isNaN(Number(no)) || Number.isNaN(Number(courseId))) {
       return next(
         new ApiError('Nomor chapter dan courseId harus berupa angka', 400),
       )
@@ -144,7 +144,7 @@ const updateChapter = async (req, res, next) => {
 
     if (no) {
       const parsedNo = parseInt(no, 10)
-      if (Number.isNaN(parsedNo)) {
+      if (Number.isNaN(Number(parsedNo))) {
         return next(new ApiError('Nomor chapter harus berupa angka', 400))
       }
 
@@ -182,7 +182,7 @@ const updateChapter = async (req, res, next) => {
     }
 
     if (courseId) {
-      if (Number.isNaN(courseId)) {
+      if (Number.isNaN(Number(courseId))) {
         return next(new ApiError('Chapter ID harus berupa angka', 400))
       }
       const checkCourse = await Course.findByPk(courseId)

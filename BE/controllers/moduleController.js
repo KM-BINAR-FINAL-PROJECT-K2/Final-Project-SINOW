@@ -18,7 +18,7 @@ const createModule = async (req, res, next) => {
       )
     }
 
-    if (Number.isNaN(no) || Number.isNaN(chapterId)) {
+    if (Number.isNaN(Number(no)) || Number.isNaN(Number(chapterId))) {
       return next(new ApiError('Nomor dan chapterId harus berupa angka', 400))
     }
     no = parseInt(no, 10)
@@ -184,7 +184,7 @@ const updateModule = async (req, res, next) => {
 
     if (no) {
       const parsedNo = parseInt(no, 10)
-      if (Number.isNaN(parsedNo)) {
+      if (Number.isNaN(Number(parsedNo))) {
         return next(new ApiError('Nomor modul harus berupa angka', 400))
       }
 
@@ -205,7 +205,7 @@ const updateModule = async (req, res, next) => {
     }
 
     if (chapterId) {
-      if (Number.isNaN(chapterId)) {
+      if (Number.isNaN(Number(chapterId))) {
         return next(new ApiError('Chapter ID harus berupa angka', 400))
       }
 
