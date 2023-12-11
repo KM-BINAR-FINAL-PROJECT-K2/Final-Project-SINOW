@@ -122,7 +122,7 @@ const getChapterById = async (req, res, next) => {
 
     return res.status(200).json({
       status: 'Success',
-      message: `Berhasil mendapatkan data Chapter id: ${id};`,
+      message: `Berhasil mendapatkan data Chapter id: ${id}`,
       data: chapter,
     })
   } catch (error) {
@@ -151,7 +151,10 @@ const updateChapter = async (req, res, next) => {
       const checkNumber = await Chapter.findOne({
         where: {
           no: parsedNo,
-          courseId: courseId || chapter.courseId,
+          courseId:
+            courseId && !Number.isNaN(Number(courseId))
+              ? courseId
+              : chapter.courseId,
           id: { [Op.not]: id },
         },
       })
@@ -168,7 +171,10 @@ const updateChapter = async (req, res, next) => {
       const existingChapter = await Chapter.findOne({
         where: {
           name,
-          courseId: courseId || chapter.courseId,
+          courseId:
+            courseId && !Number.isNaN(Number(courseId))
+              ? courseId
+              : chapter.courseId,
           id: { [Op.not]: id },
         },
       })
@@ -183,7 +189,7 @@ const updateChapter = async (req, res, next) => {
 
     if (courseId) {
       if (Number.isNaN(Number(courseId))) {
-        return next(new ApiError('Chapter ID harus berupa angka', 400))
+        return next(new ApiError('Course ID harus berupa angka', 400))
       }
       const checkCourse = await Course.findByPk(courseId)
       if (!checkCourse) {
