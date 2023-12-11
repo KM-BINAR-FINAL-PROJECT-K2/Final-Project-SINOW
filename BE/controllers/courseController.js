@@ -69,11 +69,17 @@ const createCourse = async (req, res, next) => {
     }
 
     if (promo < 0 || promo > 100) {
-      return next(new ApiError('Diskon harus antara 0 dan 100', 400))
+      return next(new ApiError('Promo harus antara 0 dan 100', 400))
     }
 
-    if (type === 'premium' && price <= 0) {
-      return next(new ApiError('Harga harus lebih dari 0', 400))
+    if (type === 'premium') {
+      if (price <= 0) {
+        return next(new ApiError('Harga harus lebih dari 0', 400))
+      }
+
+      if (Number.isNaN(Number(price))) {
+        return next(new ApiError('Harga harus berupa angka', 400))
+      }
     }
 
     const { imageUrl } = await uploadImage(req.files.image[0], next)
@@ -100,7 +106,7 @@ const createCourse = async (req, res, next) => {
 
     return res.status(201).json({
       status: 'Success',
-      message: 'Berhasiil menambahkan data course',
+      message: 'Berhasil menambahkan data course',
       data: course,
     })
   } catch (error) {
@@ -269,6 +275,9 @@ const updateCourse = async (req, res, next) => {
 
     if (rating) {
       validateNumericFields({ rating }, next)
+      if (rating < 0 || rating > 5) {
+        return next(new ApiError('Rating harus antara 0 dan 5', 400))
+      }
       updateData.rating = rating
     }
 
@@ -298,7 +307,7 @@ const updateCourse = async (req, res, next) => {
         if (!price || price <= 0) {
           return next(new ApiError('Harga course harus lebih dari 0', 400))
         }
-        if (Number.isNaN(price)) {
+        if (Number.isNaN(Number(price))) {
           return next(new ApiError('Harga yang dimasukkan bukan angka', 400))
         }
         updateData.price = price
@@ -308,7 +317,7 @@ const updateCourse = async (req, res, next) => {
 
     if (promo) {
       if (promo < 0 || promo > 100) {
-        return next(new ApiError('Diskon harus antara 0 dan 100', 400))
+        return next(new ApiError('Promo harus antara 0 dan 100', 400))
       }
       validateNumericFields({ promo }, next)
       updateData.promo = promo
@@ -316,18 +325,12 @@ const updateCourse = async (req, res, next) => {
 
     if (req.files || Object.keys(req.files).length > 0) {
       if (req.files.image) {
-        const { imageUrl } = await uploadImage(req.files.image[0])
-        if (!imageUrl) {
-          return next(new ApiError('Gagal upload image', 400))
-        }
+        const { imageUrl } = await uploadImage(req.files.image[0], next)
         updateData.imageUrl = imageUrl
       }
 
       if (req.files.video) {
-        const { videoUrl } = await uploadVideo(req.files.video[0])
-        if (!videoUrl) {
-          return next(new ApiError('Gagal upload video', 400))
-        }
+        const { videoUrl } = await uploadVideo(req.files.video[0], next)
         updateData.videoUrl = videoUrl
       }
     }

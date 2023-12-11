@@ -17,7 +17,7 @@ const createChapter = async (req, res, next) => {
       )
     }
 
-    if (Number.isNaN(no) || Number.isNaN(courseId)) {
+    if (Number.isNaN(Number(no)) || Number.isNaN(Number(courseId))) {
       return next(
         new ApiError('Nomor chapter dan courseId harus berupa angka', 400),
       )
@@ -71,7 +71,7 @@ const createChapter = async (req, res, next) => {
 
     return res.status(201).json({
       status: 'Success',
-      message: 'Sukses menambahkan data chapter',
+      message: 'Berhasil menambahkan data chapter',
       data: chapter,
     })
   } catch (error) {
@@ -144,14 +144,14 @@ const updateChapter = async (req, res, next) => {
 
     if (no) {
       const parsedNo = parseInt(no, 10)
-      if (Number.isNaN(parsedNo)) {
+      if (Number.isNaN(Number(parsedNo))) {
         return next(new ApiError('Nomor chapter harus berupa angka', 400))
       }
 
       const checkNumber = await Chapter.findOne({
         where: {
           no: parsedNo,
-          courseId,
+          courseId: courseId || chapter.courseId,
           id: { [Op.not]: id },
         },
       })
@@ -168,7 +168,7 @@ const updateChapter = async (req, res, next) => {
       const existingChapter = await Chapter.findOne({
         where: {
           name,
-          courseId,
+          courseId: courseId || chapter.courseId,
           id: { [Op.not]: id },
         },
       })
@@ -182,7 +182,7 @@ const updateChapter = async (req, res, next) => {
     }
 
     if (courseId) {
-      if (Number.isNaN(courseId)) {
+      if (Number.isNaN(Number(courseId))) {
         return next(new ApiError('Chapter ID harus berupa angka', 400))
       }
       const checkCourse = await Course.findByPk(courseId)
@@ -228,7 +228,6 @@ const deleteChapter = async (req, res, next) => {
     return res.status(200).json({
       status: 'Success',
       message: `Berhasil menghapus data Chapter id: ${id};`,
-      data: chapter,
     })
   } catch (error) {
     return next(new ApiError(error.message, 500))

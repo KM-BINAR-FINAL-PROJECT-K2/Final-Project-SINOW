@@ -5,7 +5,7 @@ const validateCategory = async (categoryId, next) => {
   if (Array.isArray(categoryId)) {
     // eslint-disable-next-line consistent-return
     categoryId.forEach(async (cat) => {
-      if (Number.isNaN(cat)) {
+      if (Number.isNaN(Number(cat))) {
         return next(
           new ApiError('Semua category harus berupa angka bilangan bulat', 400),
         )
@@ -21,7 +21,7 @@ const validateCategory = async (categoryId, next) => {
       }
     })
   } else {
-    if (Number.isNaN(categoryId)) {
+    if (Number.isNaN(Number(categoryId))) {
       return next(
         new ApiError('Category harus berupa angka bilangan bulat', 400),
       )
@@ -73,7 +73,7 @@ const validateType = (type, next) => {
 
 const validateNumericFields = (fields, next) => {
   const hasNonNumericFields = Object.keys(fields).forEach((field) => {
-    if (Number.isNaN(fields[field])) {
+    if (Number.isNaN(Number(fields[field]))) {
       return next(
         new ApiError(
           `${field.charAt(0).toUpperCase() + field.slice(1)} harus angka`,
