@@ -41,6 +41,7 @@ const videoPath = path.join(__dirname, '../public/videos/video.mp4')
 describe('API Get All Course Data', () => {
   it('success get course', async () => {
     const response = await request(app).get('/api/v1/courses')
+    console.log('\n\n\n\n', response.body.message)
     expect(response.statusCode).toBe(200)
     expect(response.body.status).toBe('Success')
   })
@@ -48,6 +49,29 @@ describe('API Get All Course Data', () => {
   it('failed get course: no course data', async () => {
     const response = await request(app).get('/api/v1/courses?search=sdfasdfas')
     expect(response.statusCode).toBe(404)
+    expect(response.body.status).toBe('Failed')
+  })
+
+  it('failed get course: category id not valid', async () => {
+    const response = await request(app).get('/api/v1/courses?category=asd')
+    expect(response.statusCode).toBe(400)
+    expect(response.body.status).toBe('Failed')
+  })
+  it('failed get course: category id not found', async () => {
+    const response = await request(app).get('/api/v1/courses?category=912321')
+    expect(response.statusCode).toBe(404)
+    expect(response.body.status).toBe('Failed')
+  })
+
+  it('failed get course: level not valid', async () => {
+    const response = await request(app).get('/api/v1/courses?level=asd')
+    expect(response.statusCode).toBe(400)
+    expect(response.body.status).toBe('Failed')
+  })
+
+  it('failed get course: type not valid', async () => {
+    const response = await request(app).get('/api/v1/courses?type=asd')
+    expect(response.statusCode).toBe(400)
     expect(response.body.status).toBe('Failed')
   })
 })
@@ -285,7 +309,7 @@ describe('API Create Course', () => {
       .field(failCourse)
       .attach('image', imagePath)
       .attach('video', videoPath)
-    expect(response.statusCode).toBe(400)
+    expect(response.statusCode).toBe(404)
     expect(response.body.status).toBe('Failed')
   })
 
@@ -575,7 +599,7 @@ describe('API Update Course', () => {
       .field(failCourse)
       .attach('image', imagePath)
       .attach('video', videoPath)
-    expect(response.statusCode).toBe(400)
+    expect(response.statusCode).toBe(404)
     expect(response.body.status).toBe('Failed')
   })
 

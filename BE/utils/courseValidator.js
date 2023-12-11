@@ -15,7 +15,7 @@ const validateCategory = async (categoryId, next) => {
         return next(
           new ApiError(
             'Category tidak tersedia, cek \'localhost:3000/api/v1/category\' untuk melihat daftar kategori yang tersedia',
-            400,
+            404,
           ),
         )
       }
@@ -31,7 +31,7 @@ const validateCategory = async (categoryId, next) => {
       return next(
         new ApiError(
           'Category tidak tersedia, cek \'localhost:3000/api/v1/category\' untuk melihat daftar kategori yang tersedia',
-          400,
+          404,
         ),
       )
     }

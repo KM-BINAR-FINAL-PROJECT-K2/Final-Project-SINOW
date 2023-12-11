@@ -24,6 +24,12 @@ beforeAll(async () => {
     })
 
     token2 = loginResponse2.body.data.token
+
+    await request(app)
+      .get('/api/v1/user/my-courses/1')
+      .set({
+        Authorization: `Bearer ${token2}`,
+      })
   } catch (error) {
     console.log('error saat login: ')
     console.log(error)
@@ -367,9 +373,6 @@ describe('API create User Course', () => {
       .set({
         Authorization: `Bearer ${token}`,
       })
-      .send({
-        courseId: 1,
-      })
     expect(response.statusCode).toBe(404)
     expect(response.body.status).toBe('Failed')
   })
@@ -415,5 +418,50 @@ describe('API get userModule', () => {
       })
     expect(response.statusCode).toBe(200)
     expect(response.body.status).toBe('Success')
+  })
+  it('failed get user module: no token', async () => {
+    const response = await request(app).get(
+      `/api/v1/user/my-courses/1/modules/${userModuleId}`,
+    )
+    expect(response.statusCode).toBe(401)
+    expect(response.body.status).toBe('Failed')
+  })
+  it('failed get user module: token not valid', async () => {
+    const response = await request(app)
+      .get(`/api/v1/user/my-courses/1/modules/${userModuleId}`)
+      .set({
+        Authorization: `Bearer ${token}12`,
+      })
+    expect(response.statusCode).toBe(401)
+    expect(response.body.status).toBe('Failed')
+  })
+  it('failed get user modules: no relation', async () => {
+    const response = await request(app)
+      .get(`/api/v1/user/my-courses/1/modules/${userModuleId}`)
+      .set({
+        Authorization: `Bearer ${token2}`,
+      })
+    console.log('\n\n\n\n\n')
+    console.log(response.body.message)
+    expect(response.statusCode).toBe(403)
+    expect(response.body.status).toBe('Failed')
+  })
+  it('failed get user module: course not found', async () => {
+    const response = await request(app)
+      .get(`/api/v1/user/my-courses/99999999/modules/${userModuleId}`)
+      .set({
+        Authorization: `Bearer ${token}`,
+      })
+    expect(response.statusCode).toBe(404)
+    expect(response.body.status).toBe('Failed')
+  })
+  it('failed get user module: module not found', async () => {
+    const response = await request(app)
+      .get(`/api/v1/user/my-courses/99999999/modules/9191919`)
+      .set({
+        Authorization: `Bearer ${token}`,
+      })
+    expect(response.statusCode).toBe(404)
+    expect(response.body.status).toBe('Failed')
   })
 })
