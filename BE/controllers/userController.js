@@ -415,6 +415,13 @@ const getMyCourses = async (req, res, next) => {
       include: [
         {
           model: Course,
+          include: [
+            {
+              model: Category,
+              attributes: ['id', 'name'],
+              as: 'category',
+            },
+          ],
         },
       ],
     })
