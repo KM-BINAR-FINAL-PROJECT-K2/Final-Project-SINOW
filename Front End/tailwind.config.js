@@ -51,5 +51,5 @@ export default {
       },
     },
   },
-  plugins: [],
+  plugins: [import("flowbite/plugin")],
 };

@@ -16,7 +16,6 @@ import { ErrorContext } from "../../../store/Error";
 import { PlaceholderContext } from "../../../store/PlaceholderStore";
 import FilterKelolaKelas from "../../Molecule/Filter/FilterKelolaKelas";
 import { QueryContext } from "../../../store/QuerySearch";
-import { RotateContext } from "../../../store/RotateAction";
 export default function CRUD() {
   const { setIsLoading } = useContext(LoaderContext);
   const { showInfoClass } = useContext(InfoClassContext);
