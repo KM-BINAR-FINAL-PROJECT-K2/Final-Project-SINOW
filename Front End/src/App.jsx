@@ -7,7 +7,6 @@ import BackToLogin from "./components/Page/ResetPass/BackToLogin";
 import AddClassContextProvider from "./store/AddClassUI";
 import InfoClassContextProvider from "./store/InfoClassUI";
 import RemoveClassContextProvider from "./store/RemoveClassUI";
-import ClassContextProvider from "./store/ClassStore";
 import KeyContextProvider from "./store/ActiveKey";
 import EditClass from "./components/Page/EditClass/EditClass";
 import AddClass from "./components/Page/AddClass/AddClass";
@@ -23,17 +22,15 @@ export default function App() {
           path="/kelola-kelas"
           element={
             <AddClassContextProvider>
-              <ClassContextProvider>
-                <KeyContextProvider>
-                  <RemoveClassContextProvider>
-                    <InfoClassContextProvider>
-                      <RotateContextProvider>
-                        <CRUD />
-                      </RotateContextProvider>
-                    </InfoClassContextProvider>
-                  </RemoveClassContextProvider>
-                </KeyContextProvider>
-              </ClassContextProvider>
+              <KeyContextProvider>
+                <RemoveClassContextProvider>
+                  <InfoClassContextProvider>
+                    <RotateContextProvider>
+                      <CRUD />
+                    </RotateContextProvider>
+                  </InfoClassContextProvider>
+                </RemoveClassContextProvider>
+              </KeyContextProvider>
             </AddClassContextProvider>
           }
         />
