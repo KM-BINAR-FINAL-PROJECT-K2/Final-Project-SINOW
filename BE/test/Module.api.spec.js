@@ -86,6 +86,11 @@ describe('API Create Module', () => {
   })
 
   it('failed create module: invalid video format', async () => {
+    const moduleData = {
+      name: 'Memulai Golang Dasar',
+      no: 5,
+      chapterId: 1,
+    }
     const response = await request(app)
       .post('/api/v1/modules')
       .set({
@@ -191,6 +196,11 @@ describe('API Create Module', () => {
 })
 describe('API Update Module', () => {
   it('success update module', async () => {
+    const moduleData = {
+      name: 'Memulai Golang Dasar',
+      no: 5,
+      chapterId: 1,
+    }
     const response = await request(app)
       .put('/api/v1/modules/2')
       .set({
