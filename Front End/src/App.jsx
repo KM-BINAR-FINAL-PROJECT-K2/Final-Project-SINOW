@@ -11,6 +11,8 @@ import ClassContextProvider from "./store/ClassStore";
 import KeyContextProvider from "./store/ActiveKey";
 import EditClass from "./components/Page/EditClass/EditClass";
 import AddClass from "./components/Page/AddClass/AddClass";
+import RotateContextProvider from "./store/RotateAction";
+import ManageChapter from "./components/Page/ManageChapter/ManageChapter";
 
 export default function App() {
   return (
@@ -25,7 +27,9 @@ export default function App() {
                 <KeyContextProvider>
                   <RemoveClassContextProvider>
                     <InfoClassContextProvider>
-                      <CRUD />
+                      <RotateContextProvider>
+                        <CRUD />
+                      </RotateContextProvider>
                     </InfoClassContextProvider>
                   </RemoveClassContextProvider>
                 </KeyContextProvider>
@@ -41,6 +45,7 @@ export default function App() {
         />
         <Route path="/edit-kelas/:id" element={<EditClass />}></Route>
         <Route path="/tambah-kelas" element={<AddClass />}></Route>
+        <Route path="/kelola-chapter/:id" element={<ManageChapter />}></Route>
       </Routes>
     </BrowserRouter>
   );
