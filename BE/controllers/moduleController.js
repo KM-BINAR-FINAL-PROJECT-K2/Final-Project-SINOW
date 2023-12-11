@@ -75,7 +75,7 @@ const createModule = async (req, res, next) => {
     })
 
     return res.status(201).json({
-      status: 'success',
+      status: 'Success',
       message: 'Berhasil menambahkan data module',
       data: module,
     })
@@ -111,7 +111,7 @@ const getAllModule = async (req, res, next) => {
     }
 
     return res.status(200).json({
-      status: 'success',
+      status: 'Success',
       message: 'Berhasil mendapatkan data modules',
       data: modules,
     })
@@ -146,8 +146,8 @@ const getModuleById = async (req, res, next) => {
     }
 
     return res.status(200).json({
-      status: 'success',
-      message: `Berhasil mendapatkan data module id: ${id};`,
+      status: 'Success',
+      message: `Berhasil mendapatkan data module id: ${id}`,
       data: module,
     })
   } catch (error) {
@@ -171,7 +171,10 @@ const updateModule = async (req, res, next) => {
       const existingModule = await Module.findOne({
         where: {
           name,
-          chapterId: chapterId || module.chapterId,
+          chapterId:
+            chapterId && !Number.isNaN(Number(chapterId))
+              ? chapterId
+              : module.chapterId,
           id: { [Op.not]: id },
         },
       })
@@ -191,7 +194,10 @@ const updateModule = async (req, res, next) => {
       const checkNumber = await Module.findOne({
         where: {
           no: parsedNo,
-          chapterId: chapterId || module.chapterId,
+          chapterId:
+            chapterId && !Number.isNaN(Number(chapterId))
+              ? chapterId
+              : module.chapterId,
           id: { [Op.not]: id },
         },
       })
@@ -222,7 +228,7 @@ const updateModule = async (req, res, next) => {
     }
 
     if (req.file) {
-      const uploadedVideo = await uploadVideo(req.file)
+      const uploadedVideo = await uploadVideo(req.file, next)
       if (!uploadedVideo || Object.keys(uploadedVideo).length === 0) {
         return next(new ApiError('Gagal upload video', 400))
       }
@@ -253,7 +259,7 @@ const deleteModule = async (req, res, next) => {
     await module.destroy()
 
     return res.status(200).json({
-      status: 'success',
+      status: 'Success',
       message: `Berhasil menghapus data module id: ${id};`,
       data: module,
     })

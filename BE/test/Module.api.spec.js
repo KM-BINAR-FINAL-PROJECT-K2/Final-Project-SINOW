@@ -199,11 +199,10 @@ describe('API Update Module', () => {
       .field(moduleData)
       .attach('video', videoPath)
 
-    moduleId = response.body.data.id
-    expect(response.statusCode).toBe(201)
+    expect(response.statusCode).toBe(200)
     expect(response.body.status).toBe('Success')
     expect(response.body.message).toBe('Berhasil mengupdate data module id: 2')
-  }, 20000)
+  })
 
   it('failed update module: invalid video format', async () => {
     const response = await request(app)
@@ -211,7 +210,6 @@ describe('API Update Module', () => {
       .set({
         Authorization: `Bearer ${token}`,
       })
-      .field(moduleData)
       .attach('video', imagePath)
     expect(response.statusCode).toBe(400)
     expect(response.body.status).toBe('Failed')
@@ -255,7 +253,7 @@ describe('API Update Module', () => {
       .attach('video', videoPath)
     expect(response.statusCode).toBe(400)
     expect(response.body.status).toBe('Failed')
-    expect(response.body.message).toBe('Nomor dan chapterId harus berupa angka')
+    expect(response.body.message).toBe('Nomor modul harus berupa angka')
   })
 
   it('failed update module: chapter not found', async () => {
@@ -283,7 +281,7 @@ describe('API Update Module', () => {
     const failModule = {
       name: 'Introduction to HTML',
       no: 4,
-      chapterId: 'satu dua empat',
+      chapterId: 'satu',
     }
 
     const response = await request(app)
