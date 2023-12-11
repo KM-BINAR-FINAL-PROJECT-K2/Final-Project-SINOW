@@ -22,6 +22,7 @@
     "test:auth": "jest --setupFiles dotenv/config --coverage --colors --verbose --detectOpenHandles --forceExit --testTimeout=20000 --runTestsByPath test/Auth.api.spec.js",
     "test:course": "jest --setupFiles dotenv/config --coverage --colors --verbose --detectOpenHandles --forceExit --testTimeout=20000 --runTestsByPath test/Course.api.spec.js",
     "test:user": "jest --setupFiles dotenv/config --coverage --colors --verbose --detectOpenHandles --forceExit --testTimeout=20000 --runTestsByPath test/User.api.spec.js",
+    "test:module": "jest --setupFiles dotenv/config --coverage --colors --verbose --detectOpenHandles --forceExit --testTimeout=20000 --runTestsByPath test/Module.api.spec.js",
     "test:notification": "jest --setupFiles dotenv/config --coverage --colors --verbose --detectOpenHandles --forceExit --testTimeout=20000 --runTestsByPath test/Notification.api.spec.js"
   },
   "author": "",

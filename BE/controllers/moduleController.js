@@ -63,7 +63,7 @@ const createModule = async (req, res, next) => {
       }
     }
 
-    const uploadedFile = await uploadVideo(req.file)
+    const uploadedFile = await uploadVideo(req.file, next)
 
     const module = await Module.create({
       name,
