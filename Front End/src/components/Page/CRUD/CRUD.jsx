@@ -15,8 +15,12 @@ import { KeyContext } from "../../../store/ActiveKey";
 import { ErrorContext } from "../../../store/Error";
 import { PlaceholderContext } from "../../../store/PlaceholderStore";
 import FilterKelolaKelas from "../../Molecule/Filter/FilterKelolaKelas";
+<<<<<<< HEAD
 import { IoIosAddCircle } from "react-icons/io";
 import { ImSearch } from "react-icons/im";
+=======
+import { QueryContext } from "../../../store/QuerySearch";
+>>>>>>> a2decdf29760224c3f2737aadaf5cbd7407f2f4b
 export default function CRUD() {
   const { setIsLoading } = useContext(LoaderContext);
   const { showInfoClass } = useContext(InfoClassContext);
@@ -24,6 +28,7 @@ export default function CRUD() {
   const { classSinow, setClassSinow } = useContext(ClassContext);
   const { keyClass } = useContext(KeyContext);
   const { setIsError } = useContext(ErrorContext);
+  const { query } = useContext(QueryContext);
 
   const { handleSearchButtonClick } = useContext(PlaceholderContext);
 
@@ -34,7 +39,9 @@ export default function CRUD() {
         setClassSinow([]);
         setIsLoading(true);
         setIsError("");
-        const res = await axios.get("http://localhost:3000/api/v1/courses");
+        const res = await axios.get(
+          `http://localhost:3000/api/v1/courses?search=${query}`
+        );
         setClassSinow(res.data.data);
       } catch (error) {
         setIsError(
@@ -49,7 +56,7 @@ export default function CRUD() {
     return () => {
       setClassSinow([]);
     };
-  }, []);
+  }, [query]);
 
   const totalQuantity = classSinow.reduce((total, item) => {
     return total + item.totalUser;

@@ -567,7 +567,7 @@ const openUserModule = async (req, res, next) => {
       return next(
         new ApiError(
           'Tidak ada relasi antara user course dan user module',
-          404,
+          403,
         ),
       )
     }

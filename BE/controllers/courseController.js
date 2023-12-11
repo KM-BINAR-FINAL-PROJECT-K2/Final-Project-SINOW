@@ -128,12 +128,13 @@ const getAllCourse = async (req, res, next) => {
     }
 
     if (category) {
+      validateCategory(category, next)
       if (Array.isArray(category)) {
         where.categoryId = {
-          [Op.in]: category.map((cat) => parseInt(cat, 10)), // Mengonversi string ke integer
+          [Op.in]: category.map((cat) => parseInt(cat, 10)),
         }
       } else {
-        where.categoryId = parseInt(category, 10) // Mengonversi string ke integer
+        where.categoryId = parseInt(category, 10)
       }
     }
 

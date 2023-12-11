@@ -112,19 +112,12 @@ const updateNotification = async (req, res, next) => {
       updateData.content = content
     }
 
-    const [rowCount, [updatedNotification]] = await Notification.update(
-      updateData,
-      {
-        where: {
-          id,
-        },
-        returning: true,
+    await notification.update(updateData, {
+      where: {
+        id,
       },
-    )
-
-    if (rowCount === 0 || !updatedNotification) {
-      return next(new ApiError('Notifikasi tidak ditemukan', 404))
-    }
+      returning: true,
+    })
 
     return res.status(200).json({
       status: 'Success',

@@ -49,6 +49,8 @@ export default function InfoClass({ id }) {
                 <video
                   className="w-full h-[300px] bg-black drop-shadow-md"
                   src={details.videoPreviewUrl}
+                  loop
+                  autoPlay={true}
                 ></video>
               )}
             </div>
@@ -179,7 +181,11 @@ export default function InfoClass({ id }) {
                     </span>
                   )}
                 </div>
-                <span className="py-3 px-6 md:ml-4 rounded-lg border bg-darkblue-05 text-white text-[18px] font-semibold md:w-auto w-full">
+                <span
+                  className={`py-3 px-6 md:ml-4 rounded-lg border bg-darkblue-05 text-white text-[18px] font-semibold md:w-auto w-full ${
+                    !details.totalDuration && "hidden"
+                  } inline-block}`}
+                >
                   {details.totalDuration
                     ? convertSeconds(details.totalDuration)
                     : "-"}
