@@ -8,6 +8,7 @@ require('dotenv').config()
 let token = null
 let token2 = null
 let notifications = null
+let userModuleId = null
 
 beforeAll(async () => {
   try {
@@ -381,15 +382,13 @@ describe('API get User Course by id', () => {
       .set({
         Authorization: `Bearer ${token}`,
       })
-      .send({
-        courseId: 1,
-      })
+    userModuleId = response.body.data.Course.chapters[0].userModules[0].id
     expect(response.statusCode).toBe(200)
     expect(response.body.status).toBe('Success')
   })
 })
 
-describe("API get all user's courses", () => {
+describe('API get all userCourses', () => {
   it('success get all user courses', async () => {
     const response = await request(app)
       .get('/api/v1/user/my-courses')
@@ -407,10 +406,10 @@ describe("API get all user's courses", () => {
   })
 })
 
-describe("API get all user's modules", () => {
+describe('API get userModule', () => {
   it('success get all user modules', async () => {
     const response = await request(app)
-      .get('/api/v1/user/my-courses/')
+      .get(`/api/v1/user/my-courses/1/modules/${userModuleId}`)
       .set({
         Authorization: `Bearer ${token}`,
       })
