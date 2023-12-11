@@ -85,7 +85,7 @@ const getBenefitById = async (req, res, next) => {
 
     return res.status(200).json({
       status: 'Success',
-      message: `Berhasil mendapatkan data Benefit id: ${id};`,
+      message: `Berhasil mendapatkan data Benefit id: ${id}`,
       data: benefit,
     })
   } catch (error) {
@@ -109,7 +109,10 @@ const updateBenefit = async (req, res, next) => {
       const existingBenefit = await Benefit.findOne({
         where: {
           description,
-          courseId: courseId || benefit.courseId,
+          courseId:
+            courseId && !Number.isNaN(Number(courseId))
+              ? courseId
+              : benefit.courseId,
           id: { [Op.not]: id },
         },
       })
@@ -122,7 +125,7 @@ const updateBenefit = async (req, res, next) => {
 
     if (courseId) {
       if (Number.isNaN(Number(courseId))) {
-        return next(new ApiError('Chapter ID harus berupa angka', 400))
+        return next(new ApiError('Course ID harus berupa angka', 400))
       }
 
       const course = await Course.findByPk(courseId)
