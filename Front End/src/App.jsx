@@ -12,6 +12,7 @@ import EditClass from "./components/Page/EditClass/EditClass";
 import AddClass from "./components/Page/AddClass/AddClass";
 import RotateContextProvider from "./store/RotateAction";
 import ManageChapter from "./components/Page/ManageChapter/ManageChapter";
+import FilterClassContextProvider from "./store/FilterClass";
 
 export default function App() {
   return (
@@ -26,7 +27,9 @@ export default function App() {
                 <RemoveClassContextProvider>
                   <InfoClassContextProvider>
                     <RotateContextProvider>
-                      <CRUD />
+                      <FilterClassContextProvider>
+                        <CRUD />
+                      </FilterClassContextProvider>
                     </RotateContextProvider>
                   </InfoClassContextProvider>
                 </RemoveClassContextProvider>
