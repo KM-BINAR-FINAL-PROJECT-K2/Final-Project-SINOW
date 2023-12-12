@@ -27,7 +27,7 @@ const createCategory = async (req, res, next) => {
       return next(new ApiError('Harus menyertakan gambar', 400))
     }
 
-    const { imageUrl } = await uploadImage(req.file)
+    const { imageUrl } = await uploadImage(req.file, next)
 
     const category = await Category.create({
       name,
@@ -66,7 +66,7 @@ const getAllCategory = async (req, res, next) => {
 
     return res.status(200).json({
       status: 'Success',
-      message: 'sukses mengambil data category',
+      message: 'Berhasil mendapatkan data category',
       data: categories,
     })
   } catch (error) {
@@ -76,14 +76,15 @@ const getAllCategory = async (req, res, next) => {
 
 const getCategoryById = async (req, res, next) => {
   try {
-    const category = await Category.findByPk(req.params.id)
+    const { id } = req.params
+    const category = await Category.findByPk(id)
     if (!category) {
       return next(new ApiError('Category tidak ditemukan', 404))
     }
 
     return res.status(200).json({
       status: 'Success',
-      message: 'sukses mengambil data category',
+      message: `Berhasil mendapatkan data category id: ${id}`,
       data: category,
     })
   } catch (error) {
@@ -104,12 +105,12 @@ const updateCategory = async (req, res, next) => {
       return next(new ApiError('Category tidak ditemukan', 404))
     }
 
-    if (name && name !== category.name) {
+    if (name && name.toLowerCase() !== category.name.toLowerCase()) {
       updateData.name = name
     }
 
     if (req.file) {
-      const { imageUrl } = await uploadImage(req.file)
+      const { imageUrl } = await uploadImage(req.file, next)
       updateData.imageUrl = imageUrl
     }
 
@@ -119,7 +120,7 @@ const updateCategory = async (req, res, next) => {
 
     return res.status(200).json({
       status: 'Success',
-      message: 'sukses update category',
+      message: `Berhasil mengupdate data category id: ${id}`,
       data: category,
     })
   } catch (error) {
