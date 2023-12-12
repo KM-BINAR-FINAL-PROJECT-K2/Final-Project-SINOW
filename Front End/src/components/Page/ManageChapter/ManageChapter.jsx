@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react/prop-types */
 import axios from "axios";
-import { Accordion } from "flowbite-react";
+import { Accordion, Flowbite } from "flowbite-react";
 import { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import Navigation from "../../Template/Navigation/Navigation";
@@ -55,6 +55,19 @@ export default function ManageChapter() {
     }
   }, []);
 
+  const customTheme = {
+    accordion: {
+      title: {
+        open: {
+          on: "opacity-100",
+          off: "opacity-80",
+        },
+      },
+    },
+  };
+
+  console.log(chapters);
+
   return (
     <>
       {isLoading && <LoadingScreen />}
@@ -74,25 +87,48 @@ export default function ManageChapter() {
             </h1>
             {chapters && classData && (
               <div>
-                <Accordion>
-                  {chapters.map((chapter) => {
-                    return (
-                      <Accordion.Panel key={chapter.id}>
-                        <Accordion.Title className="px-[20px] border border-gray-200">
-                          <p className="text-darkblue-05 font-bold  py-[20px]">
-                            {chapter.name}
-                          </p>
-                        </Accordion.Title>
-                        <Accordion.Content className="px-[20px]">
-                          <div className="py-[20px]">
-                            <p>{chapter.id}</p>
-                            <p>{classData.name}</p>
-                          </div>
-                        </Accordion.Content>
-                      </Accordion.Panel>
-                    );
-                  })}
-                </Accordion>
+                <Flowbite theme={{ theme: customTheme }}>
+                  <Accordion alwaysOpen>
+                    {chapters.map((chapter) => {
+                      return (
+                        <Accordion.Panel key={chapter.id}>
+                          <Accordion.Title className="px-[20px] border border-gray-200">
+                            <div className="flex items-center gap-2">
+                              <span>
+                                <svg
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  fill="none"
+                                  viewBox="0 0 24 24"
+                                  strokeWidth="1.5"
+                                  stroke="currentColor"
+                                  className="w-6 h-6"
+                                >
+                                  <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0111.186 0z"
+                                  />
+                                </svg>
+                              </span>
+
+                              <p
+                                className={`text-darkblue-05 font-bold  py-[20px]`}
+                              >
+                                {chapter.name}
+                              </p>
+                            </div>
+                          </Accordion.Title>
+                          <Accordion.Content className="px-[20px]">
+                            <div className="py-[20px]">
+                              <p>{chapter.id}</p>
+                              <p>{classData.name}</p>
+                            </div>
+                          </Accordion.Content>
+                        </Accordion.Panel>
+                      );
+                    })}
+                  </Accordion>
+                </Flowbite>
               </div>
             )}
           </section>
