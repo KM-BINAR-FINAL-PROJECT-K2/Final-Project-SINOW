@@ -11,9 +11,11 @@ import Swal from "sweetalert2";
 import { LoaderContext } from "../../../store/Loader";
 import LoadingScreen from "../../Molecule/Loading/LoadingScreen";
 import { convertSeconds } from "../../../utils/formatHour";
+import { ErrorContext } from "../../../store/Error";
 
 export default function ManageChapter() {
   const { isLoading, setIsLoading } = useContext(LoaderContext);
+  const { isError, setIsError } = useContext(ErrorContext);
   const [chapters, setChapters] = useState();
   const [classData, setClassData] = useState();
   const [random, setRandom] = useState();
@@ -21,40 +23,43 @@ export default function ManageChapter() {
   const { id } = useParams();
 
   useEffect(() => {
-    try {
-      const getChapters = async () => {
+    const getChapters = async () => {
+      try {
         setIsLoading(true);
         const res = await axios.get(`http://localhost:3000/api/v1/chapters/`);
 
         const filteredResponse = await res.data.data.filter(
           (chapter) => chapter.courseId == id
         );
-
         setChapters(filteredResponse);
-      };
-      getChapters();
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setIsLoading(false);
-    }
+      } catch (error) {
+        console.log(error);
+        setIsError(error ? error.message : "Kesalahan Jaringan");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    getChapters();
   }, [random]);
 
   useEffect(() => {
-    try {
-      const getClass = async () => {
+    const getClass = async () => {
+      try {
         setIsLoading(true);
         const res = await axios.get(
           `http://localhost:3000/api/v1/courses/${id}`
         );
         setClassData(res.data.data);
-      };
-      getClass();
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setIsLoading(false);
-    }
+      } catch (error) {
+        if (error.response.status === 404) {
+          return setIsError("Chapter Tidak Ada");
+        }
+        setIsError(error ? error.message : "Kesalahan Jaringan");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    getClass();
   }, []);
 
   const removeModuleHandle = (e, id) => {
@@ -146,8 +151,6 @@ export default function ManageChapter() {
     },
   };
 
-  console.log(chapters);
-
   return (
     <>
       {isLoading && <LoadingScreen />}
@@ -165,7 +168,48 @@ export default function ManageChapter() {
             <h1 className="text-center font-bold text-2xl text-darkblue-05 mb-[30px]">
               Kelola Chapter
             </h1>
-
+            {isError && (
+              <>
+                <div className="font-bold bg-slate-950 bg-opacity-10 p-10 flex justify-center gap-5 items-center text-center">
+                  <img
+                    src="/images/logo-n-maskot/failed_payment.png"
+                    alt=""
+                    className="w-[100px]"
+                  />
+                  <p className="text-xl text-alert-danger">
+                    {isError}
+                    <br />
+                    <span className="text-sm text-gray-800 font-normal">
+                      Cobalah untuk{" "}
+                      {isError === "Chapter Tidak Ada" && (
+                        <a
+                          href="/kelola-kelas"
+                          className="text-darkblue-03 font-medium"
+                          onClick={() => {
+                            window.location.href = "/kelola-kelas";
+                            window.location.reload();
+                          }}
+                        >
+                          Mencari Chapter Lain
+                        </a>
+                      )}
+                      {isError !== "Chapter Tidak Ada" && (
+                        <a
+                          href={`/kelola-chapter/${id}`}
+                          className="text-darkblue-03 font-medium"
+                          onClick={() => {
+                            window.location.href = `/kelola-chapter/${id}`;
+                            window.location.reload();
+                          }}
+                        >
+                          Muat Ulang Halaman
+                        </a>
+                      )}
+                    </span>
+                  </p>
+                </div>
+              </>
+            )}
             {chapters && classData && (
               <>
                 <p className="mb-4">
