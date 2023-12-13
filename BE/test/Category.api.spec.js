@@ -30,11 +30,23 @@ const imagePath = path.join(__dirname, '../public/images/image.png')
 const videoPath = path.join(__dirname, '../public/videos/video.mp4')
 
 describe('API Get All category Data', () => {
-  it('success get category', async () => {
+  it('success get all category', async () => {
     const response = await request(app).get('/api/v1/category')
     expect(response.statusCode).toBe(200)
     expect(response.body.status).toBe('Success')
     expect(response.body.message).toBe('Berhasil mendapatkan data category')
+  })
+  it('success get search category by name', async () => {
+    const response = await request(app).get('/api/v1/category?name=development')
+    expect(response.statusCode).toBe(200)
+    expect(response.body.status).toBe('Success')
+    expect(response.body.message).toBe('Berhasil mendapatkan data category')
+  })
+  it('failed get category: no category data', async () => {
+    const response = await request(app).get('/api/v1/category?name=sdfasdfas')
+    expect(response.statusCode).toBe(404)
+    expect(response.body.status).toBe('Failed')
+    expect(response.body.message).toBe('Category tidak ditemukan')
   })
 })
 
@@ -133,9 +145,6 @@ describe('API Create Category', () => {
 })
 describe('API Update Category', () => {
   it('success update category', async () => {
-    // const categoryData = {
-    //   name: 'Cyber Security',
-    // }
     const response = await request(app)
       .put('/api/v1/category/2')
       .set({
