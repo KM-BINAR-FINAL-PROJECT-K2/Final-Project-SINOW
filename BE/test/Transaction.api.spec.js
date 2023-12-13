@@ -24,8 +24,6 @@ beforeAll(async () => {
     if (premiumCourseResponse.body.data.length > 0) {
       course = premiumCourseResponse.body.data[0]
     }
-
-    console.log('course: \n', course)
   } catch (error) {
     console.log('error saat login: ')
     console.log(error)
@@ -54,7 +52,9 @@ describe('API create transaction', () => {
       .set({
         Authorization: `Bearer ${token}`,
       })
+
     transaction = response.body.data.transactionDetail
+
     expect(response.statusCode).toBe(201)
     expect(response.body.status).toBe('Success')
   })
