@@ -8,9 +8,36 @@ import FilterKelolaDashboard from "../../Molecule/Filter/FilterKelolaDashboard";
 import { PlaceholderContext } from "../../../store/PlaceholderStore";
 import { ImSearch } from "react-icons/im";
 export default function DashboadAdmin() {
+  const [paymentDetail, setPaymentDetail] = useState([]);
+  const [classSinow, setClassSinow] = useState([]);
   const { setIsLoading } = useContext(LoaderContext);
   const [error, setError] = useState("");
   const { handleSearchButtonClick } = useContext(PlaceholderContext);
+
+  useEffect(() => {
+    const getPaymentDetail = async () => {
+      try {
+        setPaymentDetail([]);
+        setIsLoading(true);
+        setError("");
+        const res = await axios.get(
+          "https://sinow-production.up.railway.app/api/v1/transactions"
+        );
+        setPaymentDetail(res.data.data);
+      } catch (error) {
+        setError(
+          error.response ? error.response.data.message : "Network Error"
+        );
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    getPaymentDetail();
+    return () => {
+      setPaymentDetail([]);
+    };
+  }, []);
+
   useEffect(() => {
     const getClasses = async () => {
       try {
@@ -33,7 +60,7 @@ export default function DashboadAdmin() {
       setClassSinow([]);
     };
   }, []);
-  const [classSinow, setClassSinow] = useState([]);
+
   const totalQuantity = classSinow.reduce((total, item) => {
     return total + item.totalUser;
   }, 0);
@@ -76,50 +103,7 @@ export default function DashboadAdmin() {
         <div className="border-blue-500 ">
           <section className="border-yellow-300 overflow-auto">
             {/* Payment Table */}
-            <table className="w-full table-auto">
-              <thead className="sticky top-0 bg-lightblue-05 z-10">
-                <tr className="bg-lightblue-05 text-left border-orange-700">
-                  <th className="py-2 text-[12px] px-4 font-semibold w-1/7">
-                    ID
-                  </th>
-                  <th className="px-4 py-2 text-[12px] font-semibold w-1/7">
-                    Kategori
-                  </th>
-                  <th className="px-4 py-2 text-[12px] font-semibold w-2/7">
-                    Kelas Premium
-                  </th>
-                  <th className=" px-4 py-2 text-[12px] font-semibold w-1/7">
-                    Status
-                  </th>
-                  <th className="px-4 py-2 text-[12px] font-semibold w-1/7">
-                    Metode Pembayaran
-                  </th>
-                  <th className="px-4 py-2 text-[12px] font-semibold w-1/7">
-                    Tanggal Bayar
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                <PaymentTable
-                  color={"bg-alert-success"}
-                  id={"johndoe123"}
-                  category={"UI/UX Design"}
-                  premiumClass={"Belajar Web Designer dengan Figma"}
-                  statusMessage={"SUDAH BAYAR"}
-                  paymenMethod={"Credit Card"}
-                  paymentDate={"21 Sep, 2023 at 2:00 AM"}
-                />
-                <PaymentTable
-                  color={"bg-alert-danger"}
-                  id={"supermanxx"}
-                  category={"UI/UX Design"}
-                  premiumClass={"Belajar Web Designer dengan Figma"}
-                  statusMessage={"BELUM BAYAR"}
-                  paymenMethod={"-"}
-                  paymentDate={"-"}
-                />
-              </tbody>
-            </table>
+            <PaymentTable />
           </section>
         </div>
       </section>
