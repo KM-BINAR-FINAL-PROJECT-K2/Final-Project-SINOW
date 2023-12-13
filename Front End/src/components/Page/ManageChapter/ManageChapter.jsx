@@ -19,8 +19,91 @@ export default function ManageChapter() {
   const [chapters, setChapters] = useState();
   const [classData, setClassData] = useState();
   const [random, setRandom] = useState();
+  const [form, setForm] = useState();
+  const [showAddForm, setShowAddForm] = useState(false);
 
   const { id } = useParams();
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    const name = formData.get("name");
+    const no = Number(formData.get("no"));
+
+    setForm({
+      name,
+      no,
+      courseId: id,
+    });
+  };
+
+  useEffect(() => {
+    try {
+      if (!form || !form.name || !form.no) {
+        return;
+      }
+      const addChapter = async () => {
+        await Swal.fire({
+          title: "Yakin menambahkan chapter?",
+          imageUrl: "/images/logo-n-maskot/Sticker-1.png",
+          color: "#3C3C3C",
+          imageWidth: 200,
+          showDenyButton: true,
+          confirmButtonText: "Tambah",
+          confirmButtonColor: "#6148FF",
+          denyButtonColor: "#FF0000",
+          denyButtonText: `Batalkan`,
+        }).then(async (result) => {
+          if (result.isConfirmed) {
+            try {
+              setIsLoading(true);
+              await axios.post(`http://localhost:3000/api/v1/chapters/`, form, {
+                headers: {
+                  "Content-Type": "application/json",
+                  Authorization: `Bearer ${localStorage.getItem("token")}`,
+                },
+              });
+              setRandom(Math.random());
+            } catch (error) {
+              if (error.response.status !== 200) {
+                const err = error.response.data.message;
+                await Swal.fire({
+                  titleText: err,
+                  imageUrl: "/images/logo-n-maskot/failed_payment.png",
+                  imageWidth: 200,
+                  confirmButtonText: "Kembali",
+                  confirmButtonColor: "#73CA5C",
+                });
+              }
+              setIsLoading(false);
+              return;
+            }
+            setIsLoading(false);
+            await Swal.fire({
+              titleText: "Berhasil Ditambahkan!",
+              imageUrl: "/images/logo-n-maskot/Sticker-3.png",
+              imageWidth: 200,
+              confirmButtonText: "Ok",
+              confirmButtonColor: "#73CA5C",
+            });
+          } else if (result.isDenied) {
+            await Swal.fire({
+              titleText: "Perubahan dibatalkan",
+              imageUrl: "/images/logo-n-maskot/Sticker-2.png",
+              imageWidth: 200,
+              confirmButtonText: "Kembali",
+              confirmButtonColor: "#73CA5C",
+            });
+          }
+        });
+      };
+      addChapter();
+    } catch (error) {
+      console.log(error.response.data.message.split(", ")[1]);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [form]);
 
   useEffect(() => {
     const getChapters = async () => {
@@ -61,6 +144,10 @@ export default function ManageChapter() {
     };
     getClass();
   }, []);
+
+  const handleAddForm = () => {
+    setShowAddForm(!showAddForm);
+  };
 
   const removeModuleHandle = (e, id) => {
     e.preventDefault();
@@ -212,9 +299,87 @@ export default function ManageChapter() {
             )}
             {chapters && classData && (
               <>
-                <p className="mb-4">
-                  {classData.classCode} | {classData.category.name}
-                </p>
+                <div className="flex justify-between items-center mb-4 mx-2">
+                  <p className="">
+                    {classData.classCode} | {classData.category.name}
+                  </p>
+                  <button
+                    className="text-white bg-darkblue-05 hover:bg-blue-800  focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+                    onClick={handleAddForm}
+                  >
+                    Tambah
+                  </button>
+                </div>
+                <div
+                  className={`w-full px-[20px] border border-gray-200 rounded-md my-5 ${
+                    showAddForm ? "block" : "hidden"
+                  }`}
+                >
+                  <button
+                    className="border-red-600 w-full text-left mt-3"
+                    onClick={handleAddForm}
+                  >
+                    <p className="flex justify-end items-center">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth="1.5"
+                        stroke="rgb(97 72 255)"
+                        className="h-6 w-6 inline-block ml-2"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M6 18L18 6M6 6l12 12"
+                        />
+                      </svg>
+                    </p>
+                  </button>
+
+                  <form
+                    action=""
+                    className="text-left py-3 mx-auto"
+                    type="submit"
+                    onSubmit={handleSubmit}
+                  >
+                    <div className="mb-[15px]">
+                      <label
+                        htmlFor="noChapter"
+                        className="mb-[4px] block text-[10px] text-black font-semibold ml-2"
+                      >
+                        Urutan Chapter
+                      </label>
+                      <input
+                        type="number"
+                        min={1}
+                        placeholder="contoh: 2"
+                        className="px-[16px] py-[12px] rounded-[16px] border-neutral-02 text-gray-600 border w-full focus:ring-darkblue-05 focus:border-darkblue-05 focus:outline-none"
+                        name="no"
+                        id="noChapter"
+                        required
+                      />
+                    </div>
+                    <div className="mb-[15px]">
+                      <label
+                        htmlFor="nameChapter"
+                        className="mb-[4px] block text-[10px] text-black font-semibold ml-2"
+                      >
+                        Judul Chapter
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="Memulai Design"
+                        className="px-[16px] py-[12px] rounded-[16px] border-neutral-02 text-gray-600 border w-full focus:ring-darkblue-05 focus:border-darkblue-05 focus:outline-none"
+                        id="nameChapter"
+                        name="name"
+                      />
+                    </div>
+                    <button className="px-[16px] py-[12px] rounded-[16px] border-darkblue-05 text-neutral-01 bg-darkblue-05 border w-full hover:bg-blue-800">
+                      Tambah Chapter
+                    </button>
+                  </form>
+                </div>
                 <div>
                   <Flowbite theme={{ theme: customTheme }}>
                     <Accordion alwaysOpen>
@@ -300,7 +465,7 @@ export default function ManageChapter() {
                                           </span>
                                           <hr className="my-3 border border-gray-300" />
                                           <div className="flex items-center justify-end gap-3">
-                                            <button className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center ">
+                                            <button className="text-white bg-darkblue-05 hover:bg-blue-800  focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center ">
                                               Ubah
                                             </button>
                                             <button
@@ -316,6 +481,33 @@ export default function ManageChapter() {
                                       </div>
                                     );
                                   })}
+
+                                {chapter.modules[0] && (
+                                  <button
+                                    className="w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow overflow-hidden text-center p-5 flex items-center flex-col justify-center cursor-pointer hover:bg-gray-100 gap-5"
+                                    onClick={() => alert("Coming Soon!")}
+                                  >
+                                    <div className="">
+                                      <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                        strokeWidth="1.5"
+                                        stroke="rgb(51 65 85)"
+                                        className="w-20 h-20 border border-gray-700 rounded-md border-dashed"
+                                      >
+                                        <path
+                                          strokeLinecap="round"
+                                          strokeLinejoin="round"
+                                          d="M12 4.5v15m7.5-7.5h-15"
+                                        />
+                                      </svg>
+                                    </div>
+                                    <p className="font-semibold text-gray-700">
+                                      Tambah Modul
+                                    </p>
+                                  </button>
+                                )}
                               </div>
                             </Accordion.Content>
                           </Accordion.Panel>
