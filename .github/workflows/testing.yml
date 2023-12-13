@@ -28,6 +28,9 @@ jobs:
       JWT_ISSUER: ${{secrets.JWT_ISSUER}}
       PASSWORD_HASH: ${{secrets.PASSWORD_HASH}}
       BASE_URL: ${{secrets.BASE_URL}}
+      MIDTRANS_CLIENT_KEY: ${{secrets.MIDTRANS_CLIENT_KEY}}
+      MIDTRANS_SERVER_KEY: ${{secrets.MIDTRANS_SERVER_KEY}}
+      MIDTRANS_API_KEY: ${{secrets.MIDTRANS_API}}
     steps:
       - name: Get code
         uses: actions/checkout@v3
