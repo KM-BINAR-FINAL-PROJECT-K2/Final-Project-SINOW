@@ -1,7 +1,7 @@
 /* eslint-disable camelcase */
 
 const Midtrans = require('midtrans-client')
-const { Transaction, Course } = require('../models')
+const { Transaction, Course, UserCourse } = require('../models')
 const ApiError = require('../utils/ApiError')
 const generateSHA512 = require('../utils/generateSHA512')
 
@@ -27,6 +27,25 @@ const getAllTransaction = async (req, res, next) => {
   }
 }
 
+const getTransactionById = async (req, res, next) => {
+  try {
+    const { id } = req.params
+    const transaction = await Transaction.findByPk(id)
+
+    if (!transaction) {
+      return next(new ApiError('Data transaction tidak ditemukan', 404))
+    }
+
+    return res.status(200).json({
+      status: 'Success',
+      message: 'sukses mengambil data transaksi',
+      data: transaction,
+    })
+  } catch (error) {
+    return next(new ApiError(error.message, 500))
+  }
+}
+
 const createTransaction = async (req, res, next) => {
   try {
     const { courseId } = req.body
@@ -34,17 +53,6 @@ const createTransaction = async (req, res, next) => {
 
     if (!courseId) {
       return next(new ApiError('Course ID harus diisi', 400))
-    }
-
-    const checkTransaction = await Transaction.findOne({
-      where: {
-        userId: user.id,
-        courseId,
-      },
-    })
-
-    if (checkTransaction) {
-      return next(new ApiError('Anda sudah membeli course ini', 400))
     }
 
     const course = await Course.findByPk(courseId)
@@ -57,29 +65,65 @@ const createTransaction = async (req, res, next) => {
       return next(new ApiError('Bukan course premium', 400))
     }
 
+    const [checkUserCourse] = await UserCourse.findOrCreate({
+      where: {
+        userId: user.id,
+        courseId,
+      },
+      defaults: {
+        userId: user.id,
+        courseId,
+        isAccessible: false,
+        progress: 0,
+        lastSeen: new Date(),
+      },
+    })
+
+    if (checkUserCourse.isAccessible) {
+      return next(
+        new ApiError('Anda sudah memiliki akses untuk course ini', 400),
+      )
+    }
+
+    const checkTransaction = await Transaction.findOne({
+      where: {
+        userId: user.id,
+        courseId,
+      },
+    })
+
+    if (checkTransaction) {
+      return next(new ApiError('Sudah ada transaksi untuk course ini', 400))
+    }
+
     const promoPrice = course.price - (course.price * course.promo) / 100
     const totalPrice = promoPrice + (promoPrice * 11) / 100
 
     const newTransaction = await Transaction.create({
       userId: user.id,
       courseId,
-      coursePrice: totalPrice,
+      coursePrice: course.price,
       totalPrice,
       promo: course.promo,
       status: 'BELUM BAYAR',
     })
+
+    const courseName = course.name.length > 30
+      ? `${course.name.substring(0, 30)}...`
+      : course.name
+
     const parameter = {
       item_details: [
         {
           id: course.id,
           price: totalPrice,
-          name: course.name,
+          name: courseName,
           quantity: 1,
         },
       ],
       customer_details: {
         first_name: user.name,
-        email: 'muhammadfadhlan0011@gmail.com',
+        email: user.email,
         phone: user.Auth.phoneNumber,
         customer_details_required_fields: ['first_name', 'phone', 'email'],
       },
@@ -95,7 +139,10 @@ const createTransaction = async (req, res, next) => {
     return res.status(201).json({
       status: 'Success',
       message: 'sukses membuat transaksi',
-      data: midtransResponseData,
+      data: {
+        ...midtransResponseData,
+        transactionDetail: newTransaction,
+      },
     })
   } catch (error) {
     return next(new ApiError(error.message, 500))
@@ -124,6 +171,20 @@ const paymentFinalize = async (req, res, next) => {
       return next(new ApiError('Semua field harus diisi', 400))
     }
 
+    const transaction = await Transaction.findByPk(order_id)
+    if (!transaction) {
+      return next(new ApiError('Transaksi tidak ditemukan', 404))
+    }
+
+    if (transaction_status === 'expire') {
+      transaction.status = 'KADALUARSA'
+      await transaction.save()
+
+      return next(
+        new ApiError('Transaksi kadaluarsa, silahkan buat transaksi baru', 400),
+      )
+    }
+
     const checkSignatureKey = generateSHA512(
       `${order_id}${status_code}${gross_amount}${process.env.MIDTRANS_SERVER_KEY}`,
     )
@@ -132,17 +193,8 @@ const paymentFinalize = async (req, res, next) => {
       return next(new ApiError('Signature key tidak sesuai', 400))
     }
 
-    const transaction = await Transaction.findByPk(order_id)
-    if (!transaction) {
-      return next(new ApiError('Transaksi tidak ditemukan', 404))
-    }
-
     if (transaction.status === 'SUDAH BAYAR') {
-      return next(new ApiError('Transaksi sudah berhasil', 400))
-    }
-
-    if (transaction.status === 'GAGAL') {
-      return next(new ApiError('Transaksi gagal', 400))
+      return next(new ApiError('Transaksi ini sudah dibayar', 400))
     }
 
     if (
@@ -155,22 +207,21 @@ const paymentFinalize = async (req, res, next) => {
       } else {
         transaction.status = 'GAGAL'
         await transaction.save()
+        return next(
+          new ApiError('Transaksi gagal: terdeteksi sebagai fraud', 400),
+        )
       }
     }
 
     if (transaction_status === 'cancel' || transaction_status === 'deny') {
       transaction.status = 'failed'
       await transaction.save()
-    }
-
-    if (transaction_status === 'expire') {
-      transaction.status = 'KADALUARSA'
-      await transaction.save()
+      return next(new ApiError('Transaksi ditolak', 400))
     }
 
     return res.status(200).json({
       status: 'Success',
-      message: 'Berhasil menyelesaikan transaksi',
+      message: 'Berhasil menyelesaikan transaksi, course kini dapat diakses',
       data: transaction,
     })
   } catch (error) {
@@ -180,6 +231,7 @@ const paymentFinalize = async (req, res, next) => {
 
 module.exports = {
   getAllTransaction,
+  getTransactionById,
   createTransaction,
   paymentFinalize,
 }

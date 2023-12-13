@@ -361,48 +361,6 @@ const deleteNotification = async (req, res, next) => {
   }
 }
 
-const createUserCourse = async (req, res, next) => {
-  try {
-    const { user } = req
-    const { courseId } = req.params
-
-    const checkUserCourse = await UserCourse.findOne({
-      where: {
-        userId: user.id,
-        courseId,
-      },
-    })
-
-    if (checkUserCourse) {
-      return res.status(200).json({
-        status: 'Success',
-        message: 'User sudah mengikuti course ini',
-      })
-    }
-
-    const course = await Course.findByPk(courseId)
-
-    const userCourse = await UserCourse.create({
-      userId: user.id,
-      courseId,
-      isAccessible: course.type === 'gratis',
-      progresss: 0,
-      lastSeen: new Date(),
-    })
-
-    if (!userCourse) {
-      return next(new ApiError('Gagal membuat user course', 500))
-    }
-
-    return res.status(200).json({
-      status: 'Success',
-      message: 'Berhasil mengikuti course',
-    })
-  } catch (error) {
-    return next(new ApiError(error.message, 500))
-  }
-}
-
 const getMyCourses = async (req, res, next) => {
   try {
     const { user } = req
@@ -451,23 +409,16 @@ const openCourse = async (req, res, next) => {
       return next(new ApiError('Course tidak ditemukan', 404))
     }
 
-    const [userCourse, created] = await UserCourse.findOrCreate({
+    const userCourse = await UserCourse.findOne({
       where: {
         userId: user.id,
         courseId,
-      },
-      defaults: {
-        userId: user.id,
-        courseId,
-        isAccessible: course.type === 'gratis',
-        progress: 0,
-        lastSeen: new Date(),
       },
       include: userCourseRelation(user.id).include,
       order: userCourseRelation(user.id).order,
     })
 
-    if (!created) {
+    if (userCourse) {
       await userCourse.update({
         lastSeen: new Date(),
       })
@@ -475,11 +426,21 @@ const openCourse = async (req, res, next) => {
       return res.status(200).json({
         status: 'Success',
         message: 'Berhasil mendapatkan detail course user',
-        data: userCourse,
+        data: {
+          userCourse,
+        },
       })
     }
 
-    const userCourseBuffer = await UserCourse.findByPk(userCourse.id, {
+    const createUserCourse = await UserCourse.create({
+      userId: user.id,
+      courseId,
+      isAccessible: course.type === 'gratis',
+      progress: 0,
+      lastSeen: new Date(),
+    })
+
+    const userCourseBuffer = await UserCourse.findByPk(createUserCourse.id, {
       include: [
         {
           model: Course,
@@ -527,7 +488,7 @@ const openCourse = async (req, res, next) => {
       )
     }
 
-    const newUserCourse = await UserCourse.findByPk(userCourse.id, {
+    const newUserCourse = await UserCourse.findByPk(createUserCourse.id, {
       include: userCourseRelation(user.id).include,
       order: userCourseRelation(user.id).order,
     })
@@ -663,5 +624,4 @@ module.exports = {
   getMyCourses,
   openCourse,
   openUserModule,
-  createUserCourse,
 }

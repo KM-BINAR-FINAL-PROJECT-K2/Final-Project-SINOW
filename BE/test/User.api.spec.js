@@ -41,7 +41,6 @@ afterAll(async () => {
     await UserCourse.destroy({
       where: {
         userId: 1,
-        courseId: 1,
       },
     })
   } catch (error) {
@@ -378,14 +377,15 @@ describe('API create User Course', () => {
   })
 })
 
-describe('API get User Course by id', () => {
-  it('success create user course', async () => {
+describe('API open User Course', () => {
+  it('success open user course', async () => {
     const response = await request(app)
       .get('/api/v1/user/my-courses/1')
       .set({
         Authorization: `Bearer ${token}`,
       })
-    userModuleId = response.body.data.Course.chapters[0].userModules[0].id
+    userModuleId =
+      response.body.data.userCourse.Course.chapters[0].userModules[0].id
     expect(response.statusCode).toBe(200)
     expect(response.body.status).toBe('Success')
   })
@@ -441,8 +441,6 @@ describe('API get userModule', () => {
       .set({
         Authorization: `Bearer ${token2}`,
       })
-    console.log('\n\n\n\n\n')
-    console.log(response.body.message)
     expect(response.statusCode).toBe(403)
     expect(response.body.status).toBe('Failed')
   })
@@ -463,5 +461,26 @@ describe('API get userModule', () => {
       })
     expect(response.statusCode).toBe(404)
     expect(response.body.status).toBe('Failed')
+  })
+  it('failed get user module: module is inaccessible', async () => {
+    const coursePremium = await request(app)
+      .get('/api/v1/user/my-courses/4')
+      .set({
+        Authorization: `Bearer ${token}`,
+      })
+
+    const modulePremiumId =
+      coursePremium.body.data.userCourse.Course.chapters[0].userModules[1].id
+
+    const response = await request(app)
+      .get(`/api/v1/user/my-courses/4/modules/${modulePremiumId}`)
+      .set({
+        Authorization: `Bearer ${token}`,
+      })
+    expect(response.statusCode).toBe(403)
+    expect(response.body.status).toBe('Failed')
+    expect(response.body.message).toBe(
+      'Anda perlu menyelesaikan pembayaran terlebih dahulu untuk mengakses course ini',
+    )
   })
 })

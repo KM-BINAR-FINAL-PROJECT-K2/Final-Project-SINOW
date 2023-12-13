@@ -1,0 +1,97 @@
+{
+  "data": {
+    "Course": {
+      "benefits": [
+        {
+          "description": "Bahasa C memberikan tingkat kontrol yang tinggi terhadap perangkat keras dan memori. Hal ini memungkinkan pengembang untuk secara langsung mengelola sumber daya dan mengoptimalkan kinerja API, menciptakan solusi yang lebih efisien.",
+          "id": 11
+        },
+        {
+          "description": "Menguasai pembuatan Restful API dengan bahasa C tidak hanya membuka pintu ke dunia API, tetapi juga meningkatkan pemahaman mendalam tentang manajemen memori, manipulasi byte, dan konsep-konsep tingkat rendah. Keahlian ini dapat menjadi landasan yang kuat untuk eksplorasi lebih lanjut dalam pengembangan perangkat lunak.",
+          "id": 12
+        },
+        {
+          "description": "Memahami dan mengimplementasikan Restful API dengan bahasa C memungkinkan pengoptimalan performa tinggi. Dengan mengendalikan sumber daya secara langsung, API yang dihasilkan cenderung lebih efisien dan responsif",
+          "id": 10
+        }
+      ],
+      "category": { "id": 3, "name": "Web Development" },
+      "categoryId": 3,
+      "chapters": [
+        {
+          "id": 8,
+          "name": "Pendahuluan",
+          "no": 1,
+          "userModules": [
+            {
+              "id": 78,
+              "moduleData": { "id": 23, "name": "video 1", "no": 1 },
+              "status": "terbuka"
+            },
+            {
+              "id": 79,
+              "moduleData": { "id": 24, "name": "video 2", "no": 2 },
+              "status": "terkunci"
+            },
+            {
+              "id": 80,
+              "moduleData": { "id": 25, "name": "video 3", "no": 3 },
+              "status": "terkunci"
+            }
+          ]
+        },
+        {
+          "id": 9,
+          "name": "Membuat Restful API dengan C",
+          "no": 2,
+          "userModules": [
+            {
+              "id": 81,
+              "moduleData": { "id": 26, "name": "video 4", "no": 4 },
+              "status": "terkunci"
+            },
+            {
+              "id": 82,
+              "moduleData": { "id": 27, "name": "video 5", "no": 5 },
+              "status": "terkunci"
+            },
+            {
+              "id": 83,
+              "moduleData": { "id": 28, "name": "video 6", "no": 6 },
+              "status": "terkunci"
+            }
+          ]
+        }
+      ],
+      "classCode": "BE100",
+      "courseBy": "Aceng",
+      "courseCreator": { "id": 9, "name": "Randika" },
+      "createdAt": "2023-12-13T02:38:21.078Z",
+      "createdBy": 9,
+      "description": "Selamat datang, para petualang kode! Apakah Anda siap untuk memasuki dunia yang penuh misteri, tantangan, dan keberanian dalam membuat Restful API menggunakan bahasa pemrograman C? Bersiaplah untuk mengembara melalui kode-kode piramida dan menavigasi lautan sintaksis!· Dalam kursus ini, kami akan membimbing Anda melalui petualangan epik dalam menciptakan Restful API yang tangguh menggunakan kekuatan C. Kami tidak hanya akan membahas konsep-konsep dasar, tetapi juga menyelami perairan yang lebih dalam tentang manajemen memori, manipulasi byte, dan segala hal seru yang dapat Anda lakukan dengan bahasa C.· Ayo sambut badai kode bersama-sama! Bersiaplah untuk menulis baris-baris keren, menaklukkan bug-bug jahat, dan menciptakan API yang legendaris. Bahkan, emoji tengkorak ☠️ di judul ini hanya akan menjadi saksi bbisu dari keseruan perjalanan Anda.· Ingatlah, petualangan ini bukan hanya tentang menciptakan API, tetapi juga tentang menemukan keajaiban dalam setiap kurung kurawal dan melibatkan diri dalam cerita seru dalam dunia pemrograman. Ayo mulai petualangan Anda menuju puncak lautan kode!",
+      "id": 4,
+      "imageUrl": "https://images.unsplash.com/photo-1537884944318-390069bb8665?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "level": "advanced",
+      "name": "Membuat Restful API dengan menggunakan Bahasa C ☠️",
+      "price": 800000,
+      "promo": 15,
+      "rating": 4.5,
+      "totalDuration": 0,
+      "totalModule": 0,
+      "totalUser": 1,
+      "type": "premium",
+      "updatedAt": "2023-12-13T03:10:47.827Z",
+      "videoPreviewUrl": "https://ik.imagekit.io/96gmelvyq/Video-preview.mp4?updatedAt=1701743141010"
+    },
+    "courseId": 4,
+    "createdAt": "2023-12-13T03:10:47.820Z",
+    "id": 12,
+    "isAccessible": false,
+    "lastSeen": "2023-12-13T03:22:32.372Z",
+    "progress": 0,
+    "updatedAt": "2023-12-13T03:22:32.372Z",
+    "userId": 1
+  },
+  "message": "Berhasil mendapatkan detail course user",
+  "status": "Success"
+}
