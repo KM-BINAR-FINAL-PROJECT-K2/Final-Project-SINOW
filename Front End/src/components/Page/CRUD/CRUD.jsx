@@ -38,7 +38,9 @@ export default function CRUD() {
         setIsError("");
 
         const res = await axios.get(
-          `http://localhost:3000/api/v1/courses?search=${query}&type=${filterClass}`
+          `http://localhost:3000/api/v1/courses?search=${query}${`${
+            filterClass && `&type=${filterClass}`
+          }`}`
         );
         setClassSinow(res.data.data);
       } catch (error) {
