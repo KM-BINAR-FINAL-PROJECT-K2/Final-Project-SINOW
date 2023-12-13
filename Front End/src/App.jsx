@@ -7,10 +7,12 @@ import BackToLogin from "./components/Page/ResetPass/BackToLogin";
 import AddClassContextProvider from "./store/AddClassUI";
 import InfoClassContextProvider from "./store/InfoClassUI";
 import RemoveClassContextProvider from "./store/RemoveClassUI";
-import ClassContextProvider from "./store/ClassStore";
 import KeyContextProvider from "./store/ActiveKey";
 import EditClass from "./components/Page/EditClass/EditClass";
 import AddClass from "./components/Page/AddClass/AddClass";
+import RotateContextProvider from "./store/RotateAction";
+import ManageChapter from "./components/Page/ManageChapter/ManageChapter";
+import FilterClassContextProvider from "./store/FilterClass";
 
 export default function App() {
   return (
@@ -21,15 +23,17 @@ export default function App() {
           path="/kelola-kelas"
           element={
             <AddClassContextProvider>
-              <ClassContextProvider>
-                <KeyContextProvider>
-                  <RemoveClassContextProvider>
-                    <InfoClassContextProvider>
-                      <CRUD />
-                    </InfoClassContextProvider>
-                  </RemoveClassContextProvider>
-                </KeyContextProvider>
-              </ClassContextProvider>
+              <KeyContextProvider>
+                <RemoveClassContextProvider>
+                  <InfoClassContextProvider>
+                    <RotateContextProvider>
+                      <FilterClassContextProvider>
+                        <CRUD />
+                      </FilterClassContextProvider>
+                    </RotateContextProvider>
+                  </InfoClassContextProvider>
+                </RemoveClassContextProvider>
+              </KeyContextProvider>
             </AddClassContextProvider>
           }
         />
@@ -41,6 +45,7 @@ export default function App() {
         />
         <Route path="/edit-kelas/:id" element={<EditClass />}></Route>
         <Route path="/tambah-kelas" element={<AddClass />}></Route>
+        <Route path="/kelola-chapter/:id" element={<ManageChapter />}></Route>
       </Routes>
     </BrowserRouter>
   );

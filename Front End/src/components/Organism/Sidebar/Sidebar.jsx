@@ -19,7 +19,8 @@ export default function Sidebar() {
     } else if (
       location.pathname === "/kelola-kelas" ||
       location.pathname.includes("/edit-kelas") ||
-      location.pathname.includes("/tambah-kelas")
+      location.pathname.includes("/tambah-kelas") ||
+      location.pathname.includes("/kelola-chapter")
     ) {
       setBackground({
         dashboard: false,

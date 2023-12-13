@@ -22,7 +22,12 @@
     "test:auth": "jest --setupFiles dotenv/config --coverage --colors --verbose --detectOpenHandles --forceExit --testTimeout=20000 --runTestsByPath test/Auth.api.spec.js",
     "test:course": "jest --setupFiles dotenv/config --coverage --colors --verbose --detectOpenHandles --forceExit --testTimeout=20000 --runTestsByPath test/Course.api.spec.js",
     "test:user": "jest --setupFiles dotenv/config --coverage --colors --verbose --detectOpenHandles --forceExit --testTimeout=20000 --runTestsByPath test/User.api.spec.js",
-    "test:notification": "jest --setupFiles dotenv/config --coverage --colors --verbose --detectOpenHandles --forceExit --testTimeout=20000 --runTestsByPath test/Notification.api.spec.js"
+    "test:module": "jest --setupFiles dotenv/config --coverage --colors --verbose --detectOpenHandles --forceExit --testTimeout=20000 --runTestsByPath test/Module.api.spec.js",
+    "test:notification": "jest --setupFiles dotenv/config --coverage --colors --verbose --detectOpenHandles --forceExit --testTimeout=20000 --runTestsByPath test/Notification.api.spec.js",
+    "test:chapter": "jest --setupFiles dotenv/config --coverage --colors --verbose --detectOpenHandles --forceExit --testTimeout=20000 --runTestsByPath test/Chapter.api.spec.js",
+    "test:benefit": "jest --setupFiles dotenv/config --coverage --colors --verbose --detectOpenHandles --forceExit --testTimeout=20000 --runTestsByPath test/Benefit.api.spec.js",
+    "test:category": "jest --setupFiles dotenv/config --coverage --colors --verbose --detectOpenHandles --forceExit --testTimeout=20000 --runTestsByPath test/Category.api.spec.js",
+    "test:transaction": "jest --setupFiles dotenv/config --coverage --colors --verbose --detectOpenHandles --forceExit --testTimeout=20000 --runTestsByPath test/Transaction.api.spec.js"
   },
   "author": "",
   "license": "ISC",

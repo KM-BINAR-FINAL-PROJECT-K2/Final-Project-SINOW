@@ -18,7 +18,7 @@ app.use(router)
 
 app.use('/', (req, res, next) => {
   if (req.originalUrl === '/') {
-    return res.status(301).redirect(`${process.env.BASE_URL}/api-docs`)
+    return res.status(301).redirect(`/api-docs`)
   }
   return next()
 })

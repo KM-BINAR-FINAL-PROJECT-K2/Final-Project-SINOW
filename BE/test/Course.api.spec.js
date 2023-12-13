@@ -41,7 +41,6 @@ const videoPath = path.join(__dirname, '../public/videos/video.mp4')
 describe('API Get All Course Data', () => {
   it('success get course', async () => {
     const response = await request(app).get('/api/v1/courses')
-    console.log('\n\n\n\n', response.body.message)
     expect(response.statusCode).toBe(200)
     expect(response.body.status).toBe('Success')
   })

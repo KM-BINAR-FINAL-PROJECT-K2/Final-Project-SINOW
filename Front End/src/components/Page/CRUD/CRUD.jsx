@@ -18,6 +18,7 @@ import FilterKelolaKelas from "../../Molecule/Filter/FilterKelolaKelas";
 import { IoIosAddCircle } from "react-icons/io";
 import { ImSearch } from "react-icons/im";
 import { QueryContext } from "../../../store/QuerySearch";
+import { FilterClassContext } from "../../../store/FilterClass";
 export default function CRUD() {
   const { setIsLoading } = useContext(LoaderContext);
   const { showInfoClass } = useContext(InfoClassContext);
@@ -26,6 +27,7 @@ export default function CRUD() {
   const { keyClass } = useContext(KeyContext);
   const { setIsError } = useContext(ErrorContext);
   const { query } = useContext(QueryContext);
+  const { filterClass } = useContext(FilterClassContext);
 
   const { handleSearchButtonClick } = useContext(PlaceholderContext);
 
@@ -36,8 +38,13 @@ export default function CRUD() {
         setClassSinow([]);
         setIsLoading(true);
         setIsError("");
+
+        console.log(filterClass);
+
         const res = await axios.get(
-          `http://localhost:3000/api/v1/courses?search=${query}`
+          `http://localhost:3000/api/v1/courses?search=${query}${
+            filterClass ? `&type=${filterClass}` : ""
+          }`
         );
         setClassSinow(res.data.data);
       } catch (error) {
@@ -53,7 +60,7 @@ export default function CRUD() {
     return () => {
       setClassSinow([]);
     };
-  }, [query]);
+  }, [query, filterClass]);
 
   const totalQuantity = classSinow.reduce((total, item) => {
     return total + item.totalUser;
