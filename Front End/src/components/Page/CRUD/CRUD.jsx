@@ -37,10 +37,12 @@ export default function CRUD() {
         setIsLoading(true);
         setIsError("");
 
+        console.log(filterClass);
+
         const res = await axios.get(
-          `http://localhost:3000/api/v1/courses?search=${query}${`${
-            filterClass && `&type=${filterClass}`
-          }`}`
+          `http://localhost:3000/api/v1/courses?search=${query}${
+            filterClass ? `&type=${filterClass}` : ""
+          }`
         );
         setClassSinow(res.data.data);
       } catch (error) {

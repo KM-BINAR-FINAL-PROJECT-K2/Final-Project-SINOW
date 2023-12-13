@@ -18,7 +18,7 @@ export default function FilterKelolaKelas() {
   ];
 
   const handleFilterClick = (item) => {
-    setSelected(item.value === selected ? null : item.value);
+    setSelected(item.value === selected ? false : item.value);
   };
 
   useEffect(() => {
