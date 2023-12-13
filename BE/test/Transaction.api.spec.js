@@ -53,6 +53,7 @@ describe('API create transaction', () => {
         Authorization: `Bearer ${token}`,
       })
 
+    console.log(response.req._header)
     console.log(response.body)
     transaction = response.body.data.transactionDetail
 
