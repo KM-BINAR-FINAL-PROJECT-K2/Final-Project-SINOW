@@ -137,25 +137,25 @@ export default function ClassTable() {
                 {rupiah(classItem.price)}
               </td>
               <td
-                className={`px-4 text-[10px] font-bold ${
+                className={`px-4 py-2 table-cell object-center text-[10px] font-bold ${
                   rotate ? "block" : "hidden"
                 }`}
               >
                 <a
-                  className="m-2 py-[3px] font-bold text-neutral-01 inline-block rounded-[4px] w-[50px] hover:bg-neutral-02 bg-alert-success text-center leading-[14px] shadow-md"
+                  className="m-2 py-[5px] font-bold text-neutral-01 inline-block rounded-[4px] w-[50px] hover:bg-neutral-02 bg-alert-success text-center leading-[14px] shadow-md"
                   href={`/edit-kelas/${classItem.id}`}
                 >
                   Ubah
                 </a>
                 <button
-                  className="m-2 py-[3px] font-bold text-neutral-01 inline-block rounded-[4px] hover:bg-neutral-02 bg-alert-danger w-[50px] text-center leading-[14px] shadow-md"
+                  className="m-2 py-[5px] font-bold text-neutral-01 inline-block rounded-[4px] hover:bg-neutral-02 bg-alert-danger w-[50px] text-center leading-[14px] shadow-md"
                   onClick={() => toggleShowWarning(classItem.id)}
                 >
                   Hapus
                 </button>
                 <button
                   onClick={() => toggleShowInfo(classItem.id)}
-                  className="m-2 py-[3px] font-bold text-neutral-01 inline-block rounded-[4px] hover:bg-neutral-02 bg-sinow-03 w-[50px] text-center leading-[14px] shadow-md"
+                  className="m-2 py-[5px] font-bold text-neutral-01 inline-block rounded-[4px] hover:bg-neutral-02 bg-sinow-03 w-[50px] text-center leading-[14px] shadow-md"
                 >
                   Info
                 </button>
@@ -167,7 +167,7 @@ export default function ClassTable() {
               >
                 <div className=" text-center flex items-center justify-center border-red-500">
                   <a
-                    className=" font-bold py-[10px] px-[20px] text-neutral-01 rounded-[10px] text-center bg-darkblue-05"
+                    className=" font-bold py-[10px] shadow-md px-[20px] text-neutral-01 rounded-[6px] text-center bg-darkblue-05"
                     href={`/kelola-chapter/${classItem.id}`}
                   >
                     Kelola Chapter
