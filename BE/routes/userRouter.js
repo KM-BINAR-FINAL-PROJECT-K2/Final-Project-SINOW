@@ -29,4 +29,11 @@ router.get(
   User.openUserModule,
 )
 
+router.get('/transaction', authenticate, User.userTransaction)
+router.get(
+  '/transaction/:transactionId',
+  authenticate,
+  User.openUserTransaction,
+)
+
 module.exports = router

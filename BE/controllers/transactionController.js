@@ -168,21 +168,28 @@ const paymentFinalize = async (req, res, next) => {
       || !gross_amount
       || !signature_key
     ) {
-      return next(new ApiError('Semua field harus diisi', 400))
+      return res.status(200).json({
+        status: 'Failed',
+        message: 'Semua field harus diisi',
+      })
     }
 
     const transaction = await Transaction.findByPk(order_id)
     if (!transaction) {
-      return next(new ApiError('Transaksi tidak ditemukan', 404))
+      return res.status(200).json({
+        status: 'Success',
+        message: 'Transaksi tidak ditemukan',
+      })
     }
 
     if (transaction_status === 'expire') {
       transaction.status = 'KADALUARSA'
       await transaction.save()
 
-      return next(
-        new ApiError('Transaksi kadaluarsa, silahkan buat transaksi baru', 400),
-      )
+      return res.status(200).json({
+        status: 'Success',
+        message: 'Transaksi kadaluarsa, silahkan buat transaksi baru',
+      })
     }
 
     const checkSignatureKey = generateSHA512(
@@ -190,11 +197,17 @@ const paymentFinalize = async (req, res, next) => {
     )
 
     if (signature_key !== checkSignatureKey) {
-      return next(new ApiError('Signature key tidak sesuai', 400))
+      return res.status(200).json({
+        status: 'Success',
+        message: 'Signature key tidak sesuai',
+      })
     }
 
     if (transaction.status === 'SUDAH BAYAR') {
-      return next(new ApiError('Transaksi ini sudah dibayar', 400))
+      return res.status(200).json({
+        status: 'Success',
+        message: 'Transaksi sudah dibayar',
+      })
     }
 
     if (
@@ -207,16 +220,20 @@ const paymentFinalize = async (req, res, next) => {
       } else {
         transaction.status = 'GAGAL'
         await transaction.save()
-        return next(
-          new ApiError('Transaksi gagal: terdeteksi sebagai fraud', 400),
-        )
+        return res.status(200).json({
+          status: 'Success',
+          message: 'Transaksi gagal: terdeteksi sebagai fraud',
+        })
       }
     }
 
     if (transaction_status === 'cancel' || transaction_status === 'deny') {
-      transaction.status = 'failed'
+      transaction.status = 'GAGAL'
       await transaction.save()
-      return next(new ApiError('Transaksi ditolak', 400))
+      return res.status(200).json({
+        status: 'Success',
+        message: 'Transaksi ditolak',
+      })
     }
 
     return res.status(200).json({

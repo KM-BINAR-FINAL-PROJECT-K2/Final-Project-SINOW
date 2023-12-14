@@ -1,5 +1,6 @@
 const validator = require('validator')
 const bcrypt = require('bcrypt')
+const { Op } = require('sequelize')
 const {
   User,
   Auth,
@@ -11,10 +12,17 @@ const {
   Chapter,
   Notification,
   UserModule,
+  Transaction,
 } = require('../models')
 const ApiError = require('../utils/ApiError')
 const { createNotification } = require('../utils/notificationUtils')
 const { createToken } = require('../utils/jwtUtils')
+const {
+  validateCategory,
+  validateLevel,
+  validateType,
+  getCourseOrder,
+} = require('../utils/courseValidator')
 
 const { uploadImage } = require('../utils/imagekitUploader')
 
@@ -107,7 +115,7 @@ const updateMyDetails = async (req, res, next) => {
     }
 
     if (req.file) {
-      const { imageUrl } = await uploadImage(req.file)
+      const { imageUrl } = await uploadImage(req.file, next)
       updateDataUser.photoProfileUrl = imageUrl
     }
 
@@ -365,6 +373,42 @@ const getMyCourses = async (req, res, next) => {
   try {
     const { user } = req
 
+    const {
+      search, category, level, type, sortBy,
+    } = req.query
+    const where = {}
+
+    if (search) {
+      where.name = {
+        [Op.iLike]: `%${search}%`,
+      }
+    }
+
+    const courseOrder = getCourseOrder(sortBy, next)
+
+    if (category) {
+      validateCategory(category, next)
+      if (Array.isArray(category)) {
+        where.categoryId = {
+          [Op.in]: category.map((cat) => parseInt(cat, 10)),
+        }
+      } else {
+        where.categoryId = parseInt(category, 10)
+      }
+    }
+
+    if (level) {
+      validateLevel(level, next)
+      where.level = {
+        [Op.in]: Array.isArray(level) ? level : [level],
+      }
+    }
+
+    if (type) {
+      validateType(type, next)
+      where.type = type
+    }
+
     const course = await UserCourse.findAll({
       where: {
         userId: user.id,
@@ -373,6 +417,7 @@ const getMyCourses = async (req, res, next) => {
       include: [
         {
           model: Course,
+          where,
           include: [
             {
               model: Category,
@@ -380,6 +425,7 @@ const getMyCourses = async (req, res, next) => {
               as: 'category',
             },
           ],
+          order: [courseOrder.length === 0 ? ['id', 'ASC'] : courseOrder],
         },
       ],
     })
@@ -614,6 +660,78 @@ const openUserModule = async (req, res, next) => {
   }
 }
 
+const userTransaction = async (req, res, next) => {
+  try {
+    const { user } = req
+
+    const transactions = await Transaction.findAll({
+      where: {
+        userId: user.id,
+      },
+      include: [
+        {
+          model: Course,
+          attributes: ['id', 'name'],
+        },
+      ],
+    })
+
+    if (transactions.length === 0) {
+      return next(new ApiError('Tidak ada transaksi', 404))
+    }
+
+    return res.status(200).json({
+      status: 'Success',
+      message: 'Berhasil mengambil transaksi',
+      data: {
+        transactions,
+      },
+    })
+  } catch (error) {
+    return next(new ApiError(error.message, 500))
+  }
+}
+
+const openUserTransaction = async (req, res, next) => {
+  try {
+    const { user } = req
+    const { transactionId } = req.params
+
+    const transaction = await Transaction.findByPk(transactionId, {
+      include: [
+        {
+          model: Course,
+          attributes: ['id', 'name'],
+        },
+      ],
+      order: ['createdAt', 'DESC'],
+    })
+
+    if (!transaction) {
+      return next(new ApiError('Transaksi tidak ditemukan', 404))
+    }
+
+    if (transaction.userId !== user.id) {
+      return next(
+        new ApiError(
+          'User tidak memiliki akses untuk melihat transaksi ini',
+          403,
+        ),
+      )
+    }
+
+    return res.status(200).json({
+      status: 'Success',
+      message: 'Berhasil mendapatkan data transaksi',
+      data: {
+        transaction,
+      },
+    })
+  } catch (error) {
+    return next(new ApiError(error.message, 500))
+  }
+}
+
 module.exports = {
   myDetails,
   updateMyDetails,
@@ -624,4 +742,6 @@ module.exports = {
   getMyCourses,
   openCourse,
   openUserModule,
+  userTransaction,
+  openUserTransaction,
 }
