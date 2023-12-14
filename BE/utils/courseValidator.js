@@ -97,7 +97,7 @@ const getCourseOrder = (sortBy, next) => {
       )
     }
     if (sortBy === 'terbaru') {
-      courseOrder.push(['id', 'DESC'])
+      courseOrder.push(['createdAt', 'DESC'])
     } else if (sortBy === 'terpopuler') {
       courseOrder.push(['totalUser', 'DESC'])
     } else if (sortBy === 'promo') {

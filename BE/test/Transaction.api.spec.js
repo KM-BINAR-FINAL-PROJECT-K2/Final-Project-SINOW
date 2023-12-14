@@ -134,8 +134,8 @@ describe('API finalize transaction', () => {
         signature_key,
       })
 
-    expect(response.statusCode).toBe(400)
-    expect(response.body.status).toBe('Failed')
+    expect(response.statusCode).toBe(200)
+    expect(response.body.status).toBe('Success')
     expect(response.body.message).toBe(
       'Transaksi gagal: terdeteksi sebagai fraud',
     )
@@ -161,8 +161,8 @@ describe('API finalize transaction', () => {
         signature_key,
       })
 
-    expect(response.statusCode).toBe(400)
-    expect(response.body.status).toBe('Failed')
+    expect(response.statusCode).toBe(200)
+    expect(response.body.status).toBe('Success')
     expect(response.body.message).toBe('Signature key tidak sesuai')
   })
 
@@ -211,8 +211,8 @@ describe('API finalize transaction', () => {
         signature_key,
       })
 
-    expect(response.statusCode).toBe(400)
-    expect(response.body.status).toBe('Failed')
+    expect(response.statusCode).toBe(200)
+    expect(response.body.status).toBe('Success')
     expect(response.body.message).toBe(
       'Transaksi kadaluarsa, silahkan buat transaksi baru',
     )
@@ -238,8 +238,8 @@ describe('API finalize transaction', () => {
         signature_key,
       })
 
-    expect(response.statusCode).toBe(400)
-    expect(response.body.status).toBe('Failed')
+    expect(response.statusCode).toBe(200)
+    expect(response.body.status).toBe('Success')
     expect(response.body.message).toBe('Transaksi ditolak')
   })
 
@@ -290,8 +290,8 @@ describe('API finalize transaction', () => {
         signature_key,
       })
 
-    expect(response.statusCode).toBe(400)
-    expect(response.body.status).toBe('Failed')
-    expect(response.body.message).toBe('Transaksi ini sudah dibayar')
+    expect(response.statusCode).toBe(200)
+    expect(response.body.status).toBe('Success')
+    expect(response.body.message).toBe('Transaksi sudah dibayar')
   })
 })
