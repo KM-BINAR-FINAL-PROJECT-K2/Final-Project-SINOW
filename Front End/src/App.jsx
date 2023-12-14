@@ -4,15 +4,10 @@ import DashboadAdmin from "./components/Page/DashboardAdmin/DashboardAdmin";
 import Login from "./components/Page/Login/Login";
 import ResetPassword from "./components/Page/ResetPass/ResetPass";
 import BackToLogin from "./components/Page/ResetPass/BackToLogin";
-import AddClassContextProvider from "./store/AddClassUI";
-import InfoClassContextProvider from "./store/InfoClassUI";
-import RemoveClassContextProvider from "./store/RemoveClassUI";
-import KeyContextProvider from "./store/ActiveKey";
 import EditClass from "./components/Page/EditClass/EditClass";
 import AddClass from "./components/Page/AddClass/AddClass";
-import RotateContextProvider from "./store/RotateAction";
 import ManageChapter from "./components/Page/ManageChapter/ManageChapter";
-import FilterClassContextProvider from "./store/FilterClass";
+import ManageClassContextProvider from "./store/ManageClassStore";
 
 export default function App() {
   return (
@@ -22,19 +17,9 @@ export default function App() {
         <Route
           path="/kelola-kelas"
           element={
-            <AddClassContextProvider>
-              <KeyContextProvider>
-                <RemoveClassContextProvider>
-                  <InfoClassContextProvider>
-                    <RotateContextProvider>
-                      <FilterClassContextProvider>
-                        <CRUD />
-                      </FilterClassContextProvider>
-                    </RotateContextProvider>
-                  </InfoClassContextProvider>
-                </RemoveClassContextProvider>
-              </KeyContextProvider>
-            </AddClassContextProvider>
+            <ManageClassContextProvider>
+              <CRUD />
+            </ManageClassContextProvider>
           }
         />
         <Route path="/" element={<Login />} />
