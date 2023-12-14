@@ -40,6 +40,8 @@ export default {
         },
         sinow: {
           "05": "#00CCF4",
+          "04": "#001C30",
+          "03": "#003A64",
         },
       },
       boxShadow: {

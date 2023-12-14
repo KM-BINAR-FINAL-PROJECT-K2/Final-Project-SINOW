@@ -1,7 +1,7 @@
 import { Fragment, useContext, useEffect, useState } from "react";
 import { Popover, Transition } from "@headlessui/react";
+import { MdFilterAlt } from "react-icons/md";
 import { FilterClassContext } from "../../../store/FilterClass";
-
 export default function FilterKelolaKelas() {
   const [selected, setSelected] = useState(null);
   const { filterClass, setFilterClass } = useContext(FilterClassContext);
@@ -32,14 +32,10 @@ export default function FilterKelolaKelas() {
   return (
     <Popover className="relative">
       <Popover.Button
-        className={`bg-neutral-01 border-2 border-darkblue-05 rounded-[18px] py-[3px] px-[10px] w-[150px] h-[34px] mr-[16px] my-[10px] inline-flex items-center gap-x-12 text-sm font-semibold leading-6 text-gray-900 justify-center`}
+        className={`bg-white text-darkblue-05  border-darkblue-05 hover:bg-darkblue-05 hover:text-white  border-2 rounded-[6px] py-[3px] px-[10px] w-[100px] h-[34px] mr-[16px] my-[10px] inline-flex items-center gap-x-2  text-sm font-semibold leading-6  justify-center`}
       >
+        <MdFilterAlt className="fill-current h-[24px] w-[24px] transition-colors duration-100 ease-in-out group-hover:text-white" />
         <span>Filter</span>
-        <img
-          src="/images/prefix-wrapper.png"
-          alt=""
-          className="w-[24px] h-[24px] "
-        />
       </Popover.Button>
 
       <Transition
