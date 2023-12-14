@@ -168,7 +168,7 @@ const paymentFinalize = async (req, res, next) => {
       || !gross_amount
       || !signature_key
     ) {
-      return res.status(200).json({
+      return res.status(400).json({
         status: 'Failed',
         message: 'Semua field harus diisi',
       })
@@ -176,8 +176,8 @@ const paymentFinalize = async (req, res, next) => {
 
     const transaction = await Transaction.findByPk(order_id)
     if (!transaction) {
-      return res.status(200).json({
-        status: 'Success',
+      return res.status(404).json({
+        status: 'Failed',
         message: 'Transaksi tidak ditemukan',
       })
     }
