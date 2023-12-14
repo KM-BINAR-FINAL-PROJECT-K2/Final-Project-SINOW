@@ -31,7 +31,6 @@ export default function CRUD() {
 
   const { handleSearchButtonClick } = useContext(PlaceholderContext);
 
-  console.log(classSinow);
   useEffect(() => {
     const getClasses = async () => {
       try {
