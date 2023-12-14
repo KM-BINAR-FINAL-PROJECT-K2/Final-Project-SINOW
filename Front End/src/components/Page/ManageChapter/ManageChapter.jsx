@@ -808,6 +808,7 @@ export default function ManageChapter() {
                                             className="w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow overflow-hidden"
                                           >
                                             <video
+                                              className="w-full"
                                               controls={true}
                                               src={module.videoUrl}
                                             ></video>
