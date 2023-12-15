@@ -35,7 +35,7 @@ module.exports = {
         categoryId: 3,
         description: `Selamat datang di kursus yang akan membawa Anda melewati perjalanan menakjubkan dalam dunia pengembangan web! Apakah Anda belum memiliki latar belakang di dunia IT? Tidak masalah! Kursus ini dirancang khusus untuk para pemberani yang ingin menjelajahi keindahan pengembangan front-end menggunakan React JS tanpa harus menjadi ahli teknologi informasi.\n\nDalam petualangan ini, kami akan membimbing Anda dari dasar-dasar, memberikan pemahaman yang kokoh tentang React JS, dan membekali Anda dengan keterampilan untuk membangun antarmuka web yang menakjubkan dan dinamis. Bersiaplah untuk merasakan sensasi code-reactivity dan menyaksikan aplikasi web Anda menjadi hidup!\n\nApa pun latar belakang Anda, dari seniman hingga petualang baru di dunia IT, kursus ini akan membuka pintu ke dunia React JS dengan pendekatan yang ramah dan bersemangat. Saksikan bagaimana ide-ide kreatif Anda menjadi kenyataan di web!\n\nAyo, bersiaplah untuk mengejar impian web development Anda tanpa batasan, tanpa batasan background IT! `,
         classCode: 'FSW100',
-        totalModule: 9,
+        totalModule: 7,
         type: 'gratis',
         price: 0,
         promo: 0,

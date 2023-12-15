@@ -1145,6 +1145,14 @@
               "type": "string",
               "enum": ["terbaru", "terpopuler", "promo"]
             }
+          },
+          {
+            "in": "query",
+            "name": "progress",
+            "schema": {
+              "type": "string",
+              "enum": ["inProgress", "completed"]
+            }
           }
         ],
         "responses": {

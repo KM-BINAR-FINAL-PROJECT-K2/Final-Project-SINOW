@@ -27,9 +27,23 @@ module.exports = (sequelize, DataTypes) => {
     {
       userId: DataTypes.INTEGER,
       courseId: DataTypes.INTEGER,
-      isAccessible: DataTypes.BOOLEAN,
+      isAccessible: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+      },
       lastSeen: DataTypes.DATE,
-      progress: DataTypes.INTEGER,
+      progress: {
+        type: DataTypes.STRING,
+        defaultValue: 'inProgress',
+      },
+      progressPercentage: {
+        type: DataTypes.INTEGER,
+        defaultValue: 0,
+        validate: {
+          min: 0,
+          max: 100,
+        },
+      },
     },
     {
       hooks: {

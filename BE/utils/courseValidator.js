@@ -108,10 +108,20 @@ const getCourseOrder = (sortBy, next) => {
   return courseOrder
 }
 
+const validateProgress = (progress, next) => {
+  if (progress !== 'inProgress' && progress !== 'completed') {
+    return next(
+      new ApiError('progress harus \'inProgress\' atau \'completed\'', 400),
+    )
+  }
+  return true
+}
+
 module.exports = {
   validateCategory,
   validateLevel,
   validateType,
   getCourseOrder,
   validateNumericFields,
+  validateProgress,
 }

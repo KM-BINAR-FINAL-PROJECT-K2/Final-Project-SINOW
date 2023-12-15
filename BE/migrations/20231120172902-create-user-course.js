@@ -18,6 +18,10 @@ module.exports = {
         type: Sequelize.BOOLEAN,
       },
       progress: {
+        type: Sequelize.STRING,
+        defaultValue: 'inProgress',
+      },
+      progressPercentage: {
         type: Sequelize.INTEGER,
       },
       lastSeen: {
