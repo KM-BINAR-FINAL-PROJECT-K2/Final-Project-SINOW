@@ -51,7 +51,7 @@ const userCourseRelation = (id) => {
           {
             model: Chapter,
             as: 'chapters',
-            attributes: ['id', 'no', 'name'],
+            attributes: ['id', 'no', 'name', 'totalDuration'],
             include: [
               {
                 model: UserModule,

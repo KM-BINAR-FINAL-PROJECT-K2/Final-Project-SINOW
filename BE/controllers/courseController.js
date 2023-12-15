@@ -211,7 +211,7 @@ const getCourseById = async (req, res, next) => {
         {
           model: Chapter,
           as: 'chapters',
-          attributes: ['id', 'no', 'name'],
+          attributes: ['id', 'no', 'name', 'totalDuration'],
           include: [
             {
               model: Module,
