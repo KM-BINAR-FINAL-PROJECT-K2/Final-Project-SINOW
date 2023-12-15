@@ -21,6 +21,7 @@ const {
   validateCategory,
   validateLevel,
   validateType,
+  validateProgress,
   getCourseOrder,
 } = require('../utils/courseValidator')
 
@@ -157,28 +158,21 @@ const updateMyDetails = async (req, res, next) => {
     }
 
     if (Object.keys(updateDataUser).length !== 0) {
-      const [rowCountUser, [updatedUser]] = await User.update(updateDataUser, {
+      await User.update(updateDataUser, {
         where: {
           id,
         },
         returning: true,
       })
-
-      if (rowCountUser === 0 && !updatedUser) {
-        return next(new ApiError('Gagal update user', 500))
-      }
     }
 
     if (updateDataAuth.email || updateDataAuth.phoneNumber) {
-      const [rowCountAuth, [updatedAuth]] = await Auth.update(updateDataAuth, {
+      await Auth.update(updateDataAuth, {
         where: {
           id: user.Auth.id,
         },
         returning: true,
       })
-      if (rowCountAuth === 0 && !updatedAuth) {
-        return next(new ApiError('Gagal update auth', 500))
-      }
     }
 
     const newUser = await User.findByPk(id, {
@@ -251,20 +245,9 @@ const changeMyPassword = async (req, res, next) => {
 
     const hashedPassword = await bcrypt.hash(newPassword, 10)
 
-    const [rowCountAuth, [updatedAuth]] = await Auth.update(
-      {
-        password: hashedPassword,
-      },
-      {
-        where: {
-          userId: user.id,
-        },
-        returning: true,
-      },
-    )
-    if (rowCountAuth === 0 && !updatedAuth) {
-      return next(new ApiError('Gagal update auth', 500))
-    }
+    await auth.update({
+      password: hashedPassword,
+    })
 
     await createNotification(
       'Notifikasi',
@@ -317,27 +300,14 @@ const openNotification = async (req, res, next) => {
       return next(new ApiError('Akses ditolak', 403))
     }
 
-    const [rowCount, [updatedNotification]] = await Notification.update(
-      {
-        isRead: true,
-      },
-      {
-        where: {
-          id,
-          userId,
-        },
-        returning: true,
-      },
-    )
-
-    if (rowCount === 0 && !updatedNotification) {
-      return next(new ApiError('Gagal mengupdate notifikasi'))
-    }
+    notification.update({
+      isRead: true,
+    })
 
     return res.status(200).json({
       status: 'Success',
       message: 'Berhasil membuka notifikasi',
-      data: updatedNotification,
+      data: notification,
     })
   } catch (error) {
     return next(new ApiError(error.message, 500))
@@ -374,7 +344,7 @@ const getMyCourses = async (req, res, next) => {
     const { user } = req
 
     const {
-      search, category, level, type, sortBy,
+      search, category, level, type, sortBy, progress,
     } = req.query
     const where = {}
 
@@ -409,10 +379,15 @@ const getMyCourses = async (req, res, next) => {
       where.type = type
     }
 
+    if (progress) {
+      validateProgress(progress, next)
+    }
+
     const course = await UserCourse.findAll({
       where: {
         userId: user.id,
         isAccessible: true,
+        progress: progress || { [Op.ne]: null },
       },
       include: [
         {
@@ -482,7 +457,8 @@ const openCourse = async (req, res, next) => {
       userId: user.id,
       courseId,
       isAccessible: course.type === 'gratis',
-      progress: 0,
+      progress: 'inProgress',
+      progressPercentage: 0,
       lastSeen: new Date(),
     })
 
@@ -622,10 +598,7 @@ const openUserModule = async (req, res, next) => {
       )
     }
 
-    if (
-      (userModule.status === 'terbuka' || userModule.status === 'dipelajari')
-      && userCourse.isAccessible === true
-    ) {
+    if (userModule.status === 'terbuka' && userCourse.isAccessible === true) {
       const nextUserModule = mergedUserModules[indexUserModule + 1]
       if (nextUserModule) {
         await nextUserModule.update({
@@ -633,12 +606,18 @@ const openUserModule = async (req, res, next) => {
         })
       }
 
-      const progress = Math.ceil(
+      const progressPercentage = Math.ceil(
         ((totalModuleStudied + 1) / mergedUserModules.length) * 100,
       )
 
+      if (progressPercentage === 100) {
+        await userCourse.update({
+          progress: 'completed',
+        })
+      }
+
       await userCourse.update({
-        progress,
+        progressPercentage,
       })
 
       await userModule.update({

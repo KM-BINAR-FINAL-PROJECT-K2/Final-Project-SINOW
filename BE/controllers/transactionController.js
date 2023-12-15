@@ -74,7 +74,8 @@ const createTransaction = async (req, res, next) => {
         userId: user.id,
         courseId,
         isAccessible: false,
-        progress: 0,
+        progress: 'inProgress',
+        progressPercentage: 0,
         lastSeen: new Date(),
       },
     })
@@ -123,7 +124,7 @@ const createTransaction = async (req, res, next) => {
       ],
       customer_details: {
         first_name: user.name,
-        email: user.email,
+        email: user.Auth.email,
         phone: user.Auth.phoneNumber,
         customer_details_required_fields: ['first_name', 'phone', 'email'],
       },
