@@ -68,7 +68,7 @@ export default function CRUD() {
   return (
     <>
       <Navigation>
-        <section className="mx-8 lg:mx-16 flex justify-around gap-16 flex-wrap mb-[54px]">
+        <section className="mx-8 lg:mx-16 flex justify-around gap-6 flex-wrap mb-[54px]">
           <Card
             color={"bg-darkblue-03"}
             quantity={totalQuantity}

@@ -4,7 +4,7 @@ export default function Card({ color, quantity, description }) {
     <div
       className={`flex-3 md:flex-1 ${color} p-7 rounded-[8px] w-full xl:h-[118px] shadow-lg`}
     >
-      <div className="flex gap-8 justify-center items-center flex-wrap">
+      <div className="flex gap-8 items-center flex-wrap">
         <span className="bg-neutral-01 p-4 rounded-full">
           <img
             src="/images/logo-n-maskot/Sticker-1.png"

@@ -7,7 +7,7 @@ export default {
       colors: {
         ...defaultTheme.colors,
         darkblue: {
-          "05": "#6148FF",
+          "05": "#00CCF4",
           "04": "#6148FF57",
           "03": "#489CFF",
           "02": "#D0B7E6",

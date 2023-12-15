@@ -25,13 +25,26 @@ export default function SmallSidebar() {
         )}
         <button
           onClick={toggleNav}
-          className="absolute top-0 z-10 p-0 -ml-1 mt-2"
+          className={`absolute top-0 z-10 p-0  mt-[15px] ${
+            showNav ? "ml-[42px]" : "-ml-[8px]"
+          }`}
         >
-          <img
-            src="/images/slide.png"
+          {/* <img
+            src="/images/slide.svg"
             alt=""
             className={`w-[24px] h-[34px] opacity-100 md:opacity-0`}
-          />
+          >
+          </img> */}
+          <svg
+            width="30"
+            height="30"
+            viewBox="0 0 15 15"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            className={`opacity-100 md:opacity-0`}
+          >
+            <path d="M12 7.5L4 0V15L12 7.5Z" fill="white" />
+          </svg>
         </button>
 
         <nav
