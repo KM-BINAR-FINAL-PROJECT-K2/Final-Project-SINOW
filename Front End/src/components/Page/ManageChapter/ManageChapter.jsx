@@ -310,7 +310,7 @@ export default function ManageChapter() {
           showDenyButton: true,
           confirmButtonText: "Hapus",
           confirmButtonColor: "#FF0000",
-          denyButtonColor: "#6148FF",
+          denyButtonColor: "#73CA5C",
           denyButtonText: `Batalkan`,
         }).then(async (result) => {
           if (result.isConfirmed) {
@@ -385,7 +385,7 @@ export default function ManageChapter() {
           showDenyButton: true,
           confirmButtonText: "Hapus",
           confirmButtonColor: "#FF0000",
-          denyButtonColor: "#6148FF",
+          denyButtonColor: "#73CA5C",
           denyButtonText: `Batalkan`,
         }).then(async (result) => {
           if (result.isConfirmed) {
@@ -530,7 +530,7 @@ export default function ManageChapter() {
                     {classData.classCode} | {classData.category.name}
                   </p>
                   <button
-                    className="text-white bg-darkblue-05 hover:bg-blue-800  focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2"
+                    className="text-white bg-darkblue-05 hover:bg-sky-500  focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2"
                     onClick={handleAddForm}
                   >
                     Tambah
@@ -601,7 +601,7 @@ export default function ManageChapter() {
                         name="name"
                       />
                     </div>
-                    <button className="px-[16px] py-[12px] rounded-[16px] border-darkblue-05 text-neutral-01 bg-darkblue-05 border w-full hover:bg-blue-800">
+                    <button className="px-[16px] py-[12px] rounded-[16px] border-darkblue-05 text-neutral-01 bg-darkblue-05 border w-full hover:bg-sky-500">
                       Tambah Chapter
                     </button>
                   </form>
@@ -702,7 +702,7 @@ export default function ManageChapter() {
                           ))}
                         </select>
                       </div>
-                      <button className="px-[16px] py-[12px] rounded-[16px] border-darkblue-05 text-neutral-01 bg-darkblue-05 border w-full hover:bg-blue-800">
+                      <button className="px-[16px] py-[12px] rounded-[16px] border-darkblue-05 text-neutral-01 bg-darkblue-05 border w-full hover:bg-sky-500">
                         Edit Chapter
                       </button>
                     </form>
@@ -821,7 +821,7 @@ export default function ManageChapter() {
                                               </span>
                                               <hr className="my-3 border border-gray-300" />
                                               <div className="flex items-center justify-end gap-3">
-                                                <button className="text-white bg-darkblue-05 hover:bg-blue-800  focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center ">
+                                                <button className="text-white bg-darkblue-05 hover:bg-sky-500  focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center ">
                                                   Ubah
                                                 </button>
                                                 <button
