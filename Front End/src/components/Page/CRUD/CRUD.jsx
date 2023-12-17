@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react/prop-types */
 import axios from "axios";
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import Card from "../../Molecule/Card/Card";
 import Navigation from "../../Template/Navigation/Navigation";
 import ClassTable from "../../Molecule/ClassTable/ClassTable";
@@ -28,8 +28,37 @@ export default function CRUD() {
   const { setIsError } = useContext(ErrorContext);
   const { query } = useContext(QueryContext);
   const { filterClass } = useContext(FilterClassContext);
-
   const { handleSearchButtonClick } = useContext(PlaceholderContext);
+  const [informationCard, setInformationCard] = useState({
+    users: 0,
+    courses: 0,
+    premiumClass: 0,
+  });
+
+  useEffect(() => {
+    const getClassesInformation = async () => {
+      try {
+        setIsLoading(true);
+        setIsError("");
+
+        const res = await axios.get(`http://localhost:3000/api/v1/courses`);
+        setInformationCard({
+          users: 0,
+          courses: res.data.data.length,
+          premiumClass: res.data.data.filter((item) => item.type === "premium")
+            .length,
+        });
+      } catch (error) {
+        setIsError(
+          error.response ? error.response.data.message : "Kesalahan Jaringan"
+        );
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    getClassesInformation();
+  }, []);
 
   useEffect(() => {
     const getClasses = async () => {
@@ -37,8 +66,6 @@ export default function CRUD() {
         setClassSinow([]);
         setIsLoading(true);
         setIsError("");
-
-        console.log(filterClass);
 
         const res = await axios.get(
           `http://localhost:3000/api/v1/courses?search=${query}${
@@ -61,29 +88,23 @@ export default function CRUD() {
     };
   }, [query, filterClass]);
 
-  const totalQuantity = classSinow.reduce((total, item) => {
-    return total + item.totalUser;
-  }, 0);
-
   return (
     <>
       <Navigation>
         <section className="mx-8 lg:mx-16 flex justify-around gap-6 flex-wrap mb-[54px]">
           <Card
             color={"bg-darkblue-03"}
-            quantity={totalQuantity}
+            quantity={informationCard.users}
             description={"Pengguna Aktif"}
           />
           <Card
             color={"bg-alert-success"}
-            quantity={classSinow.length}
+            quantity={informationCard.courses}
             description={"Kelas Terdaftar"}
           />
           <Card
             color={"bg-darkblue-05"}
-            quantity={
-              classSinow.filter((item) => item.type === "premium").length
-            }
+            quantity={informationCard.premiumClass}
             description={"Kelas Premium"}
           />
         </section>
