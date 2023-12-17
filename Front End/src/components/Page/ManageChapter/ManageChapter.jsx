@@ -75,8 +75,6 @@ export default function ManageChapter() {
     });
   };
 
-  console.log(moduleForm);
-
   useEffect(() => {
     try {
       if (!form || !form.name || !form.no) {
@@ -632,7 +630,7 @@ export default function ManageChapter() {
             {chapters && classData && (
               <>
                 <div className="flex justify-between items-center mb-4 mx-2">
-                  <p className="">
+                  <p className="text-sinow-05">
                     {classData.classCode} | {classData.category.name}
                   </p>
                   <button
