@@ -424,6 +424,10 @@ const openCourse = async (req, res, next) => {
     const { user } = req
     const { courseId } = req.params
 
+    if (!courseId) {
+      return next(new ApiError('courseId harus diisi', 400))
+    }
+
     const course = await Course.findByPk(courseId)
 
     if (!course) {

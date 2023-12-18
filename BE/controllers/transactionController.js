@@ -1,7 +1,14 @@
 /* eslint-disable camelcase */
 
 const Midtrans = require('midtrans-client')
-const { Transaction, Course, UserCourse } = require('../models')
+const {
+  Transaction,
+  Course,
+  UserCourse,
+  UserModule,
+  Chapter,
+  Module,
+} = require('../models')
 const ApiError = require('../utils/ApiError')
 const generateSHA512 = require('../utils/generateSHA512')
 
@@ -65,25 +72,80 @@ const createTransaction = async (req, res, next) => {
       return next(new ApiError('Bukan course premium', 400))
     }
 
-    const [checkUserCourse] = await UserCourse.findOrCreate({
+    const checkUserCourse = await UserCourse.findOne({
       where: {
         userId: user.id,
         courseId,
       },
-      defaults: {
+    })
+
+    if (checkUserCourse) {
+      if (checkUserCourse.isAccessible) {
+        return next(
+          new ApiError('Anda sudah memiliki akses untuk course ini', 400),
+        )
+      }
+    }
+
+    if (!checkUserCourse) {
+      const createUserCourse = await UserCourse.create({
         userId: user.id,
         courseId,
         isAccessible: false,
         progress: 'inProgress',
         progressPercentage: 0,
         lastSeen: new Date(),
-      },
-    })
+      })
 
-    if (checkUserCourse.isAccessible) {
-      return next(
-        new ApiError('Anda sudah memiliki akses untuk course ini', 400),
-      )
+      const userCourseBuffer = await UserCourse.findByPk(createUserCourse.id, {
+        include: [
+          {
+            model: Course,
+            include: [
+              {
+                model: Chapter,
+                as: 'chapters',
+                attributes: ['id', 'no', 'name'],
+                include: [
+                  {
+                    model: Module,
+                    as: 'modules',
+                    attributes: ['id', 'no', 'name', 'videoUrl', 'duration'],
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      })
+
+      if (userCourseBuffer.Course.chapters.length > 0) {
+        await Promise.all(
+          userCourseBuffer.Course.chapters.map(
+            async (chapter, chapterIndex) => {
+              if (chapter.modules.length > 0) {
+                await Promise.all(
+                  chapter.modules.map(async (module, moduleIndex) => {
+                    try {
+                      await UserModule.create({
+                        userId: user.id,
+                        moduleId: module.id,
+                        chapterId: chapter.id,
+                        status:
+                          moduleIndex === 0 && chapterIndex === 0
+                            ? 'terbuka'
+                            : 'terkunci',
+                      })
+                    } catch (error) {
+                      throw next(new ApiError(error.message, 500))
+                    }
+                  }),
+                )
+              }
+            },
+          ),
+        )
+      }
     }
 
     const checkTransaction = await Transaction.findOne({
