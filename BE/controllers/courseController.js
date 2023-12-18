@@ -33,7 +33,7 @@ const createCourse = async (req, res, next) => {
       classCode,
       type,
       price = 0,
-      promo = 0,
+      promoDiscountPercentage = 0,
       courseBy,
     } = req.body
 
@@ -61,14 +61,14 @@ const createCourse = async (req, res, next) => {
 
     validateLevel(level, next)
     validateType(type, next)
-    validateNumericFields({ rating, price, promo }, next)
+    validateNumericFields({ rating, price, promoDiscountPercentage }, next)
     await validateCategory(categoryId, next)
 
     if (rating < 0 || rating > 5) {
       return next(new ApiError('Rating harus antara 0 dan 5', 400))
     }
 
-    if (promo < 0 || promo > 100) {
+    if (promoDiscountPercentage < 0 || promoDiscountPercentage > 100) {
       return next(new ApiError('Promo harus antara 0 dan 100', 400))
     }
 
@@ -96,7 +96,7 @@ const createCourse = async (req, res, next) => {
       totalModule: 0,
       type,
       price: type === 'gratis' ? 0 : price,
-      promo: Math.floor(promo),
+      promoDiscountPercentage: Math.floor(promoDiscountPercentage),
       totalUser: 0,
       imageUrl,
       videoPreviewUrl: videoUrl,
@@ -254,7 +254,7 @@ const updateCourse = async (req, res, next) => {
       classCode,
       type,
       price,
-      promo,
+      promoDiscountPercentage,
       courseBy,
     } = req.body
 
@@ -316,12 +316,12 @@ const updateCourse = async (req, res, next) => {
       updateData.type = type
     }
 
-    if (promo) {
-      if (promo < 0 || promo > 100) {
+    if (promoDiscountPercentage) {
+      if (promoDiscountPercentage < 0 || promoDiscountPercentage > 100) {
         return next(new ApiError('Promo harus antara 0 dan 100', 400))
       }
-      validateNumericFields({ promo }, next)
-      updateData.promo = promo
+      validateNumericFields({ promoDiscountPercentage }, next)
+      updateData.promoDiscountPercentage = promoDiscountPercentage
     }
 
     if (req.files || Object.keys(req.files).length > 0) {

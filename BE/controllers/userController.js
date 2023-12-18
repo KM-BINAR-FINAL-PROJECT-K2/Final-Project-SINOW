@@ -650,9 +650,9 @@ const userTransaction = async (req, res, next) => {
       include: [
         {
           model: Course,
-          attributes: ['id', 'name'],
         },
       ],
+      order: [['createdAt', 'DESC']],
     })
 
     if (transactions.length === 0) {
@@ -680,10 +680,9 @@ const openUserTransaction = async (req, res, next) => {
       include: [
         {
           model: Course,
-          attributes: ['id', 'name'],
         },
       ],
-      order: ['createdAt', 'DESC'],
+      order: [['createdAt', 'DESC']],
     })
 
     if (!transaction) {

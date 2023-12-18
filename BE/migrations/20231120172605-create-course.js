@@ -46,7 +46,7 @@ module.exports = {
       price: {
         type: Sequelize.INTEGER,
       },
-      promo: {
+      promoDiscountPercentage: {
         type: Sequelize.INTEGER,
         defaultValue: 0,
       },
