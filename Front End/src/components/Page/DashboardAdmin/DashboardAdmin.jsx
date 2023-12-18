@@ -5,12 +5,14 @@ import Card from "../../Molecule/Card/Card";
 import PaymentTable from "../../Molecule/PaymentTable/PaymentTable";
 import { LoaderContext } from "../../../store/Loader";
 import FilterKelolaDashboard from "../../Molecule/Filter/FilterKelolaDashboard";
-import { PlaceholderContext } from "../../../store/PlaceholderStore";
+import { SearchValueContext } from "../../../store/SearchValue";
+import { ImSearch } from "react-icons/im";
 
 export default function DashboadAdmin() {
   const { setIsLoading } = useContext(LoaderContext);
+  const { setSearchValue } = useContext(SearchValueContext);
+  const [showSearchInput, setShowSearchInput] = useState(false);
   const [error, setError] = useState("");
-  const { handleSearchButtonClick } = useContext(PlaceholderContext);
   useEffect(() => {
     const getClasses = async () => {
       try {
@@ -37,9 +39,17 @@ export default function DashboadAdmin() {
   const totalQuantity = classSinow.reduce((total, item) => {
     return total + item.totalUser;
   }, 0);
+
+  const handleShowSearchInput = () => {
+    setShowSearchInput(!showSearchInput);
+  };
+
+  const handleSearchButtonClick = (value) => {
+    setSearchValue(value);
+  };
   return (
     <Navigation>
-      <section className="mx-8 lg:mx-16 flex justify-around gap-16 flex-wrap mb-[54px]">
+      <section className="mx-8 lg:mx-16 flex justify-around gap-6 flex-wrap mb-[54px]">
         <Card
           color={"bg-darkblue-03"}
           quantity={totalQuantity}
@@ -65,13 +75,37 @@ export default function DashboadAdmin() {
 
           <div className="flex">
             <FilterKelolaDashboard />
-            <button className="" onClick={handleSearchButtonClick}>
-              <img
-                src="/images/search-icon-2.png"
-                alt=""
-                className=" w-[24px] h-[24px] inline-block"
-              />
-            </button>
+            {showSearchInput && (
+              <div className="flex items-center">
+                <input
+                  type="text"
+                  className="border-2 text-darkblue-05 border-sinow-05 rounded-md focus:ring-sinow-05 outline-none py-1 px-2 placeholder-sinow-05"
+                  placeholder="Cari..."
+                  onChange={(e) => handleSearchButtonClick(e.target.value)}
+                />
+                <button onClick={handleShowSearchInput}>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth="1.5"
+                    stroke="rgb(0 204 244)"
+                    className="w-6 h-6"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M6 18L18 6M6 6l12 12"
+                    />
+                  </svg>
+                </button>
+              </div>
+            )}
+            {!showSearchInput && (
+              <button className="" onClick={handleShowSearchInput}>
+                <ImSearch className="fill-darkblue-05 h-[24px] w-[24px]" />
+              </button>
+            )}
           </div>
         </div>
       </section>

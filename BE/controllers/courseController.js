@@ -116,9 +116,7 @@ const createCourse = async (req, res, next) => {
 
 const getAllCourse = async (req, res, next) => {
   try {
-    const {
-      search, category, level, type, sortBy,
-    } = req.query
+    const { search, category, level, type, sortBy } = req.query
     const where = {}
 
     if (search) {
@@ -332,7 +330,7 @@ const updateCourse = async (req, res, next) => {
 
       if (req.files.video) {
         const { videoUrl } = await uploadVideo(req.files.video[0], next)
-        updateData.videoUrl = videoUrl
+        updateData.videoPreviewUrl = videoUrl
       }
     }
 

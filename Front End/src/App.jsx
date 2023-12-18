@@ -9,6 +9,7 @@ import AddClass from "./components/Page/AddClass/AddClass";
 import ManageChapter from "./components/Page/ManageChapter/ManageChapter";
 import ManageClassContextProvider from "./store/ManageClassStore";
 import LandingPage from "./components/Page/LandingPage/LandingPage";
+import SearchValueContextProvider from "./store/SearchValue";
 
 export default function App() {
   return (
@@ -16,6 +17,14 @@ export default function App() {
       <Routes>
         <Route path="/landing-page" element={<LandingPage />} />
         <Route path="/dashboard" element={<DashboadAdmin />} />
+        <Route
+          path="/dashboard"
+          element={
+            <SearchValueContextProvider>
+              <DashboadAdmin />
+            </SearchValueContextProvider>
+          }
+        />
         <Route
           path="/kelola-kelas"
           element={

@@ -7,18 +7,13 @@ import { ClassContext } from "../../../store/ClassStore";
 import { InfoClassContext } from "../../../store/InfoClassUI";
 import { RemoveClassContext } from "../../../store/RemoveClassUI";
 import { ErrorContext } from "../../../store/Error";
-import { RotateContext } from "../../../store/RotateAction";
 export default function ClassTable() {
   const { isLoading } = useContext(LoaderContext);
   const { isError } = useContext(ErrorContext);
   const { classSinow } = useContext(ClassContext);
   const { toggleShowInfo } = useContext(InfoClassContext);
   const { toggleShowWarning } = useContext(RemoveClassContext);
-  const { rotate, setRotate } = useContext(RotateContext);
 
-  const toggleRotateIcon = () => {
-    setRotate((prevRotated) => !prevRotated);
-  };
   return (
     <table className="w-full snap-mandatory snap-x table-auto">
       <thead className="sticky top-0 bg-lightblue-05 z-10">
@@ -41,28 +36,7 @@ export default function ClassTable() {
           <th className="px-4 py-2 text-[12px] font-semibold w-1/7 hidden lg:table-cell">
             Harga Kelas
           </th>
-          <th className=" px-4 py-2 text-[12px] font-semibold w-1/7 flex items-center justify-between gap-2 lg:mt-0 mt-1">
-            Aksi{" "}
-            <span className="inline-block">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth="1.5"
-                stroke="currentColor"
-                className={`hover:cursor-pointer w-6 h-6 transition-all ${
-                  rotate ? "rotate-180" : "rotate-0"
-                }`}
-                onClick={toggleRotateIcon}
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99"
-                />
-              </svg>
-            </span>
-          </th>
+          <th className=" px-4 py-2 text-[12px] font-semibold w-1/7">Aksi</th>
         </tr>
       </thead>
       <tbody>
@@ -137,9 +111,7 @@ export default function ClassTable() {
                 {rupiah(classItem.price)}
               </td>
               <td
-                className={`px-4 py-2 table-cell object-center text-[10px] font-bold ${
-                  rotate ? "block" : "hidden"
-                }`}
+                className={`px-4 py-2 table-cell object-center text-[10px] font-bold`}
               >
                 <a
                   className="m-2 py-[5px] font-bold text-neutral-01 inline-block rounded-[4px] w-[50px] hover:bg-neutral-02 bg-alert-success text-center leading-[14px] shadow-md"
@@ -159,20 +131,12 @@ export default function ClassTable() {
                 >
                   Info
                 </button>
-              </td>
-              <td
-                className={`px-4 text-[10px] font-bold border-blue-600 h-[150px] flex items-center justify-center ${
-                  !rotate ? "block" : "hidden"
-                }`}
-              >
-                <div className=" text-center flex items-center justify-center border-red-500">
-                  <a
-                    className=" font-bold py-[10px] shadow-md px-[20px] text-neutral-01 rounded-[6px] text-center bg-darkblue-05"
-                    href={`/kelola-chapter/${classItem.id}`}
-                  >
-                    Kelola Chapter
-                  </a>
-                </div>
+                <a
+                  className="m-2 py-[5px] font-bold text-neutral-01 inline-block rounded-[4px] hover:bg-neutral-02 bg-sinow-05 w-[50px] text-center leading-[14px] shadow-md cursor-pointer"
+                  href={`/kelola-chapter/${classItem.id}`}
+                >
+                  Chapter
+                </a>
               </td>
             </tr>
           ))}
