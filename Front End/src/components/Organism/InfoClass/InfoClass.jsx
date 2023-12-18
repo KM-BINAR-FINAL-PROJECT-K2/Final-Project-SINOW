@@ -12,7 +12,6 @@ export default function InfoClass({ id }) {
   const { classSinow } = useContext(ClassContext);
   const { toggleShowInfo } = useContext(InfoClassContext);
   const details = classSinow.find((item) => item.id === id);
-  console.log(details);
   const formattedDescription = details.description
     .split("\n")
     .map((paragraph, index) => (
@@ -202,6 +201,18 @@ export default function InfoClass({ id }) {
                 <p className="font-normal text-[13px] text-gray-600">
                   {formattedDescription}
                 </p>
+                <div className="mb-[15px]">
+                  <p className="font-semibold text-[13px] text-gray-600 indent-6 mb-2">
+                    Benefit yang didapat di kelas ini adalah:
+                  </p>
+                  <div className="font-normal text-[13px] text-gray-600 ml-4">
+                    <ol className="list-decimal">
+                      {details.benefits.map((benefit) => (
+                        <li key={benefit.id}>{benefit.description}</li>
+                      ))}
+                    </ol>
+                  </div>
+                </div>
               </div>
 
               <div className="mb-[15px]  p-3 border border-gray-300 rounded-md">
