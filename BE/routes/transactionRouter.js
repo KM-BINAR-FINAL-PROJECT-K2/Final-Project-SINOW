@@ -12,6 +12,6 @@ router.get(
   Transaction.getTransactionById,
 )
 router.post('/', authenticate, Transaction.createTransaction)
-router.post('/finalize', Transaction.paymentFinalize)
+router.post('/payment-callback', Transaction.paymentCallback)
 
 module.exports = router

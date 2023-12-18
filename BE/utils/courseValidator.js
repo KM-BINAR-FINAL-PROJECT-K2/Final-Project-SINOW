@@ -101,7 +101,7 @@ const getCourseOrder = (sortBy, next) => {
     } else if (sortBy === 'terpopuler') {
       courseOrder.push(['totalUser', 'DESC'])
     } else if (sortBy === 'promo') {
-      courseOrder.push(['promo', 'DESC'])
+      courseOrder.push(['promoDiscountPercentage', 'DESC'])
     }
   }
 

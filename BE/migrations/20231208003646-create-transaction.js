@@ -4,9 +4,9 @@ module.exports = {
     await queryInterface.createTable('Transactions', {
       id: {
         allowNull: false,
-        autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER,
+        type: Sequelize.UUID,
+        defaultValue: Sequelize.UUID,
       },
       userId: {
         type: Sequelize.INTEGER,
@@ -20,11 +20,27 @@ module.exports = {
       totalPrice: {
         type: Sequelize.INTEGER,
       },
-      promo: {
+      promoDiscountPercentage: {
         type: Sequelize.INTEGER,
+      },
+      taxPercentage: {
+        type: Sequelize.INTEGER,
+        defaultValue: 11,
+      },
+      paymentUrl: {
+        type: Sequelize.STRING,
+      },
+      paymentMethod: {
+        type: Sequelize.STRING,
       },
       status: {
         type: Sequelize.STRING,
+      },
+      paidAt: {
+        type: Sequelize.DATE,
+      },
+      expiredAt: {
+        type: Sequelize.DATE,
       },
       createdAt: {
         allowNull: false,

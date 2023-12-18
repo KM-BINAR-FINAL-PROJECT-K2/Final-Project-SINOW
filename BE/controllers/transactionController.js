@@ -94,10 +94,43 @@ const createTransaction = async (req, res, next) => {
     })
 
     if (checkTransaction) {
-      return next(new ApiError('Sudah ada transaksi untuk course ini', 400))
+      if (checkTransaction.status === 'SUDAH_BAYAR') {
+        return next(new ApiError('Anda sudah melakukan transaksi', 400))
+      }
+      if (checkTransaction.status === 'BELUM_BAYAR') {
+        if (checkTransaction.expiredAt < new Date()) {
+          await checkTransaction.update({
+            status: 'KADALUARSA',
+          })
+          return next(
+            new ApiError(
+              'Transaksi sudah kadaluarsa, silahkan buat ulang transaksi',
+              400,
+            ),
+          )
+        }
+
+        return res.status(400).json({
+          status: 'Failed',
+          message: 'Transaksi sudah ada silahkan melakukan pembayaran',
+          data: {
+            transactionDetail: checkTransaction,
+            paymentUrl: checkTransaction.paymentUrl,
+          },
+        })
+      }
+      if (checkTransaction.status === 'KADALUARSA') {
+        return next(
+          new ApiError(
+            'Transaksi sudah kadaluarsa, silahkan buat ulang transaksi',
+            400,
+          ),
+        )
+      }
     }
 
-    const promoPrice = course.price - (course.price * course.promo) / 100
+    const promoPrice = course.price - (course.price * course.promoDiscountPercentage) / 100
+
     const totalPrice = promoPrice + (promoPrice * 11) / 100
 
     const newTransaction = await Transaction.create({
@@ -105,8 +138,12 @@ const createTransaction = async (req, res, next) => {
       courseId,
       coursePrice: course.price,
       totalPrice,
-      promo: course.promo,
-      status: 'BELUM BAYAR',
+      promoDiscountPercentage: course.promoDiscountPercentage,
+      taxPercentage: 11,
+      paymentMethod: null,
+      status: 'BELUM_BAYAR',
+      paidAt: null,
+      expiredAt: new Date(Date.now() + 1000 * 60 * 60 * 24),
     })
 
     const courseName = course.name.length > 30
@@ -137,6 +174,16 @@ const createTransaction = async (req, res, next) => {
 
     const midtransResponseData = await snap.createTransaction(parameter)
 
+    if (!midtransResponseData) {
+      newTransaction.destroy()
+
+      return next(new ApiError('Gagal membuat transaksi', 500))
+    }
+
+    await newTransaction.update({
+      paymentUrl: midtransResponseData.redirect_url,
+    })
+
     return res.status(201).json({
       status: 'Success',
       message: 'sukses membuat transaksi',
@@ -150,7 +197,7 @@ const createTransaction = async (req, res, next) => {
   }
 }
 
-const paymentFinalize = async (req, res, next) => {
+const paymentCallback = async (req, res, next) => {
   try {
     const {
       transaction_status,
@@ -159,6 +206,7 @@ const paymentFinalize = async (req, res, next) => {
       status_code,
       gross_amount,
       signature_key,
+      payment_type,
     } = req.body
 
     if (
@@ -176,6 +224,7 @@ const paymentFinalize = async (req, res, next) => {
     }
 
     const transaction = await Transaction.findByPk(order_id)
+
     if (!transaction) {
       return res.status(404).json({
         status: 'Failed',
@@ -204,7 +253,7 @@ const paymentFinalize = async (req, res, next) => {
       })
     }
 
-    if (transaction.status === 'SUDAH BAYAR') {
+    if (transaction.status === 'SUDAH_BAYAR') {
       return res.status(200).json({
         status: 'Success',
         message: 'Transaksi sudah dibayar',
@@ -216,8 +265,22 @@ const paymentFinalize = async (req, res, next) => {
       || transaction_status === 'settlement'
     ) {
       if (fraud_status === 'accept') {
-        transaction.status = 'SUDAH BAYAR'
-        await transaction.save()
+        const userCourse = await UserCourse.findOne({
+          where: {
+            userId: transaction.userId,
+            courseId: transaction.courseId,
+          },
+        })
+
+        await userCourse.update({
+          isAccessible: true,
+        })
+
+        await transaction.update({
+          status: 'SUDAH_BAYAR',
+          paidAt: new Date(),
+          paymentMethod: payment_type,
+        })
       } else {
         transaction.status = 'GAGAL'
         await transaction.save()
@@ -251,5 +314,5 @@ module.exports = {
   getAllTransaction,
   getTransactionById,
   createTransaction,
-  paymentFinalize,
+  paymentCallback,
 }

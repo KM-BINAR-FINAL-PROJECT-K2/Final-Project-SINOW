@@ -1900,7 +1900,7 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "integer"
+              "type": "string"
             }
           }
         ],
@@ -2041,7 +2041,7 @@
                     "example": 0,
                     "description": "Harga course"
                   },
-                  "promo": {
+                  "promoDiscountPercentage": {
                     "type": "integer",
                     "example": 0,
                     "description": "Diskon course"
@@ -2463,7 +2463,7 @@
                     "example": 0,
                     "description": "Harga course"
                   },
-                  "promo": {
+                  "promoDiscountPercentage": {
                     "type": "integer",
                     "example": 0,
                     "description": "Diskon course"
@@ -6129,7 +6129,7 @@
         }
       }
     },
-    "/transactions/finalize": {
+    "/transactions/payment-callback": {
       "post": {
         "tags": ["Transaction"],
         "summary": "API untuk menyelesaikan transaksi",

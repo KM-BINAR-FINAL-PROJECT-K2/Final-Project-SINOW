@@ -30,7 +30,7 @@ const course = {
   classCode: 'FSW123',
   type: 'gratis',
   price: 0,
-  promo: 0,
+  promoDiscountPercentage: 0,
   courseBy: 'John Doe',
 }
 
@@ -140,7 +140,7 @@ describe('API Create Course', () => {
       classCode: 'FSW123',
       type: 'premium',
       price: 0,
-      promo: 0,
+      promoDiscountPercentage: 0,
       courseBy: 'John Doe',
     }
 
@@ -166,7 +166,7 @@ describe('API Create Course', () => {
       classCode: 'FSW123',
       type: 'premium',
       price: 'not a number',
-      promo: 0,
+      promoDiscountPercentage: 0,
       courseBy: 'John Doe',
     }
 
@@ -182,7 +182,7 @@ describe('API Create Course', () => {
     expect(response.body.status).toBe('Failed')
   })
 
-  it('failed create course: promo is not beetween 0 and 100', async () => {
+  it('failed create course: promo discount percentage is not beetween 0 and 100', async () => {
     const failCourse = {
       name: 'Fullstack Web Development',
       level: 'advanced',
@@ -192,7 +192,7 @@ describe('API Create Course', () => {
       classCode: 'FSW123',
       type: 'premium',
       price: 10000,
-      promo: 10000,
+      promoDiscountPercentage: 10000,
       courseBy: 'John Doe',
     }
 
@@ -218,7 +218,7 @@ describe('API Create Course', () => {
       classCode: 'FSW123',
       type: 'premium',
       price: 10000,
-      promo: 10,
+      promoDiscountPercentage: 10,
       courseBy: 'John Doe',
     }
 
@@ -244,7 +244,7 @@ describe('API Create Course', () => {
       classCode: 'FSW123',
       type: 'premium',
       price: 20000,
-      promo: 10,
+      promoDiscountPercentage: 10,
       courseBy: 'John Doe',
     }
 
@@ -270,7 +270,7 @@ describe('API Create Course', () => {
       classCode: 'FSW123',
       type: 'premium',
       price: 20000,
-      promo: 10,
+      promoDiscountPercentage: 10,
       courseBy: 'John Doe',
     }
 
@@ -296,7 +296,7 @@ describe('API Create Course', () => {
       classCode: 'FSW123',
       type: 'premium',
       price: 20000,
-      promo: 10,
+      promoDiscountPercentage: 10,
       courseBy: 'John Doe',
     }
 
@@ -322,7 +322,7 @@ describe('API Create Course', () => {
       classCode: 'FSW123',
       type: 'premium',
       price: 20000,
-      promo: 10,
+      promoDiscountPercentage: 10,
       courseBy: 'John Doe',
     }
 
@@ -348,7 +348,7 @@ describe('API Create Course', () => {
       classCode: 'FSW123',
       type: 'akwoakwao',
       price: 20000,
-      promo: 10,
+      promoDiscountPercentage: 10,
       courseBy: 'John Doe',
     }
 
@@ -430,7 +430,7 @@ describe('API Update Course', () => {
       classCode: 'FSW123',
       type: 'premium',
       price: 0,
-      promo: 0,
+      promoDiscountPercentage: 0,
       courseBy: 'John Doe',
     }
 
@@ -456,7 +456,7 @@ describe('API Update Course', () => {
       classCode: 'FSW123',
       type: 'premium',
       price: 'not a number',
-      promo: 0,
+      promoDiscountPercentage: 0,
       courseBy: 'John Doe',
     }
 
@@ -472,7 +472,7 @@ describe('API Update Course', () => {
     expect(response.body.status).toBe('Failed')
   })
 
-  it('failed update course: promo is not valid', async () => {
+  it('failed update course: promo discount percentage is not valid', async () => {
     const failCourse = {
       name: 'Fullstack Web Development',
       level: 'advanced',
@@ -482,7 +482,7 @@ describe('API Update Course', () => {
       classCode: 'FSW123',
       type: 'premium',
       price: 20000,
-      promo: 10000,
+      promoDiscountPercentage: 10000,
       courseBy: 'John Doe',
     }
 
@@ -508,7 +508,7 @@ describe('API Update Course', () => {
       classCode: 'FSW123',
       type: 'premium',
       price: 20000,
-      promo: 10,
+      promoDiscountPercentage: 10,
       courseBy: 'John Doe',
     }
 
@@ -534,7 +534,7 @@ describe('API Update Course', () => {
       classCode: 'FSW123',
       type: 'premium',
       price: 20000,
-      promo: 10,
+      promoDiscountPercentage: 10,
       courseBy: 'John Doe',
     }
 
@@ -560,7 +560,7 @@ describe('API Update Course', () => {
       classCode: 'FSW123',
       type: 'premium',
       price: 20000,
-      promo: 10,
+      promoDiscountPercentage: 10,
       courseBy: 'John Doe',
     }
 
@@ -586,7 +586,7 @@ describe('API Update Course', () => {
       classCode: 'FSW123',
       type: 'premium',
       price: 20000,
-      promo: 10,
+      promoDiscountPercentage: 10,
       courseBy: 'John Doe',
     }
 
@@ -612,7 +612,7 @@ describe('API Update Course', () => {
       classCode: 'FSW123',
       type: 'premium',
       price: 20000,
-      promo: 10,
+      promoDiscountPercentage: 10,
       courseBy: 'John Doe',
     }
 
@@ -638,7 +638,7 @@ describe('API Update Course', () => {
       classCode: 'FSW123',
       type: 'akwoakwao',
       price: 20000,
-      promo: 10,
+      promoDiscountPercentage: 10,
       courseBy: 'John Doe',
     }
 
