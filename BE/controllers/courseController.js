@@ -116,7 +116,9 @@ const createCourse = async (req, res, next) => {
 
 const getAllCourse = async (req, res, next) => {
   try {
-    const { search, category, level, type, sortBy } = req.query
+    const { 
+      search, category, level, type, sortBy
+    } = req.query
     const where = {}
 
     if (search) {
@@ -165,7 +167,7 @@ const getAllCourse = async (req, res, next) => {
         {
           model: Benefit,
           as: 'benefits',
-          attributes: ['id', 'courseId', 'description'],
+          attributes: ['id', 'no', 'courseId', 'description'],
         },
       ],
       where,
@@ -204,7 +206,7 @@ const getCourseById = async (req, res, next) => {
         {
           model: Benefit,
           as: 'benefits',
-          attributes: ['id', 'description'],
+          attributes: ['id', 'no', 'description'],
         },
         {
           model: Chapter,
@@ -221,6 +223,7 @@ const getCourseById = async (req, res, next) => {
       ],
       order: [
         ['id', 'ASC'],
+        ['benefits', 'no', 'ASC'],
         ['chapters', 'no', 'ASC'],
         ['chapters', 'modules', 'no', 'ASC'],
       ],
