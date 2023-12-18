@@ -5,12 +5,10 @@ import Card from "../../Molecule/Card/Card";
 import PaymentTable from "../../Molecule/PaymentTable/PaymentTable";
 import { LoaderContext } from "../../../store/Loader";
 import FilterKelolaDashboard from "../../Molecule/Filter/FilterKelolaDashboard";
-import { PlaceholderContext } from "../../../store/PlaceholderStore";
 
 export default function DashboadAdmin() {
   const { setIsLoading } = useContext(LoaderContext);
   const [error, setError] = useState("");
-  const { handleSearchButtonClick } = useContext(PlaceholderContext);
   useEffect(() => {
     const getClasses = async () => {
       try {
