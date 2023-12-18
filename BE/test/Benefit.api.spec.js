@@ -85,8 +85,8 @@ describe('API Create Benefit', () => {
     )
   })
 
-  it('failed create chapter: number isNaN', async () => {
-    const failChapter = {
+  it('failed create benefit: number isNaN', async () => {
+    const failBenefit = {
       no: 'empat',
       description:
         'Bisa Mengikuti Real Project untuk Membangun Portofolio sebanyak-banyaknya.',
@@ -98,7 +98,7 @@ describe('API Create Benefit', () => {
       .set({
         Authorization: `Bearer ${token}`,
       })
-      .send(failChapter)
+      .send(failBenefit)
     expect(response.statusCode).toBe(400)
     expect(response.body.status).toBe('Failed')
     expect(response.body.message).toBe(
@@ -217,7 +217,7 @@ describe('API Update benefit', () => {
     expect(response.body.message).toBe('Berhasil mengupdate data benefit id: 2')
   })
 
-  it('failed update chapter: benefit not found', async () => {
+  it('failed update benefit: benefit not found', async () => {
     const failBenefit = {
       no: 'tiga',
       description:
@@ -236,7 +236,7 @@ describe('API Update benefit', () => {
     expect(response.body.message).toBe('Benefit tidak ditemukan')
   })
 
-  it('failed update chapter: number isNaN', async () => {
+  it('failed update benefit: number isNaN', async () => {
     const failBenefit = {
       no: 'tiga',
       description:
