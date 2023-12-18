@@ -5,9 +5,12 @@ const ApiError = require('../utils/ApiError')
 
 const createBenefit = async (req, res, next) => {
   try {
+    let { no } = req.body
     const { description, courseId } = req.body
 
-    const missingFields = ['description', 'courseId'].filter(
+    no = parseInt(no, 10)
+
+    const missingFields = ['no', 'description', 'courseId'].filter(
       (field) => !req.body[field],
     )
     if (missingFields.length > 0) {
@@ -16,18 +19,37 @@ const createBenefit = async (req, res, next) => {
       )
     }
 
+    if (Number.isNaN(Number(no)) || Number.isNaN(Number(courseId))) {
+      return next(
+        new ApiError('Nomor benefit dan course ID harus berupa angka', 400),
+      )
+    }
+
     const existingBenefit = await Benefit.findOne({
       where: {
-        description,
+        [Op.and]: [
+          { courseId },
+          {
+            [Op.or]: [{ no }, { description }],
+          },
+        ],
       },
     })
 
     if (existingBenefit) {
-      return next(new ApiError('Benefit sudah ada', 400))
-    }
+      const errorMessage = []
 
-    if (Number.isNaN(Number(courseId))) {
-      return next(new ApiError('Course ID harus berupa angka', 400))
+      if (existingBenefit.no === no) {
+        errorMessage.push('Nomor benefit sudah digunakan dalam course ini')
+      }
+
+      if (existingBenefit.description === description) {
+        errorMessage.push('Benefit sudah ada dalam course ini')
+      }
+
+      if (errorMessage.length > 0) {
+        return next(new ApiError(errorMessage.join(', '), 400))
+      }
     }
 
     const checkCourse = await Course.findByPk(courseId)
@@ -41,6 +63,7 @@ const createBenefit = async (req, res, next) => {
     }
 
     const benefit = await Benefit.create({
+      no,
       description,
       courseId,
     })
@@ -96,7 +119,7 @@ const getBenefitById = async (req, res, next) => {
 const updateBenefit = async (req, res, next) => {
   try {
     const { id } = req.params
-    const { description, courseId } = req.body
+    const { no, description, courseId } = req.body
 
     const benefit = await Benefit.findByPk(id)
     if (!benefit) {
@@ -105,14 +128,43 @@ const updateBenefit = async (req, res, next) => {
 
     const updateData = {}
 
+    if (no) {
+      const parsedNo = parseInt(no, 10)
+      if (Number.isNaN(Number(parsedNo))) {
+        return next(new ApiError('Nomor benefit harus berupa angka', 400))
+      }
+
+      const validCourseId =
+        courseId && !Number.isNaN(Number(courseId))
+          ? courseId
+          : benefit.courseId
+
+      const checkNumber = await Benefit.findOne({
+        where: {
+          no: parsedNo,
+          courseId: validCourseId,
+          id: { [Op.not]: id },
+        },
+      })
+
+      if (checkNumber) {
+        return next(
+          new ApiError('Nomor benefit sudah digunakan dalam course ini', 400),
+        )
+      }
+      updateData.no = no
+    }
+
     if (description) {
+      const validCourseId =
+        courseId && !Number.isNaN(Number(courseId))
+          ? courseId
+          : benefit.courseId
+
       const existingBenefit = await Benefit.findOne({
         where: {
           description,
-          courseId:
-            courseId && !Number.isNaN(Number(courseId))
-              ? courseId
-              : benefit.courseId,
+          courseId: validCourseId,
           id: { [Op.not]: id },
         },
       })
@@ -148,7 +200,7 @@ const updateBenefit = async (req, res, next) => {
       data: benefit,
     })
   } catch (error) {
-    return next(new ApiError(error, 500))
+    return next(new ApiError(error.message, 500))
   }
 }
 const deleteBenefit = async (req, res, next) => {

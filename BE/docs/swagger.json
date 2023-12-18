@@ -2717,7 +2717,7 @@
                   },
                   "no": {
                     "type": "integer",
-                    "example": "2",
+                    "example": 2,
                     "description": "Urutan module di dalam chapter"
                   },
                   "video": {
@@ -2726,7 +2726,7 @@
                   },
                   "chapterId": {
                     "type": "integer",
-                    "example": "3",
+                    "example": 3,
                     "description": "ID Chapter untuk module"
                   }
                 }
@@ -2890,7 +2890,7 @@
                         },
                         "no": {
                           "type": "integer",
-                          "example": "1"
+                          "example": 1
                         },
                         "videoUrl": {
                           "type": "string",
@@ -2898,15 +2898,15 @@
                         },
                         "chapterId": {
                           "type": "integer",
-                          "example": "1"
+                          "example": 1
                         },
                         "duration": {
                           "type": "integer",
-                          "example": "10"
+                          "example": 10
                         },
                         "createdBy": {
                           "type": "integer",
-                          "example": "2"
+                          "example": 2
                         },
                         "chapter": {
                           "properties": {
@@ -3038,7 +3038,7 @@
                         },
                         "no": {
                           "type": "integer",
-                          "example": "2"
+                          "example": 2
                         },
                         "videoUrl": {
                           "type": "string",
@@ -3046,15 +3046,15 @@
                         },
                         "chapterId": {
                           "type": "integer",
-                          "example": "2"
+                          "example": 2
                         },
                         "duration": {
                           "type": "integer",
-                          "example": "12"
+                          "example": 12
                         },
                         "createdBy": {
                           "type": "integer",
-                          "example": "1"
+                          "example": 1
                         },
                         "chapter": {
                           "properties": {
@@ -3458,7 +3458,7 @@
                 "properties": {
                   "no": {
                     "type": "integer",
-                    "example": "2",
+                    "example": 2,
                     "description": "Urutan chapter di dalam course"
                   },
                   "name": {
@@ -3468,7 +3468,7 @@
                   },
                   "courseId": {
                     "type": "integer",
-                    "example": "4",
+                    "example": 4,
                     "description": "Course terkait"
                   }
                 }
@@ -3628,7 +3628,7 @@
                         },
                         "no": {
                           "type": "integer",
-                          "example": "1"
+                          "example": 1
                         },
                         "name": {
                           "type": "string",
@@ -3636,7 +3636,7 @@
                         },
                         "courseId": {
                           "type": "integer",
-                          "example": "1"
+                          "example": 1
                         },
                         "modules": {
                           "properties": {
@@ -3650,7 +3650,7 @@
                             },
                             "no": {
                               "type": "integer",
-                              "example": "1"
+                              "example": 1
                             },
                             "videoUrl": {
                               "type": "string",
@@ -3658,15 +3658,15 @@
                             },
                             "chapterId": {
                               "type": "integer",
-                              "example": "1"
+                              "example": 1
                             },
                             "duration": {
                               "type": "integer",
-                              "example": "10"
+                              "example": 10
                             },
                             "createdBy": {
                               "type": "integer",
-                              "example": "2"
+                              "example": 2
                             }
                           }
                         }
@@ -3761,7 +3761,7 @@
                         },
                         "no": {
                           "type": "integer",
-                          "example": "1"
+                          "example": 1
                         },
                         "name": {
                           "type": "string",
@@ -3769,7 +3769,7 @@
                         },
                         "courseId": {
                           "type": "integer",
-                          "example": "1"
+                          "example": 1
                         },
                         "modules": {
                           "properties": {
@@ -3783,7 +3783,7 @@
                             },
                             "no": {
                               "type": "integer",
-                              "example": "1"
+                              "example": 1
                             },
                             "videoUrl": {
                               "type": "string",
@@ -3791,15 +3791,15 @@
                             },
                             "chapterId": {
                               "type": "integer",
-                              "example": "1"
+                              "example": 1
                             },
                             "duration": {
                               "type": "integer",
-                              "example": "10"
+                              "example": 10
                             },
                             "createdBy": {
                               "type": "integer",
-                              "example": "2"
+                              "example": 2
                             }
                           }
                         }
@@ -5287,6 +5287,11 @@
               "schema": {
                 "type": "object",
                 "properties": {
+                  "no": {
+                    "type": "integer",
+                    "example": 2,
+                    "description": "Urutan benefit di dalam course"
+                  },
                   "description": {
                     "type": "string",
                     "example": "Bisa Mengikuti Real Project untuk Membangun Portofolio",
@@ -5294,7 +5299,7 @@
                   },
                   "courseId": {
                     "type": "integer",
-                    "example": "4",
+                    "example": 4,
                     "description": "Course terkait"
                   }
                 }
@@ -5452,13 +5457,17 @@
                           "type": "integer",
                           "example": 1
                         },
+                        "no": {
+                          "type": "integer",
+                          "example": 2
+                        },
                         "description": {
                           "type": "string",
                           "example": "Kursus ramah pemula untuk belajar pengembangan web dengan React JS tanpa perlu latar belakang IT."
                         },
                         "courseId": {
                           "type": "integer",
-                          "example": "1"
+                          "example": 1
                         }
                       }
                     }
@@ -5529,13 +5538,17 @@
                           "type": "integer",
                           "example": 2
                         },
+                        "no": {
+                          "type": "integer",
+                          "example": 3
+                        },
                         "description": {
                           "type": "string",
                           "example": "Fokus pada membangun pemahaman yang kuat tentang React JS bagi peserta tanpa pengalaman teknis."
                         },
                         "courseId": {
                           "type": "integer",
-                          "example": "1"
+                          "example": 1
                         }
                       }
                     }
@@ -5568,7 +5581,7 @@
       },
       "put": {
         "tags": ["Benefit"],
-        "summary": "API untuk mengupdate data benefitr",
+        "summary": "API untuk mengupdate data benefit",
         "description": "API ini digunakan untuk admin mengupdate data benefit",
         "security": [
           {
@@ -5593,13 +5606,17 @@
               "schema": {
                 "type": "object",
                 "properties": {
+                  "no": {
+                    "type": "integer",
+                    "example": 4
+                  },
                   "description": {
                     "type": "string",
                     "example": "Fokus pada membangun pemahaman yang kuat tentang React JS bagi peserta tanpa pengalaman teknis."
                   },
                   "courseId": {
                     "type": "integer",
-                    "example": "6",
+                    "example": 6,
                     "description": "Course terkait"
                   }
                 }
