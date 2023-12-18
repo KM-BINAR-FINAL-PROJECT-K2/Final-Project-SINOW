@@ -8,11 +8,13 @@ import EditClass from "./components/Page/EditClass/EditClass";
 import AddClass from "./components/Page/AddClass/AddClass";
 import ManageChapter from "./components/Page/ManageChapter/ManageChapter";
 import ManageClassContextProvider from "./store/ManageClassStore";
+import LandingPage from "./components/Page/LandingPage/LandingPage";
 
 export default function App() {
   return (
     <BrowserRouter>
       <Routes>
+        <Route path="/landing-page" element={<LandingPage />} />
         <Route path="/dashboard" element={<DashboadAdmin />} />
         <Route
           path="/kelola-kelas"
