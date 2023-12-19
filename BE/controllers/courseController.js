@@ -116,8 +116,14 @@ const createCourse = async (req, res, next) => {
 
 const getAllCourse = async (req, res, next) => {
   try {
+    // eslint-disable-next-line no-trailing-spaces
     const {
-      search, category, level, type, sortBy,
+      // eslint-disable-next-line comma-dangle
+      search,
+      category,
+      level,
+      type,
+      sortBy,
     } = req.query
     const where = {}
 
