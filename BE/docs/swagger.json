@@ -15,6 +15,18 @@
       "description": "API ini untuk mengelola data user resources"
     },
     {
+      "name": "User Course",
+      "description": "API ini untuk mengelola user course resources"
+    },
+    {
+      "name": "User Notification",
+      "description": "API ini untuk mengelola user notification resources"
+    },
+    {
+      "name": "User Transaction",
+      "description": "API ini untuk mengelola user transaction resources"
+    },
+    {
       "name": "Courses",
       "description": "API ini untuk mengelola course resources"
     },
@@ -1093,7 +1105,7 @@
     },
     "/user/my-courses": {
       "get": {
-        "tags": ["User"],
+        "tags": ["User Course"],
         "summary": "API untuk mengecek semua data course user",
         "description": "API ini digunakan untuk user mengecek semua data course user",
         "security": [
@@ -1221,7 +1233,7 @@
     },
     "/user/my-courses/{courseId}": {
       "get": {
-        "tags": ["User"],
+        "tags": ["User Course"],
         "summary": "API untuk mengambil data course user",
         "description": "API ini digunakan untuk user mengambil data course user",
         "security": [
@@ -1346,7 +1358,7 @@
     },
     "/user/my-courses/{courseId}/follow-course": {
       "post": {
-        "tags": ["User"],
+        "tags": ["User Course"],
         "summary": "API untuk follow course",
         "description": "API ini digunakan untuk user follow course",
         "security": [
@@ -1451,7 +1463,7 @@
     },
     "/user/my-courses/{courseId}/modules/{userModuleId}": {
       "get": {
-        "tags": ["User"],
+        "tags": ["User Course"],
         "summary": "API untuk mengambil data module user",
         "description": "API ini digunakan untuk user mengambil data module user",
         "security": [
@@ -1565,7 +1577,7 @@
     },
     "/user/notifications": {
       "get": {
-        "tags": ["User"],
+        "tags": ["User Notification"],
         "summary": "API ini untuk menampilkan data notifikasi dari user yang login",
         "description": "API ini digunakan untuk user menampilkan data notifikasi mereka",
         "security": [
@@ -1659,7 +1671,7 @@
     },
     "/user/notifications/{id}": {
       "get": {
-        "tags": ["User"],
+        "tags": ["User Notification"],
         "summary": "API ini untuk menampilkan detail data notifikasi dari user yang login",
         "description": "API ini digunakan untuk user menampilkan detail data notifikasi mereka",
         "security": [
@@ -1782,7 +1794,7 @@
         }
       },
       "delete": {
-        "tags": ["User"],
+        "tags": ["User Notification"],
         "summary": "API ini untuk menghapus data notifikasi dari user yang login",
         "description": "API ini digunakan untuk user menghapus data notifikasi mereka",
         "security": [
@@ -1905,7 +1917,7 @@
     },
     "/user/transaction": {
       "get": {
-        "tags": ["User"],
+        "tags": ["User Transaction"],
         "summary": "API untuk mengambil data transaksi user",
         "description": "API ini digunakan untuk user mengambil data transaksi user",
         "security": [
@@ -1991,7 +2003,7 @@
     },
     "/user/transaction/{transactionId}": {
       "get": {
-        "tags": ["User"],
+        "tags": ["User Transaction"],
         "summary": "API untuk mengambil data transaksi user berdasarkan id",
         "description": "API ini digunakan untuk user mengambil data transaksi user berdasarkan id",
         "security": [
