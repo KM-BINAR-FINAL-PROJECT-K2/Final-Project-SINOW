@@ -92,7 +92,7 @@ const register = async (req, res, next) => {
       phoneNumber = `+62${phoneNumber.slice(1)}`
     }
 
-    if (!`${phoneNumber}`.startsWith('+62')) {
+    if (!`${phoneNumber}`.startsWith('+')) {
       phoneNumber = `+62${phoneNumber}`
     }
     if (password.length < 8) {
