@@ -19,6 +19,7 @@ module.exports = (sequelize, DataTypes) => {
   }
   Benefit.init(
     {
+      no: DataTypes.INTEGER,
       description: DataTypes.TEXT,
       courseId: DataTypes.INTEGER,
     },

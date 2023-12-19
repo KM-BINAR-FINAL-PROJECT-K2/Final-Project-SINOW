@@ -21,13 +21,14 @@ beforeAll(async () => {
 })
 
 const benefitData = {
+  no: 4,
   description:
     'Bisa Mengikuti Real Project untuk Membangun Portofolio sebanyak-banyaknya.',
   courseId: 1,
 }
 
-describe('API Get All Benefit Data', () => {
-  it('success get benefit', async () => {
+describe('API Get All Category Data', () => {
+  it('success get category', async () => {
     const response = await request(app).get('/api/v1/benefits')
     expect(response.statusCode).toBe(200)
     expect(response.body.status).toBe('Success')
@@ -80,11 +81,54 @@ describe('API Create Benefit', () => {
     expect(response.statusCode).toBe(400)
     expect(response.body.status).toBe('Failed')
     expect(response.body.message).toBe(
-      'Field description, courseId harus di isi',
+      'Field no, description, courseId harus di isi',
+    )
+  })
+
+  it('failed create benefit: number isNaN', async () => {
+    const failBenefit = {
+      no: 'empat',
+      description:
+        'Bisa Mengikuti Real Project untuk Membangun Portofolio sebanyak-banyaknya.',
+      courseId: 1,
+    }
+
+    const response = await request(app)
+      .post('/api/v1/benefits')
+      .set({
+        Authorization: `Bearer ${token}`,
+      })
+      .send(failBenefit)
+    expect(response.statusCode).toBe(400)
+    expect(response.body.status).toBe('Failed')
+    expect(response.body.message).toBe(
+      'Nomor benefit dan course ID harus berupa angka',
+    )
+  })
+
+  it('failed create benefit: duplicate number', async () => {
+    const failBenefit = {
+      no: 1,
+      description:
+        'Bisa Mengikuti Real Project untuk Membangun Portofolio sebanyak-banyaknya.',
+      courseId: 1,
+    }
+
+    const response = await request(app)
+      .post('/api/v1/benefits')
+      .set({
+        Authorization: `Bearer ${token}`,
+      })
+      .send(failBenefit)
+    expect(response.statusCode).toBe(400)
+    expect(response.body.status).toBe('Failed')
+    expect(response.body.message).toBe(
+      'Nomor benefit sudah digunakan dalam course ini',
     )
   })
   it('failed create benefit: duplicate description', async () => {
     const failBenefit = {
+      no: 4,
       description:
         'Kursus ramah pemula untuk belajar pengembangan web dengan React JS tanpa perlu latar belakang IT.',
       courseId: 1,
@@ -98,11 +142,12 @@ describe('API Create Benefit', () => {
       .send(failBenefit)
     expect(response.statusCode).toBe(400)
     expect(response.body.status).toBe('Failed')
-    expect(response.body.message).toBe('Benefit sudah ada')
+    expect(response.body.message).toBe('Benefit sudah ada dalam course ini')
   })
 
   it('failed create benefit: Course ID isNaN', async () => {
     const failBenefit = {
+      no: 4,
       description:
         'Bisa Mengikuti Real Project untuk Membangun Portofolio sebanyak-banyaknya',
       courseId: 'satu',
@@ -116,11 +161,14 @@ describe('API Create Benefit', () => {
       .send(failBenefit)
     expect(response.statusCode).toBe(400)
     expect(response.body.status).toBe('Failed')
-    expect(response.body.message).toBe('Course ID harus berupa angka')
+    expect(response.body.message).toBe(
+      'Nomor benefit dan course ID harus berupa angka',
+    )
   })
 
   it('failed create benefit: course not found', async () => {
     const failBenefit = {
+      no: 4,
       description:
         'Bisa Mengikuti Real Project untuk Membangun Portofolio sebanyak-banyaknya',
       courseId: 10000,
@@ -152,6 +200,7 @@ describe('API Create Benefit', () => {
 describe('API Update benefit', () => {
   it('success update benefit', async () => {
     const benefitData = {
+      no: 2,
       description:
         'Fleksibel. cukup menggunakan internet agar bisa belajar, kita bisa mengatur waktu, bebas kapan harus belajar, dan di mana pun anda berada.',
       courseId: 1,
@@ -168,8 +217,68 @@ describe('API Update benefit', () => {
     expect(response.body.message).toBe('Berhasil mengupdate data benefit id: 2')
   })
 
+  it('failed update benefit: benefit not found', async () => {
+    const failBenefit = {
+      no: 'tiga',
+      description:
+        'Fleksibel. cukup menggunakan internet agar bisa belajar, kita bisa mengatur waktu, bebas kapan harus belajar, dan di mana pun anda berada.',
+      courseId: 1,
+    }
+
+    const response = await request(app)
+      .put('/api/v1/benefits/10000')
+      .set({
+        Authorization: `Bearer ${token}`,
+      })
+      .send(failBenefit)
+    expect(response.statusCode).toBe(404)
+    expect(response.body.status).toBe('Failed')
+    expect(response.body.message).toBe('Benefit tidak ditemukan')
+  })
+
+  it('failed update benefit: number isNaN', async () => {
+    const failBenefit = {
+      no: 'tiga',
+      description:
+        'Fleksibel. cukup menggunakan internet agar bisa belajar, kita bisa mengatur waktu, bebas kapan harus belajar, dan di mana pun anda berada.',
+      courseId: 1,
+    }
+
+    const response = await request(app)
+      .put(`/api/v1/benefits/${benefitId || 2}`)
+      .set({
+        Authorization: `Bearer ${token}`,
+      })
+      .send(failBenefit)
+    expect(response.statusCode).toBe(400)
+    expect(response.body.status).toBe('Failed')
+    expect(response.body.message).toBe('Nomor benefit harus berupa angka')
+  })
+
+  it('failed update benefit: duplicate number', async () => {
+    const failBenefit = {
+      no: 3,
+      description:
+        'Fleksibel. cukup menggunakan internet agar bisa belajar, kita bisa mengatur waktu, bebas kapan harus belajar, dan di mana pun anda berada.',
+      courseId: 1,
+    }
+
+    const response = await request(app)
+      .put(`/api/v1/benefits/${benefitId || 2}`)
+      .set({
+        Authorization: `Bearer ${token}`,
+      })
+      .send(failBenefit)
+    expect(response.statusCode).toBe(400)
+    expect(response.body.status).toBe('Failed')
+    expect(response.body.message).toBe(
+      'Nomor benefit sudah digunakan dalam course ini',
+    )
+  })
+
   it('failed update benefit: duplicate decription', async () => {
     const failBenefit = {
+      no: 5,
       description:
         'Kursus ramah pemula untuk belajar pengembangan web dengan React JS tanpa perlu latar belakang IT.',
       courseId: 1,
@@ -188,6 +297,7 @@ describe('API Update benefit', () => {
 
   it('failed update benefit: course not found', async () => {
     const failBenefit = {
+      no: 5,
       description:
         'Bisa Mengikuti Real Project untuk Membangun Portofolio sebanyak-banyaknya.',
       courseId: 10000,

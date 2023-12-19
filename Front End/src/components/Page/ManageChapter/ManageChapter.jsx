@@ -2,7 +2,7 @@
 /* eslint-disable react/prop-types */
 import axios from "axios";
 import { Accordion, Flowbite } from "flowbite-react";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState, useRef } from "react";
 import { useParams } from "react-router-dom";
 import Navigation from "../../Template/Navigation/Navigation";
 import Breadcrumb from "../../Organism/Breadcrumb/Breadcrumb";
@@ -22,10 +22,17 @@ export default function ManageChapter() {
   const [random, setRandom] = useState();
   const [form, setForm] = useState();
   const [editForm, setEditForm] = useState();
+  const [moduleForm, setModuleForm] = useState();
+  const [editModuleForm, setEditModuleForm] = useState();
   const [showAddForm, setShowAddForm] = useState(false);
   const [showEditForm, setShowEditForm] = useState(false);
   const [editChapter, setEditChapter] = useState({});
-  const [selectedKey, setSelectedKey] = useState();
+  const [selectedKey, setSelectedKey] = useState({
+    id: null,
+  });
+  const [showAddModule, setShowAddModule] = useState(false);
+  const [showEditModule, setShowEditModule] = useState(false);
+  const editRef = useRef(null);
 
   const { id } = useParams();
 
@@ -53,6 +60,38 @@ export default function ManageChapter() {
       name,
       no,
       courseId,
+    });
+  };
+
+  const handleModuleSubmit = (e) => {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    const name = formData.get("name");
+    const no = Number(formData.get("no"));
+    const video = formData.get("video");
+    const chapterId = selectedKey.id;
+
+    setModuleForm({
+      name,
+      no,
+      video,
+      chapterId,
+    });
+  };
+
+  const handleEditModuleSubmit = (e) => {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    const name = formData.get("name");
+    const no = Number(formData.get("no"));
+    const video = formData.get("video");
+    const chapterId = selectedKey.id;
+
+    setEditModuleForm({
+      name,
+      no,
+      video,
+      chapterId,
     });
   };
 
@@ -137,16 +176,16 @@ export default function ManageChapter() {
           imageWidth: 200,
           showDenyButton: true,
           confirmButtonText: "Simpan",
-          confirmButtonColor: "#6148FF",
+          confirmButtonColor: "rgb(115 202 92)",
           denyButtonColor: "#FF0000",
           denyButtonText: `Batalkan`,
         }).then(async (result) => {
           if (result.isConfirmed) {
             try {
               setIsLoading(true);
-              console.log(selectedKey);
+              console.log(selectedKey.id);
               await axios.put(
-                `http://localhost:3000/api/v1/chapters/${selectedKey}`,
+                `http://localhost:3000/api/v1/chapters/${selectedKey.id}`,
                 editForm,
                 {
                   headers: {
@@ -199,6 +238,152 @@ export default function ManageChapter() {
       setIsLoading(false);
     }
   }, [editForm]);
+
+  useEffect(() => {
+    try {
+      if (!moduleForm || !moduleForm.name || !moduleForm.no) {
+        return;
+      }
+      const addModule = async () => {
+        await Swal.fire({
+          title: "Yakin menambahkan modul?",
+          imageUrl: "/images/logo-n-maskot/Sticker-1.png",
+          color: "#3C3C3C",
+          imageWidth: 200,
+          showDenyButton: true,
+          confirmButtonText: "Tambah",
+          confirmButtonColor: "#73CA5C",
+          denyButtonColor: "#FF0000",
+          denyButtonText: `Batalkan`,
+        }).then(async (result) => {
+          setShowAddModule(false);
+          if (result.isConfirmed) {
+            try {
+              setIsLoading(true);
+              await axios.post(
+                `http://localhost:3000/api/v1/modules/`,
+                moduleForm,
+                {
+                  headers: {
+                    "Content-Type": "multipart/form-data",
+                    Authorization: `Bearer ${localStorage.getItem("token")}`,
+                  },
+                }
+              );
+              setRandom(Math.random());
+            } catch (error) {
+              if (error.response.status !== 200) {
+                const err = error.response.data.message;
+                await Swal.fire({
+                  titleText: err,
+                  imageUrl: "/images/logo-n-maskot/failed_payment.png",
+                  imageWidth: 200,
+                  confirmButtonText: "Kembali",
+                  confirmButtonColor: "#73CA5C",
+                });
+              }
+              setIsLoading(false);
+              return;
+            }
+            setIsLoading(false);
+            await Swal.fire({
+              titleText: "Berhasil Ditambahkan!",
+              imageUrl: "/images/logo-n-maskot/Sticker-3.png",
+              imageWidth: 200,
+              confirmButtonText: "Ok",
+              confirmButtonColor: "#73CA5C",
+            });
+          } else if (result.isDenied) {
+            await Swal.fire({
+              titleText: "Perubahan dibatalkan",
+              imageUrl: "/images/logo-n-maskot/Sticker-2.png",
+              imageWidth: 200,
+              confirmButtonText: "Kembali",
+              confirmButtonColor: "#73CA5C",
+            });
+          }
+        });
+      };
+      addModule();
+    } catch (error) {
+      console.log(error.response.data.message.split(", ")[1]);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [moduleForm]);
+
+  useEffect(() => {
+    try {
+      if (!editModuleForm || !editModuleForm.name || !editModuleForm.no) {
+        return;
+      }
+      const addModule = async () => {
+        await Swal.fire({
+          title: "Yakin menyimpan perubahan?",
+          imageUrl: "/images/logo-n-maskot/Sticker-1.png",
+          color: "#3C3C3C",
+          imageWidth: 200,
+          showDenyButton: true,
+          confirmButtonText: "Simpan",
+          confirmButtonColor: "#73CA5C",
+          denyButtonColor: "#FF0000",
+          denyButtonText: `Batalkan`,
+        }).then(async (result) => {
+          setShowEditModule(false);
+          if (result.isConfirmed) {
+            try {
+              setIsLoading(true);
+              await axios.put(
+                `http://localhost:3000/api/v1/modules/${selectedKey.moduleId}`,
+                editModuleForm,
+                {
+                  headers: {
+                    "Content-Type": "multipart/form-data",
+                    Authorization: `Bearer ${localStorage.getItem("token")}`,
+                  },
+                }
+              );
+              setRandom(Math.random());
+            } catch (error) {
+              if (error.response.status !== 200) {
+                const err = error.response.data.message;
+                await Swal.fire({
+                  titleText: err,
+                  imageUrl: "/images/logo-n-maskot/failed_payment.png",
+                  imageWidth: 200,
+                  confirmButtonText: "Kembali",
+                  confirmButtonColor: "#73CA5C",
+                });
+              }
+              setIsLoading(false);
+              return;
+            }
+            setIsLoading(false);
+            await Swal.fire({
+              titleText: "Berhasil Diperbarui!",
+              imageUrl: "/images/logo-n-maskot/Sticker-3.png",
+              imageWidth: 200,
+              confirmButtonText: "Ok",
+              confirmButtonColor: "#73CA5C",
+            });
+          } else if (result.isDenied) {
+            await Swal.fire({
+              titleText: "Perubahan dibatalkan",
+              imageUrl: "/images/logo-n-maskot/Sticker-2.png",
+              imageWidth: 200,
+              confirmButtonText: "Kembali",
+              confirmButtonColor: "#73CA5C",
+            });
+          }
+        });
+      };
+      addModule();
+    } catch (error) {
+      console.log(error.response.data.message.split(", ")[1]);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [editModuleForm]);
 
   useEffect(() => {
     const getChapters = async () => {
@@ -258,34 +443,18 @@ export default function ManageChapter() {
     getAllClass();
   }, []);
 
-  const handleAddForm = () => {
-    setShowEditForm(false);
-    setShowAddForm(!showAddForm);
-  };
-
-  const handleCloseEditForm = () => {
-    setShowAddForm(false);
-    setShowEditForm(false);
-    setSelectedKey(null);
-  };
-
-  const handleEditForm = (id) => {
-    setSelectedKey(id);
-    setShowAddForm(false);
-    setShowEditForm(true);
-  };
-
   useEffect(() => {
-    if (!selectedKey) {
+    console.log(selectedKey);
+    if (!selectedKey.id) {
       return;
     }
     try {
       const getChapterById = async () => {
         setIsLoading(true);
         const res = await axios.get(
-          `http://localhost:3000/api/v1/chapters/${selectedKey}`
+          `http://localhost:3000/api/v1/chapters/${selectedKey.id}`
         );
-
+        console.log(res.data.data);
         setEditChapter(res.data.data);
       };
 
@@ -297,9 +466,53 @@ export default function ManageChapter() {
     }
   }, [selectedKey]);
 
+  const handleAddForm = () => {
+    setShowEditForm(false);
+    setShowAddForm(!showAddForm);
+  };
+
+  const handleAddModule = (e, id) => {
+    e.preventDefault();
+    setSelectedKey({
+      id,
+    });
+    setShowAddModule(true);
+  };
+
+  const handleEditModule = (e, moduleId, chapterId) => {
+    e.preventDefault();
+    setSelectedKey({
+      id: chapterId,
+      moduleId,
+    });
+    setShowEditModule(true);
+  };
+
+  const handleCloseEditForm = () => {
+    setShowAddForm(false);
+    setShowEditForm(false);
+    setSelectedKey({
+      id: null,
+    });
+  };
+
+  const handleEditForm = (id) => {
+    if (editRef.current) {
+      editRef.current.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+        inline: "nearest",
+      });
+    }
+    setSelectedKey({
+      id,
+    });
+    setShowAddForm(false);
+    setShowEditForm(true);
+  };
+
   const removeModuleHandle = (e, id) => {
     e.preventDefault();
-
     try {
       const removeModule = async () => {
         await Swal.fire({
@@ -470,7 +683,7 @@ export default function ManageChapter() {
       <Navigation>
         <section className=" mx-4 n lg:mx-[64px] mb-64 -mt-[70px] ">
           <section className="overflow-auto">
-            <div className="mb-[20px]">
+            <div className="mb-[20px]" ref={editRef}>
               <Breadcrumb
                 links={[
                   { name: "Kelola Kelas", url: "/kelola-kelas" },
@@ -526,7 +739,7 @@ export default function ManageChapter() {
             {chapters && classData && (
               <>
                 <div className="flex justify-between items-center mb-4 mx-2">
-                  <p className="">
+                  <p className="text-sinow-05">
                     {classData.classCode} | {classData.category.name}
                   </p>
                   <button
@@ -551,7 +764,7 @@ export default function ManageChapter() {
                         fill="none"
                         viewBox="0 0 24 24"
                         strokeWidth="1.5"
-                        stroke="rgb(97 72 255)"
+                        stroke="rgb(0 204 244)"
                         className="h-6 w-6 inline-block ml-2 "
                       >
                         <path
@@ -608,12 +821,13 @@ export default function ManageChapter() {
                 </div>
                 {classSinow && editChapter && (
                   <div
+                    id="editChapter"
                     className={`w-full px-[20px] border border-gray-200 rounded-md my-5 ${
                       showEditForm ? "block" : "hidden"
                     }`}
                   >
                     <button
-                      className="border-red-600 w-full text-left mt-3"
+                      className="border-red-600 w-full text-left mt-3 "
                       onClick={handleCloseEditForm}
                     >
                       <p className="flex justify-end items-center">
@@ -622,7 +836,7 @@ export default function ManageChapter() {
                           fill="none"
                           viewBox="0 0 24 24"
                           strokeWidth="1.5"
-                          stroke="rgb(97 72 255)"
+                          stroke="rgb(0 204 244)"
                           className="h-6 w-6 inline-block ml-2 "
                         >
                           <path
@@ -782,17 +996,14 @@ export default function ManageChapter() {
                                       <br />
                                       <span className="text-sm text-gray-800 font-normal">
                                         Cobalah untuk{" "}
-                                        <a
-                                          href="/kelola-kelas"
+                                        <button
                                           className="text-darkblue-03 font-medium"
-                                          onClick={() => {
-                                            window.location.href =
-                                              "/kelola-kelas";
-                                            window.location.reload();
-                                          }}
+                                          onClick={(e) =>
+                                            handleAddModule(e, chapter.id)
+                                          }
                                         >
                                           Menambahkan modul
-                                        </a>
+                                        </button>
                                       </span>
                                     </p>
                                   </div>
@@ -800,52 +1011,68 @@ export default function ManageChapter() {
 
                                 <div className="py-[20px] grid  grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 justify-items-center">
                                   {chapter.modules &&
-                                    chapter.modules.map((module) => {
-                                      return (
-                                        <>
-                                          <div
-                                            key={module.id}
-                                            className="w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow overflow-hidden"
-                                          >
-                                            <video
-                                              className="w-full"
-                                              controls={true}
-                                              src={module.videoUrl}
-                                            ></video>
-                                            <div className="px-5 pb-5">
-                                              <h5 className="text-xl font-semibold tracking-tight text-gray-900 my-3">
-                                                {module.name}
-                                              </h5>
-                                              <span className="text-md font-bold text-gray-900 ">
-                                                {module.createdAt.slice(0, 10)}
-                                              </span>
-                                              <hr className="my-3 border border-gray-300" />
-                                              <div className="flex items-center justify-end gap-3">
-                                                <button className="text-white bg-darkblue-05 hover:bg-sky-500  focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center ">
-                                                  Ubah
-                                                </button>
-                                                <button
-                                                  className="text-white bg-alert-danger hover:bg-red-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center "
-                                                  onClick={(e) =>
-                                                    removeModuleHandle(
-                                                      e,
-                                                      module.id
-                                                    )
-                                                  }
-                                                >
-                                                  Hapus
-                                                </button>
+                                    chapter.modules
+                                      .sort((a, b) => a.no - b.no)
+                                      .map((module) => {
+                                        return (
+                                          <>
+                                            <div
+                                              key={module.id}
+                                              className="w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow overflow-hidden"
+                                            >
+                                              <video
+                                                className="w-full"
+                                                controls={true}
+                                                src={module.videoUrl}
+                                              ></video>
+                                              <div className="px-5 pb-5">
+                                                <h5 className="text-xl font-semibold tracking-tight text-gray-900 my-3">
+                                                  {module.name}
+                                                </h5>
+                                                <span className="text-md font-bold text-gray-900 ">
+                                                  {module.createdAt.slice(
+                                                    0,
+                                                    10
+                                                  )}
+                                                </span>
+                                                <hr className="my-3 border border-gray-300" />
+                                                <div className="flex items-center justify-end gap-3">
+                                                  <button
+                                                    className="text-white bg-darkblue-05 hover:bg-sky-500  focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center "
+                                                    onClick={(e) =>
+                                                      handleEditModule(
+                                                        e,
+                                                        module.id,
+                                                        chapter.id
+                                                      )
+                                                    }
+                                                  >
+                                                    Ubah
+                                                  </button>
+                                                  <button
+                                                    className="text-white bg-alert-danger hover:bg-red-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center "
+                                                    onClick={(e) =>
+                                                      removeModuleHandle(
+                                                        e,
+                                                        module.id
+                                                      )
+                                                    }
+                                                  >
+                                                    Hapus
+                                                  </button>
+                                                </div>
                                               </div>
                                             </div>
-                                          </div>
-                                        </>
-                                      );
-                                    })}
+                                          </>
+                                        );
+                                      })}
 
                                   {chapter.modules[0] && (
                                     <button
                                       className="w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow overflow-hidden text-center p-5 flex items-center flex-col justify-center cursor-pointer hover:bg-gray-100 gap-5"
-                                      onClick={() => alert("Coming Soon!")}
+                                      onClick={(e) =>
+                                        handleAddModule(e, chapter.id)
+                                      }
                                     >
                                       <div className="">
                                         <svg
@@ -876,6 +1103,201 @@ export default function ManageChapter() {
                     </Accordion>
                   </Flowbite>
                 </div>
+              </>
+            )}
+            {showAddModule && (
+              <>
+                {isLoading && <LoadingScreen />}
+                <div className="fixed z-[1000] bg-black opacity-40 top-0 left-0 right-0 bottom-0"></div>
+                <div className="absolute z-[1000] top-0 left-0 right-0 bottom-0 ">
+                  <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                    <div className="rounded-[16px] bg-neutral-01 w-[350px] sm:w-[500px] md:w-[600px] lg:w-[750px]  py-[50px] text-center overflow-y-auto overflow-x-hidden relative">
+                      <button
+                        className="absolute top-5 right-5 z-[100]"
+                        onClick={() => setShowAddModule(false)}
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          strokeWidth="1.5"
+                          stroke="rgb(0 204 244)"
+                          className="h-6 w-6 inline-block ml-2 "
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M6 18L18 6M6 6l12 12"
+                          />
+                        </svg>
+                      </button>
+                      <h3 className="text-center font-semibold text-xl text-darkblue-05 mb-[30px]">
+                        Tambah Modul
+                      </h3>
+                      <div className="mx-5">
+                        <form
+                          action=""
+                          className="w-full text-left overflow-y-auto"
+                          onSubmit={(e) => handleModuleSubmit(e)}
+                        >
+                          <div className="mb-[15px]">
+                            <label
+                              htmlFor=""
+                              className="block md:text-sm text-xs mb-1 ml-2"
+                            >
+                              Judul Modul
+                            </label>
+                            <input
+                              type="text"
+                              name="name"
+                              className="bg-gray-50 border border-gray-300 text-gray-900 md:text-sm text-xs mb-1 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
+                              placeholder="Sejarah UI"
+                            />
+                          </div>
+                          <div className="mb-[15px]">
+                            <label
+                              htmlFor=""
+                              className="block md:text-sm text-xs mb-1 ml-2"
+                            >
+                              Urutan Modul
+                            </label>
+                            <input
+                              type="text"
+                              name="no"
+                              className="bg-gray-50 border border-gray-300 text-gray-900 md:text-sm text-xs mb-1 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
+                              placeholder="1"
+                            />
+                          </div>
+                          <div className="mb-[15px]">
+                            <label
+                              htmlFor=""
+                              className="block md:text-sm text-xs mb-1 ml-2"
+                            >
+                              Upload Video
+                            </label>
+                            <input
+                              type="file"
+                              accept="video/*"
+                              name="video"
+                              className="bg-gray-50 border border-gray-300 text-gray-900 md:text-sm text-xs mb-1 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
+                            />
+                          </div>
+                          <div className="mt-[30px]">
+                            <button
+                              type="submit"
+                              className="bg-darkblue-05 text-white md:text-sm text-xs mb-1 font-semibold  p-[12px] rounded-[15px] flex-1 lg:w-full text-center w-full"
+                            >
+                              Tambah Modul
+                            </button>
+                          </div>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </>
+            )}
+            {showEditModule && Object.keys(editChapter).length > 0 && (
+              <>
+                {isLoading && <LoadingScreen />}
+
+                {editChapter.modules.map((module) => {
+                  if (module.id === selectedKey.moduleId) {
+                    return (
+                      <>
+                        <div className="fixed z-[1000] bg-black opacity-40 top-0 left-0 right-0 bottom-0"></div>
+                        <div className="absolute z-[1000] top-0 left-0 right-0 bottom-0 ">
+                          <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                            <div className="rounded-[16px] bg-neutral-01 w-[350px] sm:w-[500px] md:w-[600px] lg:w-[750px]  py-[50px] text-center overflow-y-auto overflow-x-hidden relative">
+                              <button
+                                className="absolute top-5 right-5 z-[100]"
+                                onClick={() => setShowEditModule(false)}
+                              >
+                                <svg
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  fill="none"
+                                  viewBox="0 0 24 24"
+                                  strokeWidth="1.5"
+                                  stroke="rgb(0 204 244)"
+                                  className="h-6 w-6 inline-block ml-2 "
+                                >
+                                  <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    d="M6 18L18 6M6 6l12 12"
+                                  />
+                                </svg>
+                              </button>
+                              <h3 className="text-center font-semibold text-xl text-darkblue-05 mb-[30px]">
+                                Edit Modul
+                              </h3>
+                              <div className="mx-5">
+                                <form
+                                  action=""
+                                  className="w-full text-left overflow-y-auto"
+                                  onSubmit={(e) => handleEditModuleSubmit(e)}
+                                >
+                                  <div className="mb-[15px]">
+                                    <label
+                                      htmlFor=""
+                                      className="block md:text-sm text-xs mb-1 ml-2"
+                                    >
+                                      Judul Modul
+                                    </label>
+                                    <input
+                                      type="text"
+                                      name="name"
+                                      className="bg-gray-50 border border-gray-300 text-gray-900 md:text-sm text-xs mb-1 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
+                                      placeholder={module.name}
+                                      defaultValue={module.name}
+                                    />
+                                  </div>
+                                  <div className="mb-[15px]">
+                                    <label
+                                      htmlFor=""
+                                      className="block md:text-sm text-xs mb-1 ml-2"
+                                    >
+                                      Urutan Modul
+                                    </label>
+                                    <input
+                                      type="text"
+                                      name="no"
+                                      className="bg-gray-50 border border-gray-300 text-gray-900 md:text-sm text-xs mb-1 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
+                                      placeholder={module.no}
+                                      defaultValue={module.no}
+                                    />
+                                  </div>
+                                  <div className="mb-[15px]">
+                                    <label
+                                      htmlFor=""
+                                      className="block md:text-sm text-xs mb-1 ml-2"
+                                    >
+                                      Upload Video
+                                    </label>
+                                    <input
+                                      type="file"
+                                      accept="video/*"
+                                      name="video"
+                                      className="bg-gray-50 border border-gray-300 text-gray-900 md:text-sm text-xs mb-1 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
+                                    />
+                                  </div>
+                                  <div className="mt-[30px]">
+                                    <button
+                                      type="submit"
+                                      className="bg-darkblue-05 text-white md:text-sm text-xs mb-1 font-semibold  p-[12px] rounded-[15px] flex-1 lg:w-full text-center w-full"
+                                    >
+                                      Edit Modul
+                                    </button>
+                                  </div>
+                                </form>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </>
+                    );
+                  }
+                })}
               </>
             )}
           </section>

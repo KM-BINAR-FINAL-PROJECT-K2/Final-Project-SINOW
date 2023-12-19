@@ -173,7 +173,7 @@ const getAllCourse = async (req, res, next) => {
         {
           model: Benefit,
           as: 'benefits',
-          attributes: ['id', 'courseId', 'description'],
+          attributes: ['id', 'no', 'courseId', 'description'],
         },
       ],
       where,
@@ -212,7 +212,7 @@ const getCourseById = async (req, res, next) => {
         {
           model: Benefit,
           as: 'benefits',
-          attributes: ['id', 'description'],
+          attributes: ['id', 'no', 'description'],
         },
         {
           model: Chapter,
@@ -229,6 +229,7 @@ const getCourseById = async (req, res, next) => {
       ],
       order: [
         ['id', 'ASC'],
+        ['benefits', 'no', 'ASC'],
         ['chapters', 'no', 'ASC'],
         ['chapters', 'modules', 'no', 'ASC'],
       ],
@@ -338,7 +339,7 @@ const updateCourse = async (req, res, next) => {
 
       if (req.files.video) {
         const { videoUrl } = await uploadVideo(req.files.video[0], next)
-        updateData.videoUrl = videoUrl
+        updateData.videoPreviewUrl = videoUrl
       }
     }
 
