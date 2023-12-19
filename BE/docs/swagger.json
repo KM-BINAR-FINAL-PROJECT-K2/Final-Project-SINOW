@@ -860,14 +860,9 @@
                     "example": "johndoe",
                     "description": "Nama User"
                   },
-                  "email": {
-                    "type": "string",
-                    "example": "johndoe@example.com",
-                    "description": "Email User"
-                  },
                   "phoneNumber": {
                     "type": "string",
-                    "example": "81234567890",
+                    "example": "+6281234567890",
                     "description": "Nomor Handphone User"
                   },
                   "country": {

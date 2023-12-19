@@ -96,7 +96,7 @@ const myDetails = async (req, res, next) => {
 const updateMyDetails = async (req, res, next) => {
   try {
     const { name, country, city } = req.body
-    let { email, phoneNumber } = req.body
+    let { phoneNumber } = req.body
     const { user } = req
     const { id } = user
 
@@ -121,25 +121,15 @@ const updateMyDetails = async (req, res, next) => {
 
     const updateDataAuth = {}
 
-    if (email) {
-      email = email.toLowerCase()
-      if (!validator.isEmail(email)) {
-        return next(new ApiError('Email tidak valid', 400))
-      }
-      if (email !== user.Auth.email) {
-        const isEmailExist = await Auth.findOne({ where: { email } })
-        if (isEmailExist) {
-          return next(new ApiError('Email sudah terdaftar di lain akun', 400))
-        }
-      }
-      updateDataAuth.email = email
-    }
-
     if (phoneNumber) {
       if (`${phoneNumber}`.startsWith('0')) {
-        phoneNumber = `${phoneNumber.slice(1)}`
+        phoneNumber = `+62${phoneNumber.slice(1)}`
       }
-      if (!validator.isMobilePhone(`0${phoneNumber}`, 'id-ID')) {
+
+      if (!`${phoneNumber}`.startsWith('+')) {
+        phoneNumber = `+62${phoneNumber}`
+      }
+      if (!validator.isMobilePhone(phoneNumber, 'id-ID')) {
         return next(new ApiError('Nomor telepon tidak valid', 400))
       }
 
