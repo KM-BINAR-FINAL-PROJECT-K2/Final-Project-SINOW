@@ -336,6 +336,7 @@ const paymentCallback = async (req, res, next) => {
 
         await userCourse.update({
           isAccessible: true,
+          isFollowing: true,
         })
 
         await transaction.update({

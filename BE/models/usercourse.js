@@ -31,7 +31,14 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.BOOLEAN,
         defaultValue: false,
       },
-      lastSeen: DataTypes.DATE,
+      isFollowing: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+      },
+      lastSeen: {
+        type: DataTypes.DATE,
+        defaultValue: new Date(),
+      },
       progress: {
         type: DataTypes.STRING,
         defaultValue: 'inProgress',
