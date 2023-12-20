@@ -191,14 +191,17 @@ const createTransaction = async (req, res, next) => {
       }
     }
 
-    const promoPrice = course.price - (course.price * course.promoDiscountPercentage) / 100
+    const discountPrice = (course.price * course.promoDiscountPercentage) / 100
+    const taxPrice = (discountPrice * 11) / 100
 
-    const totalPrice = promoPrice + (promoPrice * 11) / 100
+    const totalPrice = course.price - discountPrice + taxPrice
 
     const newTransaction = await Transaction.create({
       userId: user.id,
       courseId,
       coursePrice: course.price,
+      discountPrice,
+      taxPrice,
       totalPrice,
       promoDiscountPercentage: course.promoDiscountPercentage,
       taxPercentage: 11,

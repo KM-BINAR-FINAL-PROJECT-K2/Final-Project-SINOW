@@ -30,6 +30,8 @@ module.exports = (sequelize, DataTypes) => {
       userId: DataTypes.INTEGER,
       courseId: DataTypes.INTEGER,
       coursePrice: DataTypes.INTEGER,
+      discountPrice: DataTypes.INTEGER,
+      taxPrice: DataTypes.INTEGER,
       totalPrice: DataTypes.INTEGER,
       promoDiscountPercentage: DataTypes.INTEGER,
       taxPercentage: {
