@@ -6,6 +6,7 @@ const {
   Course,
   UserCourse,
   UserModule,
+  Category,
   Chapter,
   Module,
 } = require('../models')
@@ -19,7 +20,19 @@ const snap = new Midtrans.Snap({
 
 const getAllTransaction = async (req, res, next) => {
   try {
-    const transactions = await Transaction.findAll()
+    const transactions = await Transaction.findAll({
+      include: [
+        {
+          model: Course,
+          include: [
+            {
+              model: Category,
+              as: 'category',
+            },
+          ],
+        },
+      ],
+    })
 
     if (!transactions || transactions.length === 0) {
       return next(new ApiError('Data transaction masih kosong', 404))
@@ -37,7 +50,19 @@ const getAllTransaction = async (req, res, next) => {
 const getTransactionById = async (req, res, next) => {
   try {
     const { id } = req.params
-    const transaction = await Transaction.findByPk(id)
+    const transaction = await Transaction.findByPk(id, {
+      include: [
+        {
+          model: Course,
+          include: [
+            {
+              model: Category,
+              as: 'category',
+            },
+          ],
+        },
+      ],
+    })
 
     if (!transaction) {
       return next(new ApiError('Data transaction tidak ditemukan', 404))
@@ -211,9 +236,10 @@ const createTransaction = async (req, res, next) => {
       expiredAt: new Date(Date.now() + 1000 * 60 * 60 * 24),
     })
 
-    const courseName = course.name.length > 30
-      ? `${course.name.substring(0, 30)}...`
-      : course.name
+    const courseName =
+      course.name.length > 30
+        ? `${course.name.substring(0, 30)}...`
+        : course.name
 
     const parameter = {
       item_details: [
@@ -275,12 +301,12 @@ const paymentCallback = async (req, res, next) => {
     } = req.body
 
     if (
-      !transaction_status
-      || !fraud_status
-      || !order_id
-      || !status_code
-      || !gross_amount
-      || !signature_key
+      !transaction_status ||
+      !fraud_status ||
+      !order_id ||
+      !status_code ||
+      !gross_amount ||
+      !signature_key
     ) {
       return res.status(400).json({
         status: 'Failed',
@@ -326,8 +352,8 @@ const paymentCallback = async (req, res, next) => {
     }
 
     if (
-      transaction_status === 'capture'
-      || transaction_status === 'settlement'
+      transaction_status === 'capture' ||
+      transaction_status === 'settlement'
     ) {
       if (fraud_status === 'accept') {
         const userCourse = await UserCourse.findOne({
