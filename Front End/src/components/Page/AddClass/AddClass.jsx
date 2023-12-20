@@ -20,7 +20,7 @@ export default function AddClass() {
     classCode: "",
     type: "",
     price: 0,
-    promo: 0,
+    promoDiscountPercentage: 0,
     courseBy: "",
     imageUrl: "",
     videoPreviewUrl: "",
@@ -37,7 +37,9 @@ export default function AddClass() {
     let classCode = formData.get("classCode");
     const type = formData.get("type").toLowerCase();
     const price = Number(formData.get("price"));
-    const promo = Number(formData.get("promo"));
+    const promoDiscountPercentage = Number(
+      formData.get("promoDiscountPercentage")
+    );
     const courseBy = formData.get("courseBy");
     const imageUrl = formData.get("imageUrl");
     const videoPreviewUrl = formData.get("videoPreviewUrl");
@@ -55,7 +57,7 @@ export default function AddClass() {
       classCode,
       type,
       price,
-      promo,
+      promoDiscountPercentage,
       courseBy,
       image: imageUrl,
       video: videoPreviewUrl,
@@ -265,7 +267,7 @@ export default function AddClass() {
                   </label>
                   <input
                     type="number"
-                    name="promo"
+                    name="promoDiscountPercentage"
                     className="bg-gray-50 border border-gray-300 text-gray-900 md:text-sm text-xs mb-1 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
                     placeholder="20"
                   />
