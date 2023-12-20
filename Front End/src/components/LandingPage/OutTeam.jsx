@@ -16,15 +16,15 @@ export default function OurTeam() {
     },
     {
       image: Avatar3,
-      name: "M. Alif Ramdani",
+      name: "Mohamad Alif R.",
     },
     {
       image: Avatar4,
-      name: "Michael ",
+      name: "michael Arselius P.",
     },
     {
       image: Avatar5,
-      name: "Adella S.",
+      name: "adella Desinta M",
     },
   ];
   return (

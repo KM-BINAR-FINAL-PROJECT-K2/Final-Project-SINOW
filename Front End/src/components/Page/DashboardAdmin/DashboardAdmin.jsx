@@ -10,7 +10,7 @@ import { ImSearch } from "react-icons/im";
 
 export default function DashboadAdmin() {
   const { setIsLoading } = useContext(LoaderContext);
-  const { setSearchValue } = useContext(SearchValueContext);
+  // const { setSearchValue } = useContext(SearchValueContext);
   const [showSearchInput, setShowSearchInput] = useState(false);
   const [error, setError] = useState("");
   useEffect(() => {
@@ -44,9 +44,9 @@ export default function DashboadAdmin() {
     setShowSearchInput(!showSearchInput);
   };
 
-  const handleSearchButtonClick = (value) => {
-    setSearchValue(value);
-  };
+  // const handleSearchButtonClick = (value) => {
+  //   setSearchValue(value);
+  // };
   return (
     <Navigation>
       <section className="mx-8 lg:mx-16 flex justify-around gap-6 flex-wrap mb-[54px]">

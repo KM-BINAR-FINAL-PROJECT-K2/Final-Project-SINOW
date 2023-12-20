@@ -38,7 +38,7 @@ export default function HeaderLandingPage() {
           <div className=" lg:mx-5 lg:grid lg:grid-cols-2 gap-8">
             <div className=" hidden lg:flex ">
               <a
-                href="#"
+                href="/register"
                 className="px-5 py-1 rounded-md hover:bg-sinow-03 bg-sinow-05 text-white text-[14px] font-semibold leading-6"
               >
                 Daftar
@@ -46,7 +46,7 @@ export default function HeaderLandingPage() {
             </div>
             <div className="hidden lg:flex ">
               <a
-                href="#"
+                href="/login"
                 className="px-5 py-1 rounded-md hover:bg-sinow-03 bg-sinow-05 text-white text-[14px] font-semibold leading-6"
               >
                 Masuk
@@ -90,7 +90,13 @@ export default function HeaderLandingPage() {
                     href="#"
                     className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-sinow-05 hover:bg-sinow-03 hover:text-white"
                   >
-                    Log in
+                    Daftar
+                  </a>
+                  <a
+                    href="#"
+                    className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-sinow-05 hover:bg-sinow-03 hover:text-white"
+                  >
+                    Masuk
                   </a>
                 </div>
               </div>
