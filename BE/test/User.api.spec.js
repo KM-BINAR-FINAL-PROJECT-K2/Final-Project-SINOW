@@ -119,7 +119,7 @@ describe('API update data user', () => {
       .set({
         Authorization: `Bearer ${token}`,
       })
-      .field({ phoneNumber: 81234567101 })
+      .field({ phoneNumber: '+6281234567101' })
     expect(response.statusCode).toBe(400)
     expect(response.body.status).toBe('Failed')
   })

@@ -53,8 +53,6 @@ describe('API create transaction', () => {
         Authorization: `Bearer ${token}`,
       })
 
-    console.log(response.req._header)
-    console.log(response.body)
     transaction = response.body.data.transactionDetail
 
     expect(response.statusCode).toBe(201)
@@ -101,10 +99,10 @@ describe('API get transaction by id', () => {
   })
 })
 
-describe('API finalize transaction', () => {
-  it('failed finalize transaction: request body not valid', async () => {
+describe('API callback payment', () => {
+  it('failed callback payment: request body not valid', async () => {
     const response = await request(app)
-      .post(`/api/v1/transactions/finalize`)
+      .post(`/api/v1/transactions/payment-callback`)
       .set({
         Authorization: `Bearer ${token}`,
       })
@@ -114,14 +112,14 @@ describe('API finalize transaction', () => {
     expect(response.body.message).toBe('Semua field harus diisi')
   })
 
-  it('failed finalize transaction: fraud status not accept', async () => {
+  it('failed callback payment: fraud status not accept', async () => {
     const signature_key = generateSHA512(
       `${transaction.id}${200}${transaction.totalPrice}${
         process.env.MIDTRANS_SERVER_KEY
       }`,
     )
     const response = await request(app)
-      .post(`/api/v1/transactions/finalize`)
+      .post(`/api/v1/transactions/payment-callback`)
       .set({
         Authorization: `Bearer ${token}`,
       })
@@ -141,14 +139,14 @@ describe('API finalize transaction', () => {
     )
   })
 
-  it('failed finalize transaction: signature key not valid', async () => {
+  it('failed callback payment: signature key not valid', async () => {
     const signature_key = generateSHA512(
       `${transaction.id}${200}${transaction.totalPrice}${
         process.env.MIDTRANS_SERVER_KEY
       }1`,
     )
     const response = await request(app)
-      .post(`/api/v1/transactions/finalize`)
+      .post(`/api/v1/transactions/payment-callback`)
       .set({
         Authorization: `Bearer ${token}`,
       })
@@ -166,21 +164,21 @@ describe('API finalize transaction', () => {
     expect(response.body.message).toBe('Signature key tidak sesuai')
   })
 
-  it('failed finalize transaction: transaction not found', async () => {
+  it('failed callback payment: transaction not found', async () => {
     const signature_key = generateSHA512(
       `${transaction.id}${200}${transaction.totalPrice}${
         process.env.MIDTRANS_SERVER_KEY
       }`,
     )
     const response = await request(app)
-      .post(`/api/v1/transactions/finalize`)
+      .post(`/api/v1/transactions/payment-callback`)
       .set({
         Authorization: `Bearer ${token}`,
       })
       .send({
         transaction_status: 'capture',
         fraud_status: 'accept',
-        order_id: 22929022,
+        order_id: 'f730f6e1-dfbe-41b7-9101-87435f4cff92',
         status_code: 200,
         gross_amount: transaction.totalPrice,
         signature_key,
@@ -191,14 +189,14 @@ describe('API finalize transaction', () => {
     expect(response.body.message).toBe('Transaksi tidak ditemukan')
   })
 
-  it('failed finalize transaction: transaction expired', async () => {
+  it('failed callback payment: transaction expired', async () => {
     const signature_key = generateSHA512(
       `${transaction.id}${200}${transaction.totalPrice}${
         process.env.MIDTRANS_SERVER_KEY
       }`,
     )
     const response = await request(app)
-      .post(`/api/v1/transactions/finalize`)
+      .post(`/api/v1/transactions/payment-callback`)
       .set({
         Authorization: `Bearer ${token}`,
       })
@@ -218,14 +216,14 @@ describe('API finalize transaction', () => {
     )
   })
 
-  it('failed finalize transaction: transaction status deny', async () => {
+  it('failed callback payment: transaction status deny', async () => {
     const signature_key = generateSHA512(
       `${transaction.id}${200}${transaction.totalPrice}${
         process.env.MIDTRANS_SERVER_KEY
       }`,
     )
     const response = await request(app)
-      .post(`/api/v1/transactions/finalize`)
+      .post(`/api/v1/transactions/payment-callback`)
       .set({
         Authorization: `Bearer ${token}`,
       })
@@ -243,14 +241,14 @@ describe('API finalize transaction', () => {
     expect(response.body.message).toBe('Transaksi ditolak')
   })
 
-  it('success finalize transaction', async () => {
+  it('success callback payment', async () => {
     const signature_key = generateSHA512(
       `${transaction.id}${200}${transaction.totalPrice}${
         process.env.MIDTRANS_SERVER_KEY
       }`,
     )
     const response = await request(app)
-      .post(`/api/v1/transactions/finalize`)
+      .post(`/api/v1/transactions/payment-callback`)
       .set({
         Authorization: `Bearer ${token}`,
       })
@@ -270,14 +268,14 @@ describe('API finalize transaction', () => {
     )
   })
 
-  it('failed finalize transaction: transaction paid', async () => {
+  it('failed callback payment: transaction paid', async () => {
     const signature_key = generateSHA512(
       `${transaction.id}${200}${transaction.totalPrice}${
         process.env.MIDTRANS_SERVER_KEY
       }`,
     )
     const response = await request(app)
-      .post(`/api/v1/transactions/finalize`)
+      .post(`/api/v1/transactions/payment-callback`)
       .set({
         Authorization: `Bearer ${token}`,
       })

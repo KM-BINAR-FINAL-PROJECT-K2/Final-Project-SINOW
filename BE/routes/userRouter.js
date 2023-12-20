@@ -21,7 +21,14 @@ router.get('/notifications/:id', authenticate, User.openNotification)
 router.delete('/notifications/:id', authenticate, User.deleteNotification)
 
 router.get('/my-courses', authenticate, User.getMyCourses)
+
 router.get('/my-courses/:courseId', authenticate, User.openCourse)
+
+router.post(
+  '/my-courses/:courseId/follow-course',
+  authenticate,
+  User.followCourse,
+)
 
 router.get(
   '/my-courses/:courseId/modules/:userModuleId',
@@ -29,11 +36,11 @@ router.get(
   User.openUserModule,
 )
 
-router.get('/transaction', authenticate, User.userTransaction)
+router.get('/transaction', authenticate, User.getAllUserTransaction)
 router.get(
   '/transaction/:transactionId',
   authenticate,
-  User.openUserTransaction,
+  User.getUserTransactionById,
 )
 
 module.exports = router

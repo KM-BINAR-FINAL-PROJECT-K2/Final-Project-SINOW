@@ -16,6 +16,11 @@ module.exports = {
       },
       isAccessible: {
         type: Sequelize.BOOLEAN,
+        defaultValue: false,
+      },
+      isFollowing: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: false,
       },
       progress: {
         type: Sequelize.STRING,

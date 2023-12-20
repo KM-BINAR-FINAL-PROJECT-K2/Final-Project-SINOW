@@ -89,9 +89,12 @@ const register = async (req, res, next) => {
     }
 
     if (`${phoneNumber}`.startsWith('0')) {
-      phoneNumber = `${phoneNumber.slice(1)}`
+      phoneNumber = `+62${phoneNumber.slice(1)}`
     }
 
+    if (!`${phoneNumber}`.startsWith('+')) {
+      phoneNumber = `+62${phoneNumber}`
+    }
     if (password.length < 8) {
       return next(new ApiError('Password min 8 karakter', 400))
     }
