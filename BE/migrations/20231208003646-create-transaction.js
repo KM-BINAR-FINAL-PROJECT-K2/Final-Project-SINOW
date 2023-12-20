@@ -17,6 +17,12 @@ module.exports = {
       coursePrice: {
         type: Sequelize.INTEGER,
       },
+      discountPrice: {
+        type: Sequelize.INTEGER,
+      },
+      taxPrice: {
+        type: Sequelize.INTEGER,
+      },
       totalPrice: {
         type: Sequelize.INTEGER,
       },
