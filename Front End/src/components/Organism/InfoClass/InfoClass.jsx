@@ -156,26 +156,38 @@ export default function InfoClass({ id }) {
 
               <div className="mb-[15px] pt-10 pb-5 flex items-center md:flex-row flex-col gap-2 ">
                 <div className="inline-block py-3 px-6 rounded-lg border border-darkblue-05 relative overflow-hidden md:w-auto w-full ">
-                  {details.promo > 0 && (
+                  {details.promoDiscountPercentage > 0 && (
                     <div className="absolute top-0 right-0  bg-darkblue-05 rounded-bl-md">
                       <p className="text-[20px] font-bold px-2 text-white">
-                        {details.promo}%
+                        {details.promoDiscountPercentage}%
                       </p>
                     </div>
                   )}
                   <span
-                    className={` ${details.promo > 0 && "line-through"} text-${
-                      details.promo > 0 ? "gray-600" : "darkblue-05"
-                    } ${details.promo > 0 ? "font-normal" : "font-bold"} ${
-                      details.promo > 0 ? "text-[10px]" : "text-[18px]"
+                    className={` ${
+                      details.promoDiscountPercentage > 0 && "line-through"
+                    } text-${
+                      details.promoDiscountPercentage > 0
+                        ? "gray-600"
+                        : "darkblue-05"
+                    } ${
+                      details.promoDiscountPercentage > 0
+                        ? "font-normal"
+                        : "font-bold"
+                    } ${
+                      details.promoDiscountPercentage > 0
+                        ? "text-[10px]"
+                        : "text-[18px]"
                     } `}
                   >
                     {rupiah(details.price)} <br />{" "}
                   </span>
-                  {details.promo > 0 && (
+                  {details.promoDiscountPercentage > 0 && (
                     <span className="text-darkblue-05 font-semibold ">
                       {rupiah(
-                        details.price - (details.price * details.promo) / 100
+                        details.price -
+                          (details.price * details.promoDiscountPercentage) /
+                            100
                       )}
                     </span>
                   )}
