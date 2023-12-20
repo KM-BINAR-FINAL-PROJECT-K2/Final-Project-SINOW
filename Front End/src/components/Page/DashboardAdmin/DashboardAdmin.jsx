@@ -5,14 +5,14 @@ import Card from "../../Molecule/Card/Card";
 import PaymentTable from "../../Molecule/PaymentTable/PaymentTable";
 import { LoaderContext } from "../../../store/Loader";
 import FilterKelolaDashboard from "../../Molecule/Filter/FilterKelolaDashboard";
-import { SearchValueContext } from "../../../store/SearchValue";
 import { ImSearch } from "react-icons/im";
 
 export default function DashboadAdmin() {
   const { setIsLoading } = useContext(LoaderContext);
-  // const { setSearchValue } = useContext(SearchValueContext);
   const [showSearchInput, setShowSearchInput] = useState(false);
   const [error, setError] = useState("");
+  const [paymentDetail, setPaymentDetail] = useState("");
+
   useEffect(() => {
     const getClasses = async () => {
       try {
@@ -35,6 +35,34 @@ export default function DashboadAdmin() {
       setClassSinow([]);
     };
   }, []);
+
+  useEffect(() => {
+    const getpaymentDetail = async () => {
+      try {
+        setIsLoading(true);
+        setError("");
+        const res = await axios.get(
+          "https://sinow-production.up.railway.app/api/v1/transactions",
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        );
+        setPaymentDetail(res.data.data);
+      } catch (error) {
+        setError(
+          error.response ? error.response.data.message : "Network Error"
+        );
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    getpaymentDetail();
+  }, []);
+
   const [classSinow, setClassSinow] = useState([]);
   const totalQuantity = classSinow.reduce((total, item) => {
     return total + item.totalUser;
@@ -44,9 +72,9 @@ export default function DashboadAdmin() {
     setShowSearchInput(!showSearchInput);
   };
 
-  // const handleSearchButtonClick = (value) => {
-  //   setSearchValue(value);
-  // };
+  const handleSearchButtonClick = (value) => {
+    setSearchValue(value);
+  };
   return (
     <Navigation>
       <section className="mx-8 lg:mx-16 flex justify-around gap-6 flex-wrap mb-[54px]">
