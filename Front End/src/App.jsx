@@ -10,19 +10,13 @@ import ManageChapter from "./components/Page/ManageChapter/ManageChapter";
 import ManageClassContextProvider from "./store/ManageClassStore";
 import LandingPage from "./components/Page/LandingPage/LandingPage";
 import SearchValueContextProvider from "./store/SearchValue";
-import UserLogin from "./components/Page/Login/LoginUser";
-import Sinow from "./components/Page/Sinow/DashboardSinow";
-import Register from "./components/Page/Register/Register";
 
 export default function App() {
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<LandingPage />} />
-        <Route path="/login" element={<UserLogin />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/sinow" element={<Sinow />} />
-        <Route path="/dashboard" element={<DashboadAdmin />} />
+
         <Route
           path="/dashboard"
           element={

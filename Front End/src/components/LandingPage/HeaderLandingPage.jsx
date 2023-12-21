@@ -35,27 +35,16 @@ export default function HeaderLandingPage() {
             </button>
           </div>
           {/* navbar */}
-          <div className=" lg:mx-5 lg:grid lg:grid-cols-2 gap-8">
-            <div className=" hidden lg:flex ">
-              <a
-                href="/register"
-                className="px-5 py-1 rounded-md hover:bg-sinow-03 bg-sinow-05 text-white text-[14px] font-semibold leading-6"
-              >
-                Daftar
-              </a>
-            </div>
-            <div className="hidden lg:flex ">
-              <a
-                href="/login"
-                className="px-5 py-1 rounded-md hover:bg-sinow-03 bg-sinow-05 text-white text-[14px] font-semibold leading-6"
-              >
-                Masuk
-              </a>
-            </div>
+
+          <div className=" hidden lg:flex ">
+            <a
+              href="#"
+              className="px-5 py-1 rounded-md hover:bg-sinow-03 bg-sinow-05 text-white text-[14px] font-semibold leading-6"
+            >
+              Download
+            </a>
           </div>
         </nav>
-
-        {/* ------------------------------------- */}
 
         <Dialog
           as="div"
