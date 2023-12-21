@@ -9,14 +9,17 @@ import { ImSearch } from "react-icons/im";
 import { ErrorContext } from "../../../store/Error";
 import { SearchValueContext } from "../../../store/SearchValue";
 import FilterKelolaDashboard from "../../Molecule/Filter/FilterKelolaDashboard";
+import { QueryContext } from "../../../store/QuerySearch";
+import { FilterClassContext } from "../../../store/FilterClass";
 export default function DashboadAdmin() {
   const [showSearchInput, setShowSearchInput] = useState(false);
   const { setIsLoading } = useContext(LoaderContext);
   const { isLoading } = useContext(LoaderContext);
   const { setIsError } = useContext(ErrorContext);
   const { isError } = useContext(ErrorContext);
-  const [error, setError] = useState("");
   const { searchValue, setSearchValue } = useContext(SearchValueContext);
+  const { filterClass, setFilterClass } = useContext(FilterClassContext);
+  const [error, setError] = useState("");
   const [paymentDetail, setPaymentDetail] = useState([]);
   const [informationCard, setInformationCard] = useState({
     users: 0,
@@ -55,7 +58,7 @@ export default function DashboadAdmin() {
         setIsLoading(true);
         setError("");
         const res = await axios.get(
-          `https://sinow-production.up.railway.app/api/v1/transactions?search=${searchValue}`,
+          `https://sinow-production.up.railway.app/api/v1/transactions`,
           {
             headers: {
               "Content-Type": "application/json",
@@ -75,10 +78,7 @@ export default function DashboadAdmin() {
     };
 
     getpaymentDetail();
-    return () => {
-      setPaymentDetail([]);
-    };
-  }, [searchValue]);
+  }, []);
 
   const handleShowSearchInput = () => {
     setShowSearchInput(!showSearchInput);
@@ -218,43 +218,60 @@ export default function DashboadAdmin() {
                   </>
                 )}
 
+                {/* {!isError &&
+                  paymentDetail.map((paymentItem) => {
+                    
+                  })} */}
                 {!isLoading &&
                   !isError &&
-                  paymentDetail.map((paymentItem) => (
-                    <tr key={paymentItem.id}>
-                      <td className="py-2 px-4 text-[10px] font-bold ">
-                        {paymentItem.courseId}
-                      </td>
-                      <td className="py-2 px-4 text-[10px] font-bold ">
-                        {paymentItem.Course.category.name}
-                      </td>
-                      <td className="py-2 px-4 text-[10px] font-bold ">
-                        {paymentItem.Course.name}
-                      </td>
-                      <td
-                        className={`py-2 px-4 text-[10px] font-bold ${
-                          paymentItem
-                            ? paymentItem.status === "SUDAH_BAYAR"
-                              ? "text-alert-success"
-                              : paymentItem.status === "BELUM_BAYAR"
-                              ? "text-alert-danger"
-                              : paymentItem.status === "KADALUARSA"
-                              ? "text-slate-400"
-                              : ""
-                            : ""
-                        }`}
-                      >
-                        {paymentItem.status}
-                      </td>
-                      <td className="py-2 px-4 text-[10px] font-bold ">
-                        {rupiah(paymentItem.totalPrice)}
-                      </td>
-                      <td className="py-2 px-4 text-[10px] font-bold ">
-                        {paymentItem.updatedAt}{" "}
-                        {/* Fixed typo in 'updatedAt' */}
-                      </td>
-                    </tr>
-                  ))}
+                  paymentDetail.map((paymentItem) => {
+                    if (
+                      (!searchValue ||
+                        paymentItem.Course.name
+                          .toLowerCase()
+                          .includes(searchValue.toLowerCase())) &&
+                      (!filterClass ||
+                        paymentItem.status
+                          .toLowerCase()
+                          .includes(filterClass.toLowerCase()))
+                    ) {
+                      return (
+                        <tr key={paymentItem.id}>
+                          <td className="py-2 px-4 text-[10px] font-bold ">
+                            {paymentItem.courseId}
+                          </td>
+                          <td className="py-2 px-4 text-[10px] font-bold ">
+                            {paymentItem.Course.category.name}
+                          </td>
+                          <td className="py-2 px-4 text-[10px] font-bold ">
+                            {paymentItem.Course.name}
+                          </td>
+                          <td
+                            className={`py-2 px-4 text-[10px] font-bold ${
+                              paymentItem
+                                ? paymentItem.status === "SUDAH_BAYAR"
+                                  ? "text-alert-success"
+                                  : paymentItem.status === "BELUM_BAYAR"
+                                  ? "text-alert-danger"
+                                  : paymentItem.status === "KADALUARSA"
+                                  ? "text-slate-400"
+                                  : ""
+                                : ""
+                            }`}
+                          >
+                            {paymentItem.status}
+                          </td>
+                          <td className="py-2 px-4 text-[10px] font-bold ">
+                            {rupiah(paymentItem.totalPrice)}
+                          </td>
+                          <td className="py-2 px-4 text-[10px] font-bold ">
+                            {paymentItem.updatedAt}{" "}
+                            {/* Fixed typo in 'updatedAt' */}
+                          </td>
+                        </tr>
+                      );
+                    }
+                  })}
               </tbody>
             </table>
           </section>
