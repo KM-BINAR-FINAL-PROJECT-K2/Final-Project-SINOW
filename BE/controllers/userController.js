@@ -45,7 +45,7 @@ const userCourseRelation = (id) => {
           {
             model: Benefit,
             as: 'benefits',
-            attributes: ['id', 'description'],
+            attributes: ['id', 'no', 'description'],
           },
           {
             model: Chapter,
@@ -75,6 +75,7 @@ const userCourseRelation = (id) => {
     order: [
       ['Course', 'id', 'ASC'],
       ['Course', 'chapters', 'no', 'ASC'],
+      ['Course', 'benefits', 'no', 'ASC'],
       ['Course', 'chapters', 'userModules', 'moduleData', 'no', 'ASC'],
     ],
   }

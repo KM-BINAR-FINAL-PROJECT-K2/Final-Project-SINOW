@@ -236,10 +236,9 @@ const createTransaction = async (req, res, next) => {
       expiredAt: new Date(Date.now() + 1000 * 60 * 60 * 24),
     })
 
-    const courseName =
-      course.name.length > 30
-        ? `${course.name.substring(0, 30)}...`
-        : course.name
+    const courseName = course.name.length > 30
+      ? `${course.name.substring(0, 30)}...`
+      : course.name
 
     const parameter = {
       item_details: [
@@ -301,12 +300,12 @@ const paymentCallback = async (req, res, next) => {
     } = req.body
 
     if (
-      !transaction_status ||
-      !fraud_status ||
-      !order_id ||
-      !status_code ||
-      !gross_amount ||
-      !signature_key
+      !transaction_status
+      || !fraud_status
+      || !order_id
+      || !status_code
+      || !gross_amount
+      || !signature_key
     ) {
       return res.status(400).json({
         status: 'Failed',
@@ -352,8 +351,8 @@ const paymentCallback = async (req, res, next) => {
     }
 
     if (
-      transaction_status === 'capture' ||
-      transaction_status === 'settlement'
+      transaction_status === 'capture'
+      || transaction_status === 'settlement'
     ) {
       if (fraud_status === 'accept') {
         const userCourse = await UserCourse.findOne({
