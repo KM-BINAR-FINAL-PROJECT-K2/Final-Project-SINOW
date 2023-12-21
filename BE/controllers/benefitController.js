@@ -134,10 +134,9 @@ const updateBenefit = async (req, res, next) => {
         return next(new ApiError('Nomor benefit harus berupa angka', 400))
       }
 
-      const validCourseId =
-        courseId && !Number.isNaN(Number(courseId))
-          ? courseId
-          : benefit.courseId
+      const validCourseId = courseId && !Number.isNaN(Number(courseId))
+        ? courseId
+        : benefit.courseId
 
       const checkNumber = await Benefit.findOne({
         where: {
@@ -156,10 +155,9 @@ const updateBenefit = async (req, res, next) => {
     }
 
     if (description) {
-      const validCourseId =
-        courseId && !Number.isNaN(Number(courseId))
-          ? courseId
-          : benefit.courseId
+      const validCourseId = courseId && !Number.isNaN(Number(courseId))
+        ? courseId
+        : benefit.courseId
 
       const existingBenefit = await Benefit.findOne({
         where: {
