@@ -8,12 +8,15 @@ import EditClass from "./components/Page/EditClass/EditClass";
 import AddClass from "./components/Page/AddClass/AddClass";
 import ManageChapter from "./components/Page/ManageChapter/ManageChapter";
 import ManageClassContextProvider from "./store/ManageClassStore";
+import LandingPage from "./components/Page/LandingPage/LandingPage";
 import SearchValueContextProvider from "./store/SearchValue";
 
 export default function App() {
   return (
     <BrowserRouter>
       <Routes>
+        <Route path="/" element={<LandingPage />} />
+
         <Route
           path="/dashboard"
           element={
@@ -30,7 +33,7 @@ export default function App() {
             </ManageClassContextProvider>
           }
         />
-        <Route path="/" element={<Login />} />
+        <Route path="/admin" element={<Login />} />
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route
           path="/message-succes-reset-password"

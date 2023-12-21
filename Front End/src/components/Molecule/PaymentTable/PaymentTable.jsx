@@ -1,29 +1,10 @@
-export default function PaymentTable({
-  id,
-  category,
-  premiumClass,
-  statusMessage,
-  paymenMethod,
-  paymentDate,
-}) {
-  return (
-    <tr>
-      <td className="py-2 px-4 text-[10px] font-bold text-gray-600">{id}</td>
-      <td className="px-4 py-2 text-[10px] font-bold text-gray-600">
-        {category}
-      </td>
-      <td className="px-4 py-2 text-[10px] font-bold">{premiumClass}</td>
-      <td
-        className={`px-4 py-2 text-[12px] font-bold ${
-          statusMessage === "SUDAH BAYAR"
-            ? "text-alert-success"
-            : "text-alert-danger"
-        }`}
-      >
-        {statusMessage}
-      </td>
-      <td className="px-4 py-2 text-[10px] font-bold">{paymenMethod}</td>
-      <td className="px-4 py-2 text-[10px] font-bold">{paymentDate}</td>
-    </tr>
-  );
+import { useContext } from "react";
+import Loading from "../Loading/Loading";
+import { LoaderContext } from "../../../store/Loader";
+import { ErrorContext } from "../../../store/Error";
+export default function PaymentTable({ paymentDetail }) {
+  const { isLoading } = useContext(LoaderContext);
+  const { isError } = useContext(ErrorContext);
+
+  return <div>p</div>;
 }
