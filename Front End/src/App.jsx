@@ -10,6 +10,7 @@ import ManageChapter from "./components/Page/ManageChapter/ManageChapter";
 import ManageClassContextProvider from "./store/ManageClassStore";
 import LandingPage from "./components/Page/LandingPage/LandingPage";
 import SearchValueContextProvider from "./store/SearchValue";
+import FilterClassContextProvider from "./store/FilterClass";
 
 export default function App() {
   return (
@@ -21,7 +22,9 @@ export default function App() {
           path="/dashboard"
           element={
             <SearchValueContextProvider>
-              <DashboadAdmin />
+              <FilterClassContextProvider>
+                <DashboadAdmin />
+              </FilterClassContextProvider>
             </SearchValueContextProvider>
           }
         />
