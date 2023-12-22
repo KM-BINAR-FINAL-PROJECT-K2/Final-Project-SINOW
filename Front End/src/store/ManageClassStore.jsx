@@ -6,6 +6,7 @@ import InfoClassContextProvider from "./InfoClassUI";
 import RotateContextProvider from "./RotateAction";
 import FilterClassContextProvider from "./FilterClass";
 import SearchValueContextProvider from "./SearchValue";
+import CategoryContainerContextProvider from "./CategoryUI";
 
 const ManageClassContextProvider = ({ children }) => (
   <AddClassContextProvider>
@@ -15,7 +16,9 @@ const ManageClassContextProvider = ({ children }) => (
           <RotateContextProvider>
             <SearchValueContextProvider>
               <FilterClassContextProvider>
-                {children}
+                <CategoryContainerContextProvider>
+                  {children}
+                </CategoryContainerContextProvider>
               </FilterClassContextProvider>
             </SearchValueContextProvider>
           </RotateContextProvider>

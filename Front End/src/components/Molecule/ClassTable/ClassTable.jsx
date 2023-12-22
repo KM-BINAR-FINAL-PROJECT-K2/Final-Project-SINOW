@@ -1,28 +1,96 @@
 /* eslint-disable react/prop-types */
-import { useContext } from "react";
+import axios from "axios";
+import { useContext, useEffect, useState } from "react";
 import { rupiah } from "../../../utils/formatCurrency";
+import { Tooltip } from "flowbite-react";
 import Loading from "../Loading/Loading";
 import { LoaderContext } from "../../../store/Loader";
 import { ClassContext } from "../../../store/ClassStore";
 import { InfoClassContext } from "../../../store/InfoClassUI";
 import { RemoveClassContext } from "../../../store/RemoveClassUI";
 import { ErrorContext } from "../../../store/Error";
+import { CategoryContainerContext } from "../../../store/CategoryUI";
+
 export default function ClassTable() {
-  const { isLoading } = useContext(LoaderContext);
-  const { isError } = useContext(ErrorContext);
+  const { isLoading, setIsLoading } = useContext(LoaderContext);
+  const { isError, setIsError } = useContext(ErrorContext);
   const { classSinow } = useContext(ClassContext);
   const { toggleShowInfo } = useContext(InfoClassContext);
   const { toggleShowWarning } = useContext(RemoveClassContext);
+  const { showCategoryContainer, setShowCategoryContainer } = useContext(
+    CategoryContainerContext
+  );
+
+  const customTheme = {
+    dropdown: {
+      arrowIcon: "ml-2 h-4 w-4 text-black",
+      content: "p-1 focus:outline-none",
+      floating: {
+        animation: "transition-opacity",
+        arrow: {
+          base: "absolute z-10 h-2 w-2 rotate-45",
+          style: {
+            dark: "bg-black border border-black fill-black ",
+            light: "bg-black border border-black fill-black",
+            auto: "bg-black border border-black fill-black ",
+          },
+          placement: "-4px",
+        },
+        base: "z-10 w-fit rounded divide-y divide-gray-100 shadow focus:outline-none",
+        content: "py-1 text-sm text-white",
+        divider: "my-1 h-px bg-gray-100 ",
+        header: "block py-2 px-4 text-sm text-gray-700",
+        hidden: "invisible opacity-0",
+        item: {
+          container: "",
+          base: "flex items-center justify-start py-2 px-4 text-sm text-white cursor-default w-full bg-sinow-05 hover:bg-white hover:text-sinow-05 hover:stroke-sinow-05 focus:bg-gray-100 focus:outline-none",
+          icon: "mr-2 h-4 w-4",
+        },
+        style: {
+          dark: "bg-gray-900 text-sinow-05",
+          light: "bg-sinow-05 text-gray-900",
+          auto: "bg-sinow-05 text-gray-900 ",
+        },
+        target: "w-fit",
+      },
+      inlineWrapper: "flex items-center",
+    },
+  };
+
+  const handleCategoryContainer = () => {
+    console.log(showCategoryContainer);
+    setShowCategoryContainer(!showCategoryContainer);
+  };
 
   return (
     <table className="w-full snap-mandatory snap-x table-auto">
       <thead className="sticky top-0 bg-lightblue-05 z-10">
-        <tr className="bg-lightblue-05 text-left">
-          <th className="py-2 text-[12px] px-4 font-semibold w-1/7">
+        <tr className="bg-lightblue-05 text-left text-gray-800">
+          <th className="py-2 text-[12px] px-4 font-semibold w-1/7 ">
             Kode Kelas
           </th>
           <th className="px-4 py-2 text-[12px] font-semibold w-1/7">
-            Kategori
+            <Tooltip content="Kelola Kategori">
+              <button
+                className="cursor-pointer flex items-center gap-1"
+                onClick={handleCategoryContainer}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={1.5}
+                  className="w-4 h-4 stroke-gray-800"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M12 4.5v15m7.5-7.5h-15"
+                  />
+                </svg>
+                <span>Kategori</span>
+              </button>
+            </Tooltip>
           </th>
           <th className="px-4 py-2 text-[12px] font-semibold w-[150px] lg:w-2/7">
             Nama Kelas
