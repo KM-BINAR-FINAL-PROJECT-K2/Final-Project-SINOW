@@ -23,7 +23,7 @@ export default function Footer() {
   return (
     <>
       <div className="mt-24 lg:mt-32 bg-sinow-03 text-white">
-        <div className="grid grid-cols-1  gap-16 place-items-center items-start py-20 px-1 h-auto mx-10 lg:grid lg:grid-cols-4 lg:place-items-center lg:items-start lg:py-20 lg:px-1 lg:h-auto lg:mx-10">
+        <div className="grid grid-cols-1 sm:grid sm:grid-cols-2 gap-16 place-items-center items-start py-20 px-1 h-auto mx-10 lg:grid lg:grid-cols-4 lg:place-items-center lg:items-start lg:py-20 lg:px-1 lg:h-auto lg:mx-10">
           <div className=" grid grid-cols-1 gap-6 font-bold text-xl lg:text-sm mb-8">
             <img src={Logo} alt="logo" className=" h-16 lg:h-12" />
             <div className="flex gap-2 items-center ">
@@ -46,6 +46,13 @@ export default function Footer() {
               ))}
             </div>
           </div>
+          <div className=" grid grid-cols-1 gap-4 text-center text-lg lg:text-sm lg:text-start">
+            <h1 className="font-bold text-xl lg:text-lg">ABOUT</h1>
+            <p>Profile</p>
+            <p>Why Us</p>
+            <p>Our Team</p>
+            <p>FAQ</p>
+          </div>
           {/* Sosmed */}
           <div className=" grid grid-cols-1 gap-4 text-lg text-center lg:text-sm lg:text-start">
             <h1 className="font-bold text-xl lg:text-lg">BOOTCAMP</h1>
@@ -57,13 +64,7 @@ export default function Footer() {
             <p>Business Intelegence</p>
             <p>Digital Marketing</p>
           </div>
-          <div className=" grid grid-cols-1 gap-4 text-center text-lg lg:text-sm lg:text-start">
-            <h1 className="font-bold text-xl lg:text-lg">ABOUT</h1>
-            <p>Profile</p>
-            <p>Why Us</p>
-            <p>Our Team</p>
-            <p>FAQ</p>
-          </div>
+
           <div className=" grid grid-cols-1 gap-4 text-center text-lg lg:text-sm lg:text-start">
             <h1 className="font-bold text-xl lg:text-lg">LOCATION</h1>
             <p>Jakarta</p>

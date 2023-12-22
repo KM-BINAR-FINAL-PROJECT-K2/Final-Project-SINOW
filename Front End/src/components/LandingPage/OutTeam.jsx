@@ -28,28 +28,28 @@ export default function OurTeam() {
     },
   ];
   return (
-    <div className=" m-4 pt-10 pb-4 md:pt-10 lg:pb-14 bg-slate-100 rounded-lg">
-      <h1 className="py-4 text-2xl font-bold text-center md:py-2"> Our Team</h1>
-      <div className=" py-4 grid md:py-2 md:grid md:grid-cols-5 lg:grid lg:grid-cols-5 place-items-center ">
+    <div className=" m-4 pt-10 pb-4 sm:pt-10 lg:pb-14 bg-slate-100 rounded-lg">
+      <h1 className="py-4 text-2xl font-bold text-center sm:py-2"> Our Team</h1>
+      <div className=" py-4 grid sm:py-2 sm:grid sm:grid-cols-3 lg:grid lg:grid-cols-5 place-items-center ">
         {navigation.map((item) => (
-          <div className="bg-white shadow-md h-[300px] w-[250px] my-10 mx-5 rounded-xl md:h-[260px] md:w-[150px] lg:h-[250px] lg:w-[200px]">
+          <div className="bg-white shadow-sm h-[300px] w-[250px] my-10 mx-5 sm:h-[300px] sm:w-[230px] rounded-xl border lg:h-[250px] lg:w-[200px]">
             <div className="m-5  flex justify-center">
               <img
                 src={item.image}
                 alt="avatar"
-                className="rounded-full h-36 md:h-28 "
+                className="rounded-full h-36 sm:h-28 "
               />
             </div>
             <p
               key={item.name}
-              className=" mx-5 mt-5 mb-3 text-center font-bold text-md md:mb-1 md:text-[12px]"
+              className=" mx-5 mt-5 mb-3 text-center font-bold text-sm sm:mb-1 sm:text-[12px]"
             >
               {item.name}
             </p>
-            <p className=" mx-5 text-center font-normal text-sm md:text-[10px]">
+            <p className=" mx-5 text-center font-normal text-sm sm:text-[10px]">
               Fullstack Web Course
             </p>
-            <div className=" flex gap-5 my-3 justify-center h-auto w-auto md:my-2 ">
+            <div className=" flex gap-5 my-3 justify-center h-auto w-auto sm:my-2 ">
               <a href="#">
                 <FaInstagram />
               </a>
