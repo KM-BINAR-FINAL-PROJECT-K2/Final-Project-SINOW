@@ -1,23 +1,34 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react/prop-types */
+// package
 import axios from "axios";
+
+// hooks
 import { useContext, useEffect, useState } from "react";
+
+// components
 import Card from "../../Molecule/Card/Card";
 import Navigation from "../../Template/Navigation/Navigation";
 import ClassTable from "../../Molecule/ClassTable/ClassTable";
 import InfoClass from "../../Organism/InfoClass/InfoClass";
 import RemoveClass from "../../Molecule/RemoveClass/RemoveClass";
+import FilterKelolaKelas from "../../Molecule/Filter/FilterKelolaKelas";
+import ManageCategory from "../../Organism/ManageCategory/ManageCategory";
+
+// context
 import { LoaderContext } from "../../../store/Loader";
 import { InfoClassContext } from "../../../store/InfoClassUI";
 import { RemoveClassContext } from "../../../store/RemoveClassUI";
 import { ClassContext } from "../../../store/ClassStore";
 import { KeyContext } from "../../../store/ActiveKey";
 import { ErrorContext } from "../../../store/Error";
-import FilterKelolaKelas from "../../Molecule/Filter/FilterKelolaKelas";
 import { IoIosAddCircle } from "react-icons/io";
 import { ImSearch } from "react-icons/im";
 import { FilterClassContext } from "../../../store/FilterClass";
 import { SearchValueContext } from "../../../store/SearchValue";
+import { CategoryContainerContext } from "../../../store/CategoryUI";
+import { RandomNumberContext } from "../../../store/RandomNumber";
+
 export default function CRUD() {
   const { setIsLoading } = useContext(LoaderContext);
   const { showInfoClass } = useContext(InfoClassContext);
@@ -27,6 +38,8 @@ export default function CRUD() {
   const { setIsError } = useContext(ErrorContext);
   const { filterClass } = useContext(FilterClassContext);
   const { searchValue, setSearchValue } = useContext(SearchValueContext);
+  const { showCategoryContainer } = useContext(CategoryContainerContext);
+  const { randomNumber } = useContext(RandomNumberContext);
   const [showSearchInput, setShowSearchInput] = useState(false);
   const [informationCard, setInformationCard] = useState({
     users: 0,
@@ -85,7 +98,7 @@ export default function CRUD() {
     return () => {
       setClassSinow([]);
     };
-  }, [searchValue, filterClass]);
+  }, [searchValue, filterClass, randomNumber]);
 
   const handleShowSearchInput = () => {
     setSearchValue("");
@@ -95,6 +108,7 @@ export default function CRUD() {
   const handleSearchButtonClick = (value) => {
     setSearchValue(value);
   };
+  console.log(showCategoryContainer);
 
   return (
     <>
@@ -178,6 +192,7 @@ export default function CRUD() {
           </div>
         </section>
       </Navigation>
+      {showCategoryContainer && <ManageCategory />}
       {showInfoClass && <InfoClass id={keyClass} />}
       {showRemoveClass && <RemoveClass id={keyClass} />}
     </>
