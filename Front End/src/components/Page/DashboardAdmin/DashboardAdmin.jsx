@@ -166,11 +166,14 @@ export default function DashboadAdmin() {
                   <th className="px-4 py-2 text-[12px] font-semibold w-2/7">
                     Kelas Premium
                   </th>
+                  <th className="px-4 py-2 text-[12px] font-semibold w-2/7">
+                    Total Harga
+                  </th>
                   <th className=" px-4 py-2 text-[12px] font-semibold w-1/7">
                     Status
                   </th>
                   <th className="px-4 py-2 text-[12px] font-semibold w-1/7">
-                    Total Harga
+                    Metode Pembayaran
                   </th>
                   <th className="px-4 py-2 text-[12px] font-semibold w-1/7">
                     Tanggal Bayar
@@ -246,6 +249,9 @@ export default function DashboadAdmin() {
                           <td className="py-2 px-4 text-[10px] font-bold ">
                             {paymentItem.Course.name}
                           </td>
+                          <td className="py-2 px-4 text-[10px] font-bold ">
+                            {rupiah(paymentItem.totalPrice)}
+                          </td>
                           <td
                             className={`py-2 px-4 text-[10px] font-bold ${
                               paymentItem
@@ -262,10 +268,12 @@ export default function DashboadAdmin() {
                             {paymentItem.status}
                           </td>
                           <td className="py-2 px-4 text-[10px] font-bold ">
-                            {rupiah(paymentItem.totalPrice)}
+                            {paymentItem.paymentMethod
+                              ? paymentItem.paymentMethod
+                              : "-"}
                           </td>
                           <td className="py-2 px-4 text-[10px] font-bold ">
-                            {paymentItem.updatedAt}{" "}
+                            {paymentItem.updatedAt.slice(0, 10)}{" "}
                             {/* Fixed typo in 'updatedAt' */}
                           </td>
                         </tr>

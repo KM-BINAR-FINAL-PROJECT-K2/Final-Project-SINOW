@@ -24,7 +24,7 @@ export default function HeaderLandingPage() {
             </a>
           </div>
           {/* Hamberger nav */}
-          <div className=" flex lg:hidden ">
+          {/* <div className=" flex lg:hidden ">
             <button
               type="button"
               className=" -m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-sinow-05"
@@ -33,7 +33,7 @@ export default function HeaderLandingPage() {
               <span className="sr-only">Open main menu</span>
               <Bars3Icon className="h-6 w-6 md:h-8 md:w-8" aria-hidden="true" />
             </button>
-          </div>
+          </div> */}
           {/* navbar */}
 
           <div className=" hidden lg:flex ">
@@ -46,7 +46,7 @@ export default function HeaderLandingPage() {
           </div>
         </nav>
 
-        <Dialog
+        {/* <Dialog
           as="div"
           className="lg:hidden"
           open={mobileMenuOpen}
@@ -91,7 +91,7 @@ export default function HeaderLandingPage() {
               </div>
             </div>
           </Dialog.Panel>
-        </Dialog>
+        </Dialog> */}
       </header>
     </div>
   );

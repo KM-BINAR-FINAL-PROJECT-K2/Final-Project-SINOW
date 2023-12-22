@@ -27,7 +27,7 @@ export default function ButtonLogout({}) {
     }).then((result) => {
       if (result.isConfirmed) {
         localStorage.clear();
-        window.location.href = "/";
+        window.location.href = "/admin";
         alert("Berhasil keluar dari akun!");
       }
     });

@@ -84,18 +84,18 @@ export default function Login() {
 
   return (
     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 h-screen w-full">
-      <div className="px-[40px] orm-app flex flex-col justify-center md:h-screen lg:py-0">
-        <div className=" my-[30px] logo-app md:hidden flex justify-center items-center">
+      <div className="px-[40px] orm-app flex flex-col justify-center items-center md:h-screen lg:py-0">
+        <div className=" my-[20px] logo-app md:hidden flex justify-center items-center">
           <img
             src={Logo_2}
             alt=""
-            className="w-32 h-32 sm:w-36 sm:h-36 md:w-80 md:h-80 "
+            className="w-32 h-32 sm:w-36 sm:h-36 md:w-80 md:h-80"
           />
         </div>
         <form
           onSubmit={handleSubmit}
           action=""
-          className="space-y-4 md:space-y-6 max-w-[400px] w-full mx-auto"
+          className=" bg-white space-y-4 md:space-y-6 max-w-[400px] w-full mx-auto"
         >
           <h1 className="text-sinow-05 text-xl font-bold md:text-2xl py-[20px]">
             Masuk
@@ -132,9 +132,9 @@ export default function Login() {
               >
                 Password
               </label>
-              <a href="#" className="mb-2 text-sm text-sinow-05 font-semibold">
+              {/* <a href="#" className="mb-2 text-sm text-sinow-05 font-semibold">
                 Lupa Kata Sandi
-              </a>
+              </a> */}
             </div>
             <div className="flex">
               <input
@@ -161,7 +161,7 @@ export default function Login() {
           <div className=" h-[100px] justify-center items-center flex">
             <button
               type="submit"
-              className="hover:bg-darkblue-03 py-[13px] hover:py-[13px] w-full  transition-all duration-300 text-white bg-sinow-05 font-semibold rounded-2xl text-center p-1 "
+              className="hover:bg-darkblue-03 py-[12px] sm:py-[10px]  w-full transition-all duration-300 text-white bg-sinow-05 font-semibold rounded-2xl sm:rounded-lg text-center p-1 "
             >
               Masuk
             </button>
@@ -169,11 +169,17 @@ export default function Login() {
         </form>
       </div>
 
-      <div className="border logo-app bg-sinow-05  hidden sm:flex justify-center items-center">
+      <div className=" logo-app bg-sinow-05  hidden sm:flex sm:flex-col lg:flex lg:flex-col sm:justify-center items-center">
+        <img
+          src="/images/logo/Logo_02.png"
+          alt=""
+          className=" sm:w-[200px] sm:h-[52px] lg:w-[200px] lg:h-[52px] sm:my-5 "
+        />
+
         <img
           src={Logo}
           alt=""
-          className="w-24 h-24 sm:w-32 sm:h-32 md:w-80 md:h-80 "
+          className="w-24 h-24 sm:w-72 sm:h-72 lg:h-96 lg:w-96 sm:my-8 "
         />
       </div>
     </div>
