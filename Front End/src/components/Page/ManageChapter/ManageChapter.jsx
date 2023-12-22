@@ -12,7 +12,7 @@ import { LoaderContext } from "../../../store/Loader";
 import LoadingScreen from "../../Molecule/Loading/LoadingScreen";
 import { convertSeconds } from "../../../utils/formatHour";
 import { ErrorContext } from "../../../store/Error";
-
+import { RiVideoAddFill } from "react-icons/ri";
 export default function ManageChapter() {
   const { isLoading, setIsLoading } = useContext(LoaderContext);
   const { isError, setIsError } = useContext(ErrorContext);
@@ -1009,7 +1009,7 @@ export default function ManageChapter() {
                                   </div>
                                 )}
 
-                                <div className="py-[20px] grid  grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 justify-items-center">
+                                <div className="border py-[20px] grid  grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 justify-items-center">
                                   {chapter.modules &&
                                     chapter.modules
                                       .sort((a, b) => a.no - b.no)
@@ -1021,15 +1021,15 @@ export default function ManageChapter() {
                                               className="w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow overflow-hidden"
                                             >
                                               <video
-                                                className="w-full"
+                                                className="w-full border"
                                                 controls={true}
                                                 src={module.videoUrl}
                                               ></video>
                                               <div className="px-5 pb-5">
-                                                <h5 className="text-xl font-semibold tracking-tight text-gray-900 my-3">
+                                                <h5 className="border text-md font-bold tracking-tight text-gray-900 mt-4 mb-2">
                                                   {module.name}
                                                 </h5>
-                                                <span className="text-md font-bold text-gray-900 ">
+                                                <span className="border text-sm font-normal text-gray-900 ">
                                                   {module.createdAt.slice(
                                                     0,
                                                     10
@@ -1038,7 +1038,7 @@ export default function ManageChapter() {
                                                 <hr className="my-3 border border-gray-300" />
                                                 <div className="flex items-center justify-end gap-3">
                                                   <button
-                                                    className="text-white bg-darkblue-05 hover:bg-sky-500  focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center "
+                                                    className="text-white bg-darkblue-05 hover:bg-sky-500  focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-md text-sm px-4 py-1.5 text-center "
                                                     onClick={(e) =>
                                                       handleEditModule(
                                                         e,
@@ -1050,7 +1050,7 @@ export default function ManageChapter() {
                                                     Ubah
                                                   </button>
                                                   <button
-                                                    className="text-white bg-alert-danger hover:bg-red-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center "
+                                                    className="text-white bg-alert-danger hover:bg-red-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-md text-sm px-4 py-1.5 text-center "
                                                     onClick={(e) =>
                                                       removeModuleHandle(
                                                         e,
@@ -1069,28 +1069,19 @@ export default function ManageChapter() {
 
                                   {chapter.modules[0] && (
                                     <button
-                                      className="w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow overflow-hidden text-center p-5 flex items-center flex-col justify-center cursor-pointer hover:bg-gray-100 gap-5"
+                                      className="h-96 w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow overflow-hidden text-center p-5 flex items-center flex-col justify-center cursor-pointer hover:bg-gray-100 gap-5"
                                       onClick={(e) =>
                                         handleAddModule(e, chapter.id)
                                       }
                                     >
-                                      <div className="">
-                                        <svg
-                                          xmlns="http://www.w3.org/2000/svg"
-                                          fill="none"
-                                          viewBox="0 0 24 24"
-                                          strokeWidth="1.5"
-                                          stroke="rgb(51 65 85)"
-                                          className="w-20 h-20 border border-gray-700 rounded-md border-dashed"
-                                        >
-                                          <path
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                            d="M12 4.5v15m7.5-7.5h-15"
-                                          />
-                                        </svg>
+                                      <div className=" border-dashed border-[3px] border-neutral-02 p-5 rounded-full">
+                                        <RiVideoAddFill
+                                          color="#D0D0D0"
+                                          className="h-10 w-10"
+                                        />
                                       </div>
-                                      <p className="font-semibold text-gray-700">
+
+                                      <p className="font-semibold text-neutral-02">
                                         Tambah Modul
                                       </p>
                                     </button>
