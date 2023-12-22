@@ -88,6 +88,7 @@ export default function CRUD() {
   }, [searchValue, filterClass]);
 
   const handleShowSearchInput = () => {
+    setSearchValue("");
     setShowSearchInput(!showSearchInput);
   };
 
