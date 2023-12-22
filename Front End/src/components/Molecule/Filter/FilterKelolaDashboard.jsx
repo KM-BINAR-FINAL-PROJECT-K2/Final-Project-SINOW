@@ -1,7 +1,12 @@
-import { Fragment } from "react";
+import { Fragment, useContext, useState, useEffect } from "react";
 import { Popover, Transition } from "@headlessui/react";
 import { MdFilterAlt } from "react-icons/md";
+import { FilterClassContext } from "../../../store/FilterClass";
+
 export default function FilterKelolaDashboard() {
+  const [selected, setSelected] = useState(null);
+  const { filterClass, setFilterClass } = useContext(FilterClassContext);
+
   const solutions = [
     {
       name: "SUDAH BAYAR",
@@ -11,7 +16,24 @@ export default function FilterKelolaDashboard() {
       name: "BELUM BAYAR",
       value: "belum_bayar",
     },
+    {
+      name: "KADALUARSA",
+      value: "kadaluarsa",
+    },
   ];
+
+  const handleFilterClick = (item) => {
+    setSelected(item.value === selected ? false : item.value);
+  };
+
+  useEffect(() => {
+    const temp = selected;
+    if (temp === null) {
+      return setFilterClass("");
+    }
+    setFilterClass(temp);
+  }, [selected]);
+
   return (
     <Popover className="relative">
       <Popover.Button
@@ -36,7 +58,12 @@ export default function FilterKelolaDashboard() {
               {solutions.map((item) => (
                 <div
                   key={item.name}
-                  className="group relative flex gap-x-6 rounded-lg p-4 hover:bg-gray-50"
+                  className={`group relative flex gap-x-6 rounded-lg p-4 cursor-pointer ${
+                    selected === item.value
+                      ? "bg-darkblue-05 bg-opacity-100 "
+                      : "hover:bg-darkblue-05 hover:bg-opacity-10"
+                  }`}
+                  onClick={() => handleFilterClick(item)}
                 >
                   <div>
                     <a href={item.href} className="font-semibold text-gray-900">

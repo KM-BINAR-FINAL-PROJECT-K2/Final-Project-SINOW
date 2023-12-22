@@ -6,6 +6,7 @@ const {
   Course,
   UserCourse,
   UserModule,
+  Category,
   Chapter,
   Module,
 } = require('../models')
@@ -19,7 +20,19 @@ const snap = new Midtrans.Snap({
 
 const getAllTransaction = async (req, res, next) => {
   try {
-    const transactions = await Transaction.findAll()
+    const transactions = await Transaction.findAll({
+      include: [
+        {
+          model: Course,
+          include: [
+            {
+              model: Category,
+              as: 'category',
+            },
+          ],
+        },
+      ],
+    })
 
     if (!transactions || transactions.length === 0) {
       return next(new ApiError('Data transaction masih kosong', 404))
@@ -37,7 +50,19 @@ const getAllTransaction = async (req, res, next) => {
 const getTransactionById = async (req, res, next) => {
   try {
     const { id } = req.params
-    const transaction = await Transaction.findByPk(id)
+    const transaction = await Transaction.findByPk(id, {
+      include: [
+        {
+          model: Course,
+          include: [
+            {
+              model: Category,
+              as: 'category',
+            },
+          ],
+        },
+      ],
+    })
 
     if (!transaction) {
       return next(new ApiError('Data transaction tidak ditemukan', 404))

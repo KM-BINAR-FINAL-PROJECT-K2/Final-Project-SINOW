@@ -1,26 +1,73 @@
 import axios from "axios";
+import { rupiah } from "../../../utils/formatCurrency";
 import { useContext, useEffect, useState } from "react";
 import Navigation from "../../Template/Navigation/Navigation";
 import Card from "../../Molecule/Card/Card";
-import PaymentTable from "../../Molecule/PaymentTable/PaymentTable";
+import Loading from "../../Molecule/Loading/Loading";
 import { LoaderContext } from "../../../store/Loader";
-import FilterKelolaDashboard from "../../Molecule/Filter/FilterKelolaDashboard";
-import { SearchValueContext } from "../../../store/SearchValue";
 import { ImSearch } from "react-icons/im";
-
+import { ErrorContext } from "../../../store/Error";
+import { SearchValueContext } from "../../../store/SearchValue";
+import FilterKelolaDashboard from "../../Molecule/Filter/FilterKelolaDashboard";
+import { QueryContext } from "../../../store/QuerySearch";
+import { FilterClassContext } from "../../../store/FilterClass";
 export default function DashboadAdmin() {
-  const { setIsLoading } = useContext(LoaderContext);
-  const { setSearchValue } = useContext(SearchValueContext);
   const [showSearchInput, setShowSearchInput] = useState(false);
+  const { setIsLoading } = useContext(LoaderContext);
+  const { isLoading } = useContext(LoaderContext);
+  const { setIsError } = useContext(ErrorContext);
+  const { isError } = useContext(ErrorContext);
+  const { searchValue, setSearchValue } = useContext(SearchValueContext);
+  const { filterClass, setFilterClass } = useContext(FilterClassContext);
   const [error, setError] = useState("");
+  const [paymentDetail, setPaymentDetail] = useState([]);
+  const [informationCard, setInformationCard] = useState({
+    users: 0,
+    courses: 0,
+    premiumClass: 0,
+  });
+
   useEffect(() => {
-    const getClasses = async () => {
+    const getClassesInformation = async () => {
       try {
-        setClassSinow([]);
+        setIsLoading(true);
+        setIsError("");
+
+        const res = await axios.get(`http://localhost:3000/api/v1/courses`);
+        setInformationCard({
+          users: 0,
+          courses: res.data.data.length,
+          premiumClass: res.data.data.filter((item) => item.type === "premium")
+            .length,
+        });
+      } catch (error) {
+        setIsError(
+          error.response ? error.response.data.message : "Kesalahan Jaringan"
+        );
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    getClassesInformation();
+  }, []);
+
+  useEffect(() => {
+    const getpaymentDetail = async () => {
+      try {
         setIsLoading(true);
         setError("");
-        const res = await axios.get("http://localhost:3000/api/v1/courses");
-        setClassSinow(res.data.data);
+        const res = await axios.get(
+          `https://sinow-production.up.railway.app/api/v1/transactions`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        );
+        // console.log(res.data.data);
+        setPaymentDetail(res.data.data);
       } catch (error) {
         setError(
           error.response ? error.response.data.message : "Network Error"
@@ -30,15 +77,8 @@ export default function DashboadAdmin() {
       }
     };
 
-    getClasses();
-    return () => {
-      setClassSinow([]);
-    };
+    getpaymentDetail();
   }, []);
-  const [classSinow, setClassSinow] = useState([]);
-  const totalQuantity = classSinow.reduce((total, item) => {
-    return total + item.totalUser;
-  }, 0);
 
   const handleShowSearchInput = () => {
     setShowSearchInput(!showSearchInput);
@@ -47,22 +87,23 @@ export default function DashboadAdmin() {
   const handleSearchButtonClick = (value) => {
     setSearchValue(value);
   };
+
   return (
     <Navigation>
       <section className="mx-8 lg:mx-16 flex justify-around gap-6 flex-wrap mb-[54px]">
         <Card
           color={"bg-darkblue-03"}
-          quantity={totalQuantity}
+          quantity={informationCard.users}
           description={"Pengguna Aktif"}
         />
         <Card
           color={"bg-alert-success"}
-          quantity={classSinow.length}
+          quantity={informationCard.courses}
           description={"Kelas Terdaftar"}
         />
         <Card
           color={"bg-darkblue-05"}
-          quantity={classSinow.filter((item) => item.type === "premium").length}
+          quantity={informationCard.premiumClass}
           description={"Kelas Premium"}
         />
       </section>
@@ -70,10 +111,9 @@ export default function DashboadAdmin() {
       <section className="mx-4 lg:mx-16">
         <div className="py-[10px] flex flex-wrap">
           <h2 className="my-[10px] font-semibold text-[20px] flex-wrap flex-1 min-w-[200px]">
-            Status Pembayaran
+            Kelola Kelas
           </h2>
-
-          <div className="flex">
+          <div className="flex items-center">
             <FilterKelolaDashboard />
             {showSearchInput && (
               <div className="flex items-center">
@@ -130,7 +170,7 @@ export default function DashboadAdmin() {
                     Status
                   </th>
                   <th className="px-4 py-2 text-[12px] font-semibold w-1/7">
-                    Metode Pembayaran
+                    Total Harga
                   </th>
                   <th className="px-4 py-2 text-[12px] font-semibold w-1/7">
                     Tanggal Bayar
@@ -138,24 +178,100 @@ export default function DashboadAdmin() {
                 </tr>
               </thead>
               <tbody>
-                <PaymentTable
-                  color={"bg-alert-success"}
-                  id={"johndoe123"}
-                  category={"UI/UX Design"}
-                  premiumClass={"Belajar Web Designer dengan Figma"}
-                  statusMessage={"SUDAH BAYAR"}
-                  paymenMethod={"Credit Card"}
-                  paymentDate={"21 Sep, 2023 at 2:00 AM"}
-                />
-                <PaymentTable
-                  color={"bg-alert-danger"}
-                  id={"supermanxx"}
-                  category={"UI/UX Design"}
-                  premiumClass={"Belajar Web Designer dengan Figma"}
-                  statusMessage={"BELUM BAYAR"}
-                  paymenMethod={"-"}
-                  paymentDate={"-"}
-                />
+                {isLoading && (
+                  <tr>
+                    <td colSpan={7} className="text-center">
+                      <Loading />
+                    </td>
+                  </tr>
+                )}
+                {isError && (
+                  <>
+                    <tr>
+                      <td colSpan={7} className="text-center">
+                        <div className="font-bold bg-slate-950 bg-opacity-10 p-10 flex justify-center gap-5 items-center">
+                          <img
+                            src="/images/logo-n-maskot/failed_payment.png"
+                            alt=""
+                            className="w-[100px]"
+                          />
+                          <p className="text-xl text-alert-danger">
+                            {isError}
+                            <br />
+                            <span className="text-sm text-gray-800 font-normal">
+                              Cobalah untuk{" "}
+                              <a
+                                href="/dashboard"
+                                className="text-darkblue-03 font-medium"
+                                onClick={() => {
+                                  window.location.href = "/dashboard";
+                                  window.location.reload();
+                                }}
+                              >
+                                Muat Ulang Halaman
+                              </a>
+                            </span>
+                          </p>
+                        </div>
+                      </td>
+                    </tr>
+                  </>
+                )}
+
+                {/* {!isError &&
+                  paymentDetail.map((paymentItem) => {
+                    
+                  })} */}
+                {!isLoading &&
+                  !isError &&
+                  paymentDetail.map((paymentItem) => {
+                    if (
+                      (!searchValue ||
+                        paymentItem.Course.name
+                          .toLowerCase()
+                          .includes(searchValue.toLowerCase())) &&
+                      (!filterClass ||
+                        paymentItem.status
+                          .toLowerCase()
+                          .includes(filterClass.toLowerCase()))
+                    ) {
+                      return (
+                        <tr key={paymentItem.id}>
+                          <td className="py-2 px-4 text-[10px] font-bold ">
+                            {paymentItem.courseId}
+                          </td>
+                          <td className="py-2 px-4 text-[10px] font-bold ">
+                            {paymentItem.Course.category.name}
+                          </td>
+                          <td className="py-2 px-4 text-[10px] font-bold ">
+                            {paymentItem.Course.name}
+                          </td>
+                          <td
+                            className={`py-2 px-4 text-[10px] font-bold ${
+                              paymentItem
+                                ? paymentItem.status === "SUDAH_BAYAR"
+                                  ? "text-alert-success"
+                                  : paymentItem.status === "BELUM_BAYAR"
+                                  ? "text-alert-danger"
+                                  : paymentItem.status === "KADALUARSA"
+                                  ? "text-slate-400"
+                                  : ""
+                                : ""
+                            }`}
+                          >
+                            {paymentItem.status}
+                          </td>
+                          <td className="py-2 px-4 text-[10px] font-bold ">
+                            {rupiah(paymentItem.totalPrice)}
+                          </td>
+                          <td className="py-2 px-4 text-[10px] font-bold ">
+                            {paymentItem.updatedAt}{" "}
+                            {/* Fixed typo in 'updatedAt' */}
+                          </td>
+                        </tr>
+                      );
+                    }
+                  })}
               </tbody>
             </table>
           </section>
