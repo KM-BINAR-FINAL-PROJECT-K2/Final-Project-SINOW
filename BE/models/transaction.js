@@ -27,6 +27,11 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4,
       },
+      noOrder: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        unique: true,
+      },
       userId: DataTypes.INTEGER,
       courseId: DataTypes.INTEGER,
       coursePrice: DataTypes.INTEGER,

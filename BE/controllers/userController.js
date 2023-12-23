@@ -775,6 +775,43 @@ const getUserTransactionById = async (req, res, next) => {
   }
 }
 
+const deleteTransaction = async (req, res, next) => {
+  try {
+    const { transactionId } = req.params
+    const { user } = req
+    const transaction = await Transaction.findByPk(transactionId)
+    if (!transaction) {
+      return next(new ApiError('Data transaksi tidak ditemukan', 404))
+    }
+
+    if (transaction.userId !== user.id) {
+      return next(
+        new ApiError(
+          'User tidak memiliki akses untuk menghapus transaksi ini',
+          403,
+        ),
+      )
+    }
+
+    if (transaction.status === 'SUDAH_BAYAR') {
+      return next(
+        new ApiError(
+          'Tidak dapat menghapus data transaksi yang sudah dibayar',
+          403,
+        ),
+      )
+    }
+
+    await transaction.destroy()
+    return res.status(200).json({
+      status: 'Success',
+      message: 'Berhasil menghapus transaksi',
+    })
+  } catch (error) {
+    return next(new ApiError(error.message, 500))
+  }
+}
+
 module.exports = {
   myDetails,
   updateMyDetails,
@@ -788,4 +825,5 @@ module.exports = {
   openUserModule,
   getAllUserTransaction,
   getUserTransactionById,
+  deleteTransaction,
 }

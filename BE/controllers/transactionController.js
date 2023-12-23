@@ -10,6 +10,8 @@ const {
   Chapter,
   Module,
 } = require('../models')
+
+const { createNotification } = require('../utils/notificationUtils')
 const ApiError = require('../utils/ApiError')
 const generateSHA512 = require('../utils/generateSHA512')
 
@@ -217,11 +219,19 @@ const createTransaction = async (req, res, next) => {
     }
 
     const discountPrice = (course.price * course.promoDiscountPercentage) / 100
-    const taxPrice = (discountPrice * 11) / 100
+    const taxPrice = discountPrice === 0
+      ? (course.price * 11) / 100
+      : (discountPrice * 11) / 100
 
     const totalPrice = course.price - discountPrice + taxPrice
 
+    const timestamp = new Date().getTime()
+    const userSalt = Math.floor(Math.random() * 1000)
+    const combinedValue = `${timestamp}${user.id}${userSalt}${courseId}`
+    const noOrder = parseInt(combinedValue / 123, 10).toString(16)
+
     const newTransaction = await Transaction.create({
+      noOrder,
       userId: user.id,
       courseId,
       coursePrice: course.price,
@@ -266,9 +276,16 @@ const createTransaction = async (req, res, next) => {
 
     if (!midtransResponseData) {
       newTransaction.destroy()
-
       return next(new ApiError('Gagal membuat transaksi', 500))
     }
+
+    await createNotification(
+      'Transaksi',
+      'Transaksi berhasil dibuat',
+      user.id,
+      `Yeay! Transaksi untuk course ${course.name} telah dibuat. Tinggal selangkah lagi agar kamu dapat memulai pembelajaran di course ${course.name}.\n\nUntuk menyelesaikan transaksi, kamu dapat menggunakan link berikut ini:\n${midtransResponseData.redirect_url}`,
+      next,
+    )
 
     await newTransaction.update({
       paymentUrl: midtransResponseData.redirect_url,
@@ -313,7 +330,20 @@ const paymentCallback = async (req, res, next) => {
       })
     }
 
-    const transaction = await Transaction.findByPk(order_id)
+    const transaction = await Transaction.findByPk(order_id, {
+      include: [
+        {
+          model: Course,
+          include: [
+            {
+              model: Category,
+              as: 'category',
+            },
+          ],
+        },
+      ],
+      order: [['createdAt', 'DESC']],
+    })
 
     if (!transaction) {
       return res.status(404).json({
@@ -372,6 +402,13 @@ const paymentCallback = async (req, res, next) => {
           paidAt: new Date(),
           paymentMethod: payment_type,
         })
+
+        await createNotification(
+          'Transaksi',
+          'Transaksi sukses',
+          transaction.userId,
+          `Yeay! Transaksi untuk course ${transaction.Course.name} telah selesai. Sekarang kamu sudah bisa mengakses course ${transaction.Course.name}.`,
+        )
       } else {
         transaction.status = 'GAGAL'
         await transaction.save()
