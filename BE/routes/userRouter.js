@@ -42,5 +42,10 @@ router.get(
   authenticate,
   User.getUserTransactionById,
 )
+router.delete(
+  '/transaction/:transactionId',
+  authenticate,
+  User.deleteTransaction,
+)
 
 module.exports = router

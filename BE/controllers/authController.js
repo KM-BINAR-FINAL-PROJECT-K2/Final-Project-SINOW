@@ -106,7 +106,13 @@ const register = async (req, res, next) => {
     const isEmailExist = await Auth.findOne({ where: { email } })
 
     if (isEmailExist) {
-      return next(new ApiError('Email sudah terdaftar', 400))
+      if (isEmailExist.isEmailVerified) {
+        return next(new ApiError('Email sudah terdaftar', 400))
+      }
+
+      if (!isEmailExist.isEmailVerified) {
+        isEmailExist.destroy()
+      }
     }
 
     const isPhoneNumberExist = await Auth.findOne({
@@ -114,7 +120,12 @@ const register = async (req, res, next) => {
     })
 
     if (isPhoneNumberExist) {
-      return next(new ApiError('Nomor telepon sudah terdaftar', 400))
+      if (isPhoneNumberExist.isEmailVerified) {
+        return next(new ApiError('Nomor telepon sudah terdaftar', 400))
+      }
+      if (!isPhoneNumberExist.isEmailVerified) {
+        isPhoneNumberExist.destroy()
+      }
     }
 
     const hashedPassword = await bcrypt.hash(password, 10)

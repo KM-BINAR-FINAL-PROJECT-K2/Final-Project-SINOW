@@ -173,7 +173,7 @@ const getAllCourse = async (req, res, next) => {
         {
           model: Benefit,
           as: 'benefits',
-          attributes: ['id', 'no', 'courseId', 'description'],
+          attributes: ['id', 'no', 'description'],
         },
       ],
       where,
