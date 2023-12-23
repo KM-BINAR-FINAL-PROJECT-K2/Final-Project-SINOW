@@ -3,6 +3,8 @@ import axios from "axios";
 
 import { useContext, useEffect, useRef, useState } from "react";
 import { Flowbite, Alert } from "flowbite-react";
+import Swal from "sweetalert2";
+import MaskotLogout from "/images/logo-n-maskot/forgot_pass_aset.png";
 
 import { CategoryContainerContext } from "../../../store/CategoryUI";
 import { LoaderContext } from "../../../store/Loader";
@@ -21,8 +23,10 @@ export default function ManageCategory() {
   const [categories, setCategories] = useState();
   const [editedCategories, setEditedCategories] = useState({});
   const [editedValues, setEditedValues] = useState({});
+  const [editedAddValues, setEditedAddValues] = useState("Tambah Kelas");
   const [isAlert, setIsAlert] = useState(false);
   const [dataCategory, setDataCategory] = useState({});
+  const [activeAddCategory, setActiveAddCategory] = useState(false);
 
   const inputRefs = useRef({});
 
@@ -98,9 +102,64 @@ export default function ManageCategory() {
     }
   };
 
+  const handleClickAdd = () => {
+    setActiveAddCategory(!activeAddCategory);
+
+    if (activeAddCategory) {
+      // console.log("ge");
+      // handleSubmitAddCategory();
+      // const formData = new FormData(e.target);
+    }
+  };
+
   const handleSubmitCategoryName = (e, categoryId) => {
     e.preventDefault();
     handleClickEdit(categoryId);
+  };
+
+  const handleSubmitAddCategory = async (e) => {
+    e.preventDefault();
+
+    try {
+      const formData = new FormData(e.target);
+      const name = formData.get("name");
+      const image = formData.get("image");
+      const data = {
+        name,
+        image,
+      };
+      setIsLoading(true);
+      setIsError("");
+      const response = await axios.post(
+        "http://localhost:3000/api/v1/category",
+        data,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+
+      const newCategory = response.data.data;
+
+      setCategories((prevCategories) => [...prevCategories, newCategory]);
+
+      setEditedAddValues("Tambah Kelas");
+      setActiveAddCategory(false);
+
+      Swal.fire({
+        position: "center",
+        icon: "success",
+        title: "Kategori berhasil ditambahkan",
+        showConfirmButton: false,
+        timer: 1500,
+      });
+    } catch (error) {
+      setIsError(error.message);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleInputChange = (categoryId, value) => {
@@ -108,6 +167,65 @@ export default function ManageCategory() {
       ...prevEditedValues,
       [categoryId]: value,
     }));
+  };
+
+  const handleAddInputChange = (value) => {
+    setEditedAddValues(value);
+  };
+
+  const handleDeleteCategory = async (e, categoryId) => {
+    e.preventDefault();
+    try {
+      setIsLoading(true);
+      setIsError("");
+      const result = await Swal.fire({
+        title: "Yakin Menghapus Data?",
+        imageUrl: MaskotLogout,
+        imageWidth: "200",
+        imageHeight: "170",
+        showCancelButton: true,
+        confirmButtonColor: "#FF0000",
+        cancelButtonColor: "#73CA5C",
+        confirmButtonText: "Hapus",
+        cancelButtonText: "Batal",
+        customClass: {
+          title: "text-[24px]",
+          actions: "gap-3",
+          confirmButton: "px-8",
+          cancelButton: "px-10",
+        },
+      });
+
+      if (result.isConfirmed) {
+        await axios.delete(
+          `http://localhost:3000/api/v1/category/${categoryId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        );
+
+        const deletedIndex = categories.findIndex(
+          (item) => item.id === categoryId
+        );
+        const updatedClasses = [...categories];
+        updatedClasses.splice(deletedIndex, 1);
+        setCategories(updatedClasses);
+
+        Swal.fire({
+          position: "center",
+          icon: "success",
+          title: "Kategori berhasil dihapus",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+      }
+    } catch (error) {
+      setIsError(error.message);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const customTheme = {
@@ -131,6 +249,8 @@ export default function ManageCategory() {
       wrapper: "flex items-center",
     },
   };
+
+  console.log(editedAddValues);
 
   return (
     <div
@@ -261,6 +381,9 @@ export default function ManageCategory() {
                                 viewBox="0 0 24 24"
                                 strokeWidth={1.5}
                                 className="w-6 h-6 stroke-alert-danger cursor-pointer hover:stroke-2"
+                                onClick={(e) =>
+                                  handleDeleteCategory(e, category.id)
+                                }
                               >
                                 <path
                                   strokeLinecap="round"
@@ -278,8 +401,7 @@ export default function ManageCategory() {
                               fill="none"
                               viewBox="0 0 24 24"
                               strokeWidth={1.5}
-                              stroke="currentColor"
-                              className="w-6 h-6"
+                              className="w-6 h-6 stroke-alert-success hover:stroke-2"
                             >
                               <path
                                 strokeLinecap="round"
@@ -295,34 +417,92 @@ export default function ManageCategory() {
                 ))}
                 <li className="pb-3 sm:pb-4 pt-3">
                   <div className="flex items-center space-x-4 rtl:space-x-reverse">
-                    <div className="flex-shrink-0">
-                      <img
-                        className="w-8 rounded-full"
-                        src="/images/logo-n-maskot/Sticker-1.png"
-                        alt="Neil image"
-                      />
-                    </div>
+                    {!activeAddCategory && (
+                      <div className="flex-shrink-0">
+                        <img
+                          className="w-8 rounded-full"
+                          src="/images/logo-n-maskot/Sticker-1.png"
+                          alt="Neil image"
+                        />
+                      </div>
+                    )}
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium text-gray-900 truncate ">
-                        Tambah Kategori
-                      </p>
+                      {!activeAddCategory && (
+                        <input
+                          type="text"
+                          id="title"
+                          className="text-sm font-medium text-gray-900 truncate p-3 w-full bg-white"
+                          value={"Tambah Kelas"}
+                          disabled
+                        />
+                      )}
+                      {activeAddCategory && (
+                        <>
+                          <form
+                            action=""
+                            type="submit"
+                            onSubmit={(e) => handleSubmitAddCategory(e)}
+                          >
+                            <label
+                              htmlFor="title"
+                              className="text-xs font-semibold text-gray-600"
+                            >
+                              Nama Kategori
+                            </label>
+                            <input
+                              type="text"
+                              id="title"
+                              name="name"
+                              className="text-sm font-medium border-b border-gray-200  text-gray-900 truncate px-3 pt-3 pb-1 w-full bg-white mb-4"
+                              placeholder="Web Development"
+                            />
+                            <label
+                              htmlFor="fileInput"
+                              className="text-xs font-semibold text-gray-600"
+                            >
+                              Upload Gambar
+                            </label>
+                            <input
+                              type="file"
+                              id="fileInput"
+                              accept="image/*"
+                              name="image"
+                              className="text-sm font-medium border-b border-gray-200  text-gray-900 truncate px-3 pt-3 pb-1 w-full bg-white"
+                            />
+                            <div className="flex items-center gap-3 m-4">
+                              <button className="py-2 px-4 bg-sinow-05 rounded-md font-semibold text-white text-sm">
+                                Tambah
+                              </button>
+                              <span
+                                className="py-2 px-4 bg-alert-danger cursor-pointer rounded-md font-semibold text-white text-sm"
+                                onClick={() => handleClickAdd()}
+                              >
+                                Batalkan
+                              </span>
+                            </div>
+                          </form>
+                        </>
+                      )}
                     </div>
                     <div className="inline-flex gap-2 items-center text-base font-semibold text-gray-900 ">
-                      <button>
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          strokeWidth={1.5}
-                          className="w-6 h-6 stroke-gray-800"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            d="M12 4.5v15m7.5-7.5h-15"
-                          />
-                        </svg>
-                      </button>
+                      {!activeAddCategory && (
+                        <button>
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            strokeWidth={1.5}
+                            className="w-6 h-6 stroke-gray-800"
+                            onClick={() => handleClickAdd()}
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              d="M12 4.5v15m7.5-7.5h-15"
+                            />
+                          </svg>
+                        </button>
+                      )}
                     </div>
                   </div>
                 </li>
