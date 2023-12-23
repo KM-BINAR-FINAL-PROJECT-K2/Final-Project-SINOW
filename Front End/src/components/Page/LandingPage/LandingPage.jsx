@@ -7,6 +7,11 @@ import OurTeam from "../../LandingPage/OutTeam";
 import WhyUs from "../../LandingPage/WhyUs";
 
 export default function LandingPage() {
+  const checkToken = localStorage.getItem("token");
+  if (checkToken) {
+    window.location.href = "/dashboard";
+  }
+
   return (
     <>
       <div>
