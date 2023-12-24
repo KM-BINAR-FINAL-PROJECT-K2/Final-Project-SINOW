@@ -45,61 +45,104 @@ export default function EditClass() {
   }, [id]);
 
   const handleSubmit = (e) => {
-    e.preventDefault();
-    const formData = new FormData(e.target);
-    const name = formData.get("name");
-    const level = formData.get("level");
-    const rating = Number(formData.get("rating"));
-    const category = Number(formData.get("category"));
-    const description = formData.get("description");
-    let classCode = formData.get("classCode");
-    const type = formData.get("type");
-    const price = Number(formData.get("price"));
-    const promoDiscountPercentage = Number(
-      formData.get("promoDiscountPercentage")
-    );
-    const courseBy = formData.get("courseBy");
-    const imageUrl = formData.get("imageUrl");
-    const videoPreviewUrl = formData.get("videoPreviewUrl");
+    try {
+      e.preventDefault();
+      const formData = new FormData(e.target);
+      const name = formData.get("name");
+      const level = formData.get("level");
+      const rating = Number(formData.get("rating"));
+      const category = Number(formData.get("category"));
+      const description = formData.get("description");
+      let classCode = formData.get("classCode");
+      const type = formData.get("type");
+      const price = Number(formData.get("price"));
+      const promoDiscountPercentage = Number(
+        formData.get("promoDiscountPercentage")
+      );
+      const courseBy = formData.get("courseBy");
+      const imageUrl = formData.get("image");
+      const videoPreviewUrl = formData.get("videoPreviewUrl");
 
-    if (classCode === " - ") {
-      classCode = "";
+      if (classCode === " - ") {
+        classCode = "";
+      }
+
+      console.log(imageUrl);
+      console.log(videoPreviewUrl.size);
+
+      setForm({
+        name,
+        level,
+        rating,
+        categoryId: category,
+        description,
+        classCode,
+        type,
+        price,
+        promoDiscountPercentage,
+        courseBy,
+        image: imageUrl,
+        video: videoPreviewUrl,
+      });
+    } catch (error) {
+      console.log(error);
     }
-
-    setForm({
-      name,
-      level,
-      rating,
-      categoryId: category,
-      description,
-      classCode,
-      type,
-      price,
-      promoDiscountPercentage,
-      courseBy,
-      image: imageUrl,
-      video: videoPreviewUrl,
-    });
   };
 
-  console.log(form);
   useEffect(() => {
     try {
       if (!form.name) {
         return;
       }
       const updateClass = async () => {
+        const allowedImageTypes = [
+          "image/jpeg",
+          "image/png",
+          "image/jpg",
+          "image/svg+xml",
+        ];
+        const allowedVideoTypes = [
+          "video/mp4",
+          "video/ogg",
+          "video/webm",
+          "video/avi",
+          "video/mpeg",
+          "video/mov",
+        ];
+
+        console.log(form.image, form.video);
+
+        if (
+          form.image.size < 0 &&
+          !allowedImageTypes.includes(form.image.type)
+        ) {
+          throw new Error("Tipe gambar harus .jpeg/.jpg/.png/.svg");
+        }
+
+        if (
+          form.video.size < 0 &&
+          !allowedVideoTypes.includes(form.video.type)
+        ) {
+          throw new Error("Tipe video harus .mp4/.ogg/.webm/.avi/.mpeg/.mov");
+        }
+
+        if (form.image.size > 2097152) {
+          throw new Error("Ukuran gambar terlalu besar, maks 2MB");
+        }
+
+        if (form.video.size > 26214400) {
+          throw new Error("Ukuran video terlalu besar, maks 25MB");
+        }
+
         await Swal.fire({
           title: "Yakin menyimpan perubahan?",
           imageUrl: "/images/logo-n-maskot/Sticker-1.png",
           color: "#3C3C3C",
           imageWidth: 200,
           showDenyButton: true,
-          // showCancelButton: true,
           confirmButtonText: "Simpan",
           confirmButtonColor: "#73CA5C",
           denyButtonColor: "#FF0000",
-          // cancelButtonColor: "#73CA5C",
           denyButtonText: `Batal`,
           customClass: {
             actions: "gap-3",
@@ -161,9 +204,23 @@ export default function EditClass() {
           }
         });
       };
-      updateClass();
+      updateClass().catch((error) => {
+        Swal.fire({
+          position: "center",
+          icon: "error",
+          title: error.message,
+          showConfirmButton: true,
+          confirmButtonColor: "#73CA5C",
+        });
+      });
     } catch (error) {
-      console.log(error);
+      Swal.fire({
+        position: "center",
+        icon: "error",
+        title: error.message,
+        showConfirmButton: false,
+        timer: 1500,
+      });
     } finally {
       setIsLoading(false);
     }
@@ -368,6 +425,24 @@ export default function EditClass() {
 
                   <div className="mb-1 col-span-2">
                     <label htmlFor="" className="block md:text-sm text-xs mb-1">
+                      Perbarui Gambar
+                    </label>
+                    <div className="">
+                      <input
+                        type="file"
+                        name="image"
+                        className="bg-gray-50 border border-gray-300 text-gray-900 md:text-sm text-xs mb-1 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 cursor-pointer"
+                        multiple
+                        accept="image/*"
+                      />
+                    </div>
+                    <p>
+                      <span>*</span>File Gambar Maks 2 MB
+                    </p>
+                  </div>
+
+                  <div className="mb-1 col-span-2">
+                    <label htmlFor="" className="block md:text-sm text-xs mb-1">
                       Upload Video Preview
                     </label>
                     <div className="flex gap-3">
@@ -375,8 +450,6 @@ export default function EditClass() {
                         type="file"
                         name="videoPreviewUrl"
                         className="bg-gray-50 border border-gray-300 text-gray-900 md:text-sm text-xs mb-1 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 cursor-pointer"
-                        // defaultValue={editClass.videoPreviewUrl}
-                        multiple
                         accept="video/*"
                       />
                       <a
