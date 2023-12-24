@@ -176,8 +176,6 @@ export default function ManageCategory() {
   const handleDeleteCategory = async (e, categoryId) => {
     e.preventDefault();
     try {
-      setIsLoading(true);
-      setIsError("");
       const result = await Swal.fire({
         title: "Yakin Menghapus Data?",
         imageUrl: MaskotLogout,
@@ -197,6 +195,8 @@ export default function ManageCategory() {
       });
 
       if (result.isConfirmed) {
+        setIsLoading(true);
+        setIsError("");
         await axios.delete(
           `http://localhost:3000/api/v1/category/${categoryId}`,
           {
@@ -222,7 +222,19 @@ export default function ManageCategory() {
         });
       }
     } catch (error) {
-      setIsError(error.message);
+      let errorMessage = error.response.data.message;
+      if (error.response.status === 400) {
+        errorMessage = "Kategori masih terhubung dengan kelas";
+      }
+      Swal.fire({
+        position: "center",
+        imageUrl: "/images/logo-n-maskot/failed_payment.png",
+        imageWidth: "200",
+        imageHeight: "170",
+        title: `${errorMessage}`,
+        showConfirmButton: true,
+        confirmButtonColor: "#73CA5C",
+      });
     } finally {
       setIsLoading(false);
     }
