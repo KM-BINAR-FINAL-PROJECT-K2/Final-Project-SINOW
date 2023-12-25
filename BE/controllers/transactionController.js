@@ -175,49 +175,6 @@ const createTransaction = async (req, res, next) => {
       }
     }
 
-    const checkTransaction = await Transaction.findOne({
-      where: {
-        userId: user.id,
-        courseId,
-      },
-    })
-
-    if (checkTransaction) {
-      if (checkTransaction.status === 'SUDAH_BAYAR') {
-        return next(new ApiError('Anda sudah melakukan transaksi', 400))
-      }
-      if (checkTransaction.status === 'BELUM_BAYAR') {
-        if (checkTransaction.expiredAt < new Date()) {
-          await checkTransaction.update({
-            status: 'KADALUARSA',
-          })
-          return next(
-            new ApiError(
-              'Transaksi sudah kadaluarsa, silahkan buat ulang transaksi',
-              400,
-            ),
-          )
-        }
-
-        return res.status(400).json({
-          status: 'Failed',
-          message: 'Transaksi sudah ada silahkan melakukan pembayaran',
-          data: {
-            transactionDetail: checkTransaction,
-            paymentUrl: checkTransaction.paymentUrl,
-          },
-        })
-      }
-      if (checkTransaction.status === 'KADALUARSA') {
-        return next(
-          new ApiError(
-            'Transaksi sudah kadaluarsa, silahkan buat ulang transaksi',
-            400,
-          ),
-        )
-      }
-    }
-
     const discountPrice = (course.price * course.promoDiscountPercentage) / 100
     const taxPrice = discountPrice === 0
       ? (course.price * 11) / 100
@@ -352,6 +309,27 @@ const paymentCallback = async (req, res, next) => {
       })
     }
 
+    if (transaction.status === 'SUDAH_BAYAR') {
+      return res.status(200).json({
+        status: 'Success',
+        message: 'Transaksi sudah dibayar',
+      })
+    }
+
+    if (transaction.status === 'DIBATALKAN') {
+      return res.status(200).json({
+        status: 'Success',
+        message: 'Transaksi ini sudah dibatalkan',
+      })
+    }
+
+    if (transaction.status === 'KADALUARSA') {
+      return res.status(200).json({
+        status: 'Success',
+        message: 'Transaksi ini sudah kadaluarsa',
+      })
+    }
+
     if (transaction_status === 'expire') {
       transaction.status = 'KADALUARSA'
       await transaction.save()
@@ -370,13 +348,6 @@ const paymentCallback = async (req, res, next) => {
       return res.status(200).json({
         status: 'Success',
         message: 'Signature key tidak sesuai',
-      })
-    }
-
-    if (transaction.status === 'SUDAH_BAYAR') {
-      return res.status(200).json({
-        status: 'Success',
-        message: 'Transaksi sudah dibayar',
       })
     }
 
@@ -419,8 +390,17 @@ const paymentCallback = async (req, res, next) => {
       }
     }
 
-    if (transaction_status === 'cancel' || transaction_status === 'deny') {
-      transaction.status = 'GAGAL'
+    if (transaction_status === 'cancel') {
+      transaction.status = 'DIBATALKAN'
+      await transaction.save()
+      return res.status(200).json({
+        status: 'Success',
+        message: 'Transaksi dibatalkan',
+      })
+    }
+
+    if (transaction_status === 'deny') {
+      transaction.status = 'DITOLAK'
       await transaction.save()
       return res.status(200).json({
         status: 'Success',

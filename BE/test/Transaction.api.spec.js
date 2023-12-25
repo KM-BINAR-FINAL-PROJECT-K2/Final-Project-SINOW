@@ -1,6 +1,6 @@
 /* eslint-disable */
 const request = require('supertest')
-const { Transaction } = require('../models')
+const { Transaction, UserCourse } = require('../models')
 const app = require('../index')
 const generateSHA512 = require('../utils/generateSHA512')
 require('dotenv').config()
@@ -22,7 +22,10 @@ beforeAll(async () => {
     )
 
     if (premiumCourseResponse.body.data.length > 0) {
-      course = premiumCourseResponse.body.data[0]
+      course =
+        premiumCourseResponse.body.data[
+          premiumCourseResponse.body.data.length - 1
+        ]
     }
   } catch (error) {
     console.log('error saat login: ')
@@ -40,6 +43,18 @@ afterAll(async () => {
   } catch (error) {
     console.log(error)
   }
+})
+
+describe('API get all transaction before create', () => {
+  it('failed get all transaction: no transaction', async () => {
+    const response = await request(app)
+      .get('/api/v1/transactions')
+      .set({
+        Authorization: `Bearer ${token}`,
+      })
+    expect(response.statusCode).toBe(404)
+    expect(response.body.status).toBe('Failed')
+  })
 })
 
 describe('API create transaction', () => {
@@ -72,6 +87,49 @@ describe('API create transaction', () => {
     expect(response.statusCode).toBe(404)
     expect(response.body.status).toBe('Failed')
   })
+
+  it('failed create transaction: free course', async () => {
+    const response = await request(app)
+      .post('/api/v1/transactions')
+      .send({
+        courseId: 1,
+      })
+      .set({
+        Authorization: `Bearer ${token}`,
+      })
+
+    expect(response.statusCode).toBe(400)
+    expect(response.body.status).toBe('Failed')
+  })
+
+  it('failed create transaction: already paid', async () => {
+    const userCourse = await UserCourse.findOne({
+      where: {
+        userId: 1,
+        courseId: course.id,
+      },
+    })
+
+    await userCourse.update({
+      isAccessible: true,
+    })
+
+    const response = await request(app)
+      .post('/api/v1/transactions')
+      .send({
+        courseId: course.id,
+      })
+      .set({
+        Authorization: `Bearer ${token}`,
+      })
+
+    expect(response.statusCode).toBe(400)
+    expect(response.body.status).toBe('Failed')
+
+    await userCourse.update({
+      isAccessible: false,
+    })
+  })
 })
 
 describe('API get all transaction', () => {
@@ -96,6 +154,17 @@ describe('API get transaction by id', () => {
 
     expect(response.statusCode).toBe(200)
     expect(response.body.status).toBe('Success')
+  })
+
+  it('failed get detail transaction: transaction not found', async () => {
+    const response = await request(app)
+      .get(`/api/v1/transactions/2a48c09f-b1f5-4d4f-8867-29f3d0a9fe46`)
+      .set({
+        Authorization: `Bearer ${token}`,
+      })
+
+    expect(response.statusCode).toBe(404)
+    expect(response.body.status).toBe('Failed')
   })
 })
 
@@ -216,7 +285,36 @@ describe('API callback payment', () => {
     )
   })
 
+  it('failed callback payment: transaction status expired', async () => {
+    const signature_key = generateSHA512(
+      `${transaction.id}${200}${transaction.totalPrice}${
+        process.env.MIDTRANS_SERVER_KEY
+      }`,
+    )
+    const response = await request(app)
+      .post(`/api/v1/transactions/payment-callback`)
+      .set({
+        Authorization: `Bearer ${token}`,
+      })
+      .send({
+        transaction_status: 'expire',
+        fraud_status: 'accept',
+        order_id: transaction.id,
+        status_code: 200,
+        gross_amount: transaction.totalPrice,
+        signature_key,
+      })
+
+    expect(response.statusCode).toBe(200)
+    expect(response.body.status).toBe('Success')
+    expect(response.body.message).toBe('Transaksi ini sudah kadaluarsa')
+  })
+
   it('failed callback payment: transaction status deny', async () => {
+    const rollbackTransaction = await Transaction.findByPk(transaction.id)
+    rollbackTransaction.status = 'BELUM_BAYAR'
+    await rollbackTransaction.save()
+
     const signature_key = generateSHA512(
       `${transaction.id}${200}${transaction.totalPrice}${
         process.env.MIDTRANS_SERVER_KEY
@@ -241,7 +339,40 @@ describe('API callback payment', () => {
     expect(response.body.message).toBe('Transaksi ditolak')
   })
 
+  it('failed callback payment: transaction cancelled', async () => {
+    const rollbackTransaction = await Transaction.findByPk(transaction.id)
+    rollbackTransaction.status = 'BELUM_BAYAR'
+    await rollbackTransaction.save()
+
+    const signature_key = generateSHA512(
+      `${transaction.id}${200}${transaction.totalPrice}${
+        process.env.MIDTRANS_SERVER_KEY
+      }`,
+    )
+    const response = await request(app)
+      .post(`/api/v1/transactions/payment-callback`)
+      .set({
+        Authorization: `Bearer ${token}`,
+      })
+      .send({
+        transaction_status: 'cancel',
+        fraud_status: 'accept',
+        order_id: transaction.id,
+        status_code: 200,
+        gross_amount: transaction.totalPrice,
+        signature_key,
+      })
+
+    expect(response.statusCode).toBe(200)
+    expect(response.body.status).toBe('Success')
+    expect(response.body.message).toBe('Transaksi dibatalkan')
+  })
+
   it('success callback payment', async () => {
+    const rollbackTransaction = await Transaction.findByPk(transaction.id)
+    rollbackTransaction.status = 'BELUM_BAYAR'
+    await rollbackTransaction.save()
+
     const signature_key = generateSHA512(
       `${transaction.id}${200}${transaction.totalPrice}${
         process.env.MIDTRANS_SERVER_KEY
@@ -291,5 +422,34 @@ describe('API callback payment', () => {
     expect(response.statusCode).toBe(200)
     expect(response.body.status).toBe('Success')
     expect(response.body.message).toBe('Transaksi sudah dibayar')
+  })
+
+  it('failed callback payment: transaction paid', async () => {
+    const cancelTransaction = await Transaction.findByPk(transaction.id)
+    cancelTransaction.status = 'DIBATALKAN'
+    await cancelTransaction.save()
+
+    const signature_key = generateSHA512(
+      `${transaction.id}${200}${transaction.totalPrice}${
+        process.env.MIDTRANS_SERVER_KEY
+      }`,
+    )
+    const response = await request(app)
+      .post(`/api/v1/transactions/payment-callback`)
+      .set({
+        Authorization: `Bearer ${token}`,
+      })
+      .send({
+        transaction_status: 'capture',
+        fraud_status: 'accept',
+        order_id: transaction.id,
+        status_code: 200,
+        gross_amount: transaction.totalPrice,
+        signature_key,
+      })
+
+    expect(response.statusCode).toBe(200)
+    expect(response.body.status).toBe('Success')
+    expect(response.body.message).toBe('Transaksi ini sudah dibatalkan')
   })
 })

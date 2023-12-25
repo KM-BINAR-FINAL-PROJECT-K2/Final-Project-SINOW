@@ -156,7 +156,7 @@ const updateMyDetails = async (req, res, next) => {
       })
     }
 
-    if (updateDataAuth.email || updateDataAuth.phoneNumber) {
+    if (updateDataAuth.phoneNumber) {
       await Auth.update(updateDataAuth, {
         where: {
           id: user.Auth.id,
@@ -395,7 +395,7 @@ const getMyCourses = async (req, res, next) => {
     })
 
     if (!course || course.length === 0) {
-      return next(new ApiError('Data course masih kosong', 404))
+      return next(new ApiError('Data course tidak ditemukan', 404))
     }
 
     return res.status(200).json({
@@ -412,10 +412,6 @@ const openCourse = async (req, res, next) => {
   try {
     const { user } = req
     const { courseId } = req.params
-
-    if (!courseId) {
-      return next(new ApiError('courseId harus diisi', 400))
-    }
 
     const course = await Course.findByPk(courseId)
 
@@ -483,6 +479,7 @@ const openCourse = async (req, res, next) => {
         userCourseBuffer.Course.chapters.map(async (chapter, chapterIndex) => {
           if (chapter.modules.length > 0) {
             await Promise.all(
+              // eslint-disable-next-line
               chapter.modules.map(async (module, moduleIndex) => {
                 try {
                   await UserModule.create({
@@ -495,7 +492,7 @@ const openCourse = async (req, res, next) => {
                         : 'terkunci',
                   })
                 } catch (error) {
-                  throw next(new ApiError(error.message, 500))
+                  return next(new ApiError(error.message, 500))
                 }
               }),
             )
@@ -526,10 +523,6 @@ const followCourse = async (req, res, next) => {
     const { user } = req
     const { courseId } = req.params
 
-    if (!courseId) {
-      return next(new ApiError('courseId harus diisi', 400))
-    }
-
     const course = await Course.findByPk(courseId)
 
     if (!course) {
@@ -551,7 +544,7 @@ const followCourse = async (req, res, next) => {
       return next(
         new ApiError(
           'Course ini adalah course premium, silahkan beli course premium terlebih dahulu',
-          400,
+          403,
         ),
       )
     }
@@ -595,6 +588,20 @@ const openUserModule = async (req, res, next) => {
       (chapter) => chapter.userModules,
     )
 
+    const userModule = await UserModule.findByPk(userModuleId, {
+      include: [
+        {
+          model: Module,
+          as: 'moduleData',
+          attributes: ['no', 'name', 'videoUrl'],
+        },
+      ],
+    })
+
+    if (!userModule) {
+      return next(new ApiError('User Module tidak ditemukan', 404))
+    }
+
     const indexUserModule = mergedUserModules.findIndex(
       (module) => module.id === parseInt(userModuleId, 10),
     )
@@ -612,20 +619,6 @@ const openUserModule = async (req, res, next) => {
       (count, module) => (module.status === 'dipelajari' ? count + 1 : count),
       0,
     )
-
-    const userModule = await UserModule.findByPk(userModuleId, {
-      include: [
-        {
-          model: Module,
-          as: 'moduleData',
-          attributes: ['no', 'name', 'videoUrl'],
-        },
-      ],
-    })
-
-    if (!userModule) {
-      return next(new ApiError('User Module tidak ditemukan', 404))
-    }
 
     if (userModule.status === 'terkunci') {
       if (!userCourse.isAccessible) {
