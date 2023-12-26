@@ -99,6 +99,44 @@ const createTransaction = async (req, res, next) => {
       return next(new ApiError('Bukan course premium', 400))
     }
 
+    const checkTransaction = await Transaction.findOne({
+      where: {
+        userId: user.id,
+        courseId,
+      },
+      include: [
+        {
+          model: Course,
+          include: [
+            {
+              model: Category,
+              as: 'category',
+            },
+          ],
+        },
+      ],
+      order: [['createdAt', 'DESC']],
+    })
+
+    if (checkTransaction) {
+      if (checkTransaction.status === 'SUDAH_BAYAR') {
+        return next(
+          new ApiError('Anda sudah memiliki akses untuk course ini', 400),
+        )
+      }
+
+      if (checkTransaction.status === 'BELUM_BAYAR') {
+        return res.status(400).json({
+          status: 'Failed',
+          message: 'Transaksi sudah ada silahkan melakukan pembayaran',
+          data: {
+            transactionDetail: checkTransaction,
+            paymentUrl: checkTransaction.paymentUrl,
+          },
+        })
+      }
+    }
+
     const checkUserCourse = await UserCourse.findOne({
       where: {
         userId: user.id,
