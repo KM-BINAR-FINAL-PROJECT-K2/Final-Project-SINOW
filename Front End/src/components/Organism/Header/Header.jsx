@@ -10,11 +10,12 @@ export default function Header() {
       window.location.href = "/";
       return;
     }
+
     const validateToken = async () => {
       try {
         if (adminToken) {
           const res = await axios.get(
-            "https://sinow-production.up.railway.app/api/v1/auth/check-token",
+            "https://sinow-production.up.railway.app/api/v1/user",
             {
               headers: {
                 "Content-Type": "application/json",
@@ -22,7 +23,7 @@ export default function Header() {
               },
             }
           );
-          if (res.data.status === "Success") {
+          if (res.data.status === "Success" && res.data.data.role === "admin") {
             const response = res.data.data;
 
             const dataListString = JSON.stringify([
@@ -35,12 +36,16 @@ export default function Header() {
             setName(response.name);
 
             localStorage.setItem("data", dataListString);
+          } else {
+            localStorage.clear();
+            window.location.href = "/admin";
           }
         }
       } catch (error) {
         if (error.response.data.status === "Failed") {
+          console.log(error);
           localStorage.clear();
-          window.location.href = "/";
+          window.location.href = "/admin";
         }
       }
     };
