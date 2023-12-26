@@ -65,10 +65,46 @@ export default function Login() {
             }
           );
 
-          console.log(res.data);
           if (res.data.status === "Success") {
-            localStorage.setItem("token", res.data.data.token);
-            window.location.href = "/dashboard";
+            const adminToken = res.data.data.token;
+            const validateToken = async () => {
+              try {
+                if (adminToken) {
+                  const res = await axios.get(
+                    "https://sinow-production.up.railway.app/api/v1/user",
+                    {
+                      headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${adminToken}`,
+                      },
+                    }
+                  );
+                  if (
+                    res.data.status === "Success" &&
+                    res.data.data.role === "admin"
+                  ) {
+                    localStorage.setItem("token", adminToken);
+                    window.location.href = "/dashboard";
+                  } else {
+                    localStorage.clear();
+                    setFormLength("");
+                    setPasswordLengthError("");
+                    setPasswordError("Anda tidak memiliki akses disini!.");
+                    return;
+                  }
+                }
+              } catch (error) {
+                if (error.response.data.status === "Failed") {
+                  localStorage.clear();
+                  setFormLength("");
+                  setPasswordLengthError("");
+                  setPasswordError("Anda tidak memiliki akses disini!.");
+                  return;
+                }
+              }
+            };
+
+            validateToken();
           }
         }
       } catch (error) {
