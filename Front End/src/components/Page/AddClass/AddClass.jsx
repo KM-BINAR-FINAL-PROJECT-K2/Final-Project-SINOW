@@ -64,13 +64,47 @@ export default function AddClass() {
     });
   };
 
-  console.log(form);
-
   useEffect(() => {
     try {
       if (!form.name) {
         return;
       }
+
+      const allowedImageTypes = [
+        "image/jpeg",
+        "image/png",
+        "image/jpg",
+        "image/svg+xml",
+      ];
+      const allowedVideoTypes = [
+        "video/mp4",
+        "video/ogg",
+        "video/webm",
+        "video/avi",
+        "video/mpeg",
+        "video/mov",
+      ];
+
+      console.log(form.image);
+      console.log(form.video);
+
+      if (form.image.size > 0 && !allowedImageTypes.includes(form.image.type)) {
+        console.log("tes");
+        throw new Error("Tipe gambar harus .jpeg/.jpg/.png/.svg");
+      }
+
+      if (form.video.size > 0 && !allowedVideoTypes.includes(form.video.type)) {
+        throw new Error("Tipe video harus .mp4/.ogg/.webm/.avi/.mpeg/.mov");
+      }
+
+      if (form.image.size > 2097152) {
+        throw new Error("Ukuran gambar terlalu besar, maks 2MB");
+      }
+
+      if (form.video.size > 26214400) {
+        throw new Error("Ukuran video terlalu besar, maks 25MB");
+      }
+
       const addClass = async () => {
         await Swal.fire({
           title: "Yakin menambahkan Course baru?",
@@ -134,9 +168,23 @@ export default function AddClass() {
           }
         });
       };
-      addClass();
+      addClass().catch((error) => {
+        Swal.fire({
+          position: "center",
+          icon: "error",
+          title: error.message,
+          showConfirmButton: true,
+          confirmButtonColor: "#73CA5C",
+        });
+      });
     } catch (error) {
-      console.log(error);
+      Swal.fire({
+        position: "center",
+        icon: "error",
+        title: error.message,
+        showConfirmButton: true,
+        confirmButtonColor: "#73CA5C",
+      });
     }
   }, [form]);
 
@@ -324,11 +372,9 @@ export default function AddClass() {
                     type="file"
                     accept="image/*"
                   />
-                  <p
-                    className="mt-1 text-sm text-gray-500 "
-                    id="file_input_help"
-                  >
-                    SVG, PNG, JPG or GIF (MAX. 800x400px).
+                  <p className="font-semibold text-gray-600 text-xs pl-2 italic">
+                    <span className="text-red-500">*</span> File Gambar Maks 2
+                    MB
                   </p>
                 </div>
 
@@ -345,6 +391,10 @@ export default function AddClass() {
                     type="file"
                     accept="video/*"
                   />
+                  <p className="font-semibold text-gray-600 text-xs pl-2 italic">
+                    <span className="text-red-500">*</span> File Video Maks 25
+                    MB
+                  </p>
                 </div>
 
                 <div className="mb-1 col-span-2">
