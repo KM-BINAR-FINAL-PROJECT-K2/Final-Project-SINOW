@@ -31,12 +31,15 @@ export default function RemoveClass({ id }) {
       });
 
       if (result.isConfirmed) {
-        await axios.delete(`http://localhost:3000/api/v1/courses/${id}`, {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        });
+        await axios.delete(
+          `https://sinow-production.up.railway.app/api/v1/courses/${id}`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        );
 
         const deletedIndex = classSinow.findIndex((item) => item.id === id);
         const updatedClasses = [...classSinow];

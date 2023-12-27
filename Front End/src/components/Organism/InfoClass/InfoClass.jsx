@@ -119,7 +119,7 @@ export default function InfoClass({ id }) {
                       <span>{details.level.slice(1)}</span>
                     </p>
                   </div>
-                  <div className="p-2">
+                  <div className="p-2 invisible">
                     <div className="container">
                       {console.log(details.level.toLowerCase())}
                       <div
