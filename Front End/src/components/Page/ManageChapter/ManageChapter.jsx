@@ -159,9 +159,24 @@ export default function ManageChapter() {
           }
         });
       };
-      addChapter();
+      addChapter().catch((error) => {
+        Swal.fire({
+          position: "center",
+          icon: "error",
+          title: error.message,
+          showConfirmButton: true,
+          confirmButtonColor: "#73CA5C",
+        });
+      });
     } catch (error) {
       console.log(error.response.data.message.split(", ")[1]);
+      Swal.fire({
+        position: "center",
+        icon: "error",
+        title: error.message,
+        showConfirmButton: true,
+        confirmButtonColor: "#73CA5C",
+      });
     } finally {
       setIsLoading(false);
     }
@@ -187,7 +202,6 @@ export default function ManageChapter() {
           if (result.isConfirmed) {
             try {
               setIsLoading(true);
-              console.log(selectedKey.id);
               await axios.put(
                 `https://sinow-production.up.railway.app/api/v1/chapters/${selectedKey.id}`,
                 editForm,
@@ -249,6 +263,25 @@ export default function ManageChapter() {
         return;
       }
       const addModule = async () => {
+        const allowedVideoTypes = [
+          "video/mp4",
+          "video/ogg",
+          "video/webm",
+          "video/avi",
+          "video/mpeg",
+          "video/mov",
+        ];
+
+        if (
+          moduleForm.video.size > 0 &&
+          !allowedVideoTypes.includes(moduleForm.video.type)
+        ) {
+          throw new Error("Tipe video harus .mp4/.ogg/.webm/.avi/.mpeg/.mov");
+        }
+
+        if (moduleForm.video.size > 26214400) {
+          throw new Error("Ukuran video terlalu besar, maks 25MB");
+        }
         await Swal.fire({
           title: "Yakin menambahkan modul?",
           imageUrl: "/images/logo-n-maskot/Sticker-1.png",
@@ -308,9 +341,24 @@ export default function ManageChapter() {
           }
         });
       };
-      addModule();
+      addModule().catch((error) => {
+        Swal.fire({
+          position: "center",
+          icon: "error",
+          title: error.message,
+          showConfirmButton: true,
+          confirmButtonColor: "#73CA5C",
+        });
+      });
     } catch (error) {
       console.log(error.response.data.message.split(", ")[1]);
+      Swal.fire({
+        position: "center",
+        icon: "error",
+        title: error.message,
+        showConfirmButton: true,
+        confirmButtonColor: "#73CA5C",
+      });
     } finally {
       setIsLoading(false);
     }
@@ -321,7 +369,26 @@ export default function ManageChapter() {
       if (!editModuleForm || !editModuleForm.name || !editModuleForm.no) {
         return;
       }
-      const addModule = async () => {
+      const editModule = async () => {
+        const allowedVideoTypes = [
+          "video/mp4",
+          "video/ogg",
+          "video/webm",
+          "video/avi",
+          "video/mpeg",
+          "video/mov",
+        ];
+
+        if (
+          editModuleForm.video.size > 0 &&
+          !allowedVideoTypes.includes(editModuleForm.video.type)
+        ) {
+          throw new Error("Tipe video harus .mp4/.ogg/.webm/.avi/.mpeg/.mov");
+        }
+
+        if (editModuleForm.video.size > 26214400) {
+          throw new Error("Ukuran video terlalu besar, maks 25MB");
+        }
         await Swal.fire({
           title: "Yakin menyimpan perubahan?",
           imageUrl: "/images/logo-n-maskot/Sticker-1.png",
@@ -381,9 +448,24 @@ export default function ManageChapter() {
           }
         });
       };
-      addModule();
+      editModule().catch((error) => {
+        Swal.fire({
+          position: "center",
+          icon: "error",
+          title: error.message,
+          showConfirmButton: true,
+          confirmButtonColor: "#73CA5C",
+        });
+      });
     } catch (error) {
       console.log(error.response.data.message.split(", ")[1]);
+      Swal.fire({
+        position: "center",
+        icon: "error",
+        title: error.message,
+        showConfirmButton: true,
+        confirmButtonColor: "#73CA5C",
+      });
     } finally {
       setIsLoading(false);
     }
@@ -452,7 +534,6 @@ export default function ManageChapter() {
   }, []);
 
   useEffect(() => {
-    console.log(selectedKey);
     if (!selectedKey.id) {
       return;
     }
@@ -462,7 +543,6 @@ export default function ManageChapter() {
         const res = await axios.get(
           `https://sinow-production.up.railway.app/api/v1/chapters/${selectedKey.id}`
         );
-        console.log(res.data.data);
         setEditChapter(res.data.data);
       };
 
@@ -1183,6 +1263,10 @@ export default function ManageChapter() {
                               name="video"
                               className="bg-gray-50 border border-gray-300 text-gray-900 md:text-sm text-xs mb-1 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
                             />
+                            <p className="font-semibold text-gray-600 text-xs pl-2 italic">
+                              <span className="text-red-500">*</span> File Video
+                              Maks 25 MB
+                            </p>
                           </div>
                           <div className="mt-[30px]">
                             <button
@@ -1282,6 +1366,10 @@ export default function ManageChapter() {
                                       name="video"
                                       className="bg-gray-50 border border-gray-300 text-gray-900 md:text-sm text-xs mb-1 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
                                     />
+                                    <p className="font-semibold text-gray-600 text-xs pl-2 italic">
+                                      <span className="text-red-500">*</span>{" "}
+                                      File Video Maks 25 MB
+                                    </p>
                                   </div>
                                   <div className="mt-[30px]">
                                     <button
