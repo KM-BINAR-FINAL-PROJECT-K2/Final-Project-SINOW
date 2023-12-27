@@ -17,6 +17,7 @@ export default function EditClass() {
   const [editClass, setEditClass] = useState();
   const [categories, setCategories] = useState([]);
   const [removeBenefits, setRemoveBenefits] = useState([]);
+  const [benefitsValue, setBenefitsValue] = useState();
   const [form, setForm] = useState({
     name: "",
     level: "",
@@ -43,15 +44,15 @@ export default function EditClass() {
       };
       getClass();
     } catch (error) {
-      console.log(error);
+      console.error(error.response.data.message);
     }
   }, [id]);
-
-  console.log(editClass);
 
   const handleSubmit = (e) => {
     try {
       e.preventDefault();
+
+      const benefitsData = [];
       const formData = new FormData(e.target);
       const name = formData.get("name");
       const level = formData.get("level");
@@ -68,12 +69,28 @@ export default function EditClass() {
       const imageUrl = formData.get("image");
       const videoPreviewUrl = formData.get("videoPreviewUrl");
 
+      if (editClass && editClass.benefits) {
+        editClass.benefits.forEach((benefit, index) => {
+          formData.append(`benefits[${index}][id]`, benefit.id);
+          formData.append(
+            `benefits[${index}][description]`,
+            benefit.description
+          );
+
+          if (!benefitsData[index]) {
+            benefitsData[index] = {};
+          }
+
+          benefitsData[index].id = benefit.id;
+          benefitsData[index].description = benefit.description;
+        });
+      }
+
+      setBenefitsValue(Object.values(benefitsData));
+
       if (classCode === " - ") {
         classCode = "";
       }
-
-      console.log(imageUrl);
-      console.log(videoPreviewUrl.size);
 
       setForm({
         name,
@@ -90,7 +107,7 @@ export default function EditClass() {
         video: videoPreviewUrl,
       });
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   };
 
@@ -157,19 +174,71 @@ export default function EditClass() {
             try {
               setIsLoading(true);
 
-              if (removeBenefits.length > 0) {
+              if (benefitsValue.length > 0) {
+                if (removeBenefits.length > 0) {
+                  for (let i = 0; i < removeBenefits.length; i++) {
+                    await axios.delete(
+                      `http://localhost:3000/api/v1/benefits/${removeBenefits[i]}`,
+                      {
+                        headers: {
+                          "Content-Type": "application/json",
+                          Authorization: `Bearer ${localStorage.getItem(
+                            "token"
+                          )}`,
+                        },
+                      }
+                    );
+                  }
+                }
+
+                let filteredBenefitData = [];
+
                 for (let i = 0; i < removeBenefits.length; i++) {
-                  await axios.delete(
-                    `http://localhost:3000/api/v1/benefits/${removeBenefits[i]}`,
-                    {
-                      headers: {
-                        "Content-Type": "multipart/form-data",
-                        Authorization: `Bearer ${localStorage.getItem(
-                          "token"
-                        )}`,
-                      },
+                  for (let j = 0; j < benefitsValue.length; j++) {
+                    if (removeBenefits[i] === benefitsValue[j].id) {
+                      filteredBenefitData.push(benefitsValue[j]);
                     }
-                  );
+                  }
+                }
+
+                let benefitChangeId = [];
+
+                for (let i = 0; i < benefitsValue.length; i++) {
+                  const benefitData = benefitsValue[i];
+                  let shouldPush = true; // Flag to determine whether to push benefitData or not
+
+                  if (filteredBenefitData.length > 0) {
+                    for (let j = 0; j < filteredBenefitData.length; j++) {
+                      if (filteredBenefitData[j].id === benefitData.id) {
+                        shouldPush = false;
+                        break; // No need to continue checking if a match is found
+                      }
+                    }
+                  }
+
+                  if (shouldPush) {
+                    benefitChangeId.push(benefitData);
+                  }
+                }
+
+                if (benefitChangeId.length > 0) {
+                  for (let i = 0; i < benefitChangeId.length; i++) {
+                    await axios.put(
+                      `http://localhost:3000/api/v1/benefits/${benefitChangeId[i].id}`,
+                      {
+                        no: i + 1,
+                        description: benefitChangeId[i].description,
+                      },
+                      {
+                        headers: {
+                          "Content-Type": "application/x-www-form-urlencoded",
+                          Authorization: `Bearer ${localStorage.getItem(
+                            "token"
+                          )}`,
+                        },
+                      }
+                    );
+                  }
                 }
               }
 
@@ -184,7 +253,8 @@ export default function EditClass() {
                 }
               );
             } catch (error) {
-              if (error.response.status !== 200) {
+              console.log(error);
+              if (error.response.status && error.response.status !== 200) {
                 const err =
                   error.response.data.message.charAt(0).toUpperCase() +
                   error.response.data.message.slice(1);
@@ -198,7 +268,6 @@ export default function EditClass() {
 
                 return (window.location.href = "/kelola-kelas");
               }
-              console.log(error);
             }
             setIsLoading(false);
             await Swal.fire({
@@ -254,7 +323,7 @@ export default function EditClass() {
       };
       getCategory();
     } catch (error) {
-      console.log(error);
+      console.error(error.response.data.message);
     }
   }, []);
 
@@ -265,6 +334,17 @@ export default function EditClass() {
       } else {
         return [...prev, id];
       }
+    });
+  };
+
+  const handleChangeBenefitValue = (benefitId, newValue) => {
+    setEditClass((prev) => {
+      const updatedBenefits = prev.benefits.map((benefit) =>
+        benefit.id === benefitId
+          ? { ...benefit, description: newValue }
+          : benefit
+      );
+      return { ...prev, benefits: updatedBenefits };
     });
   };
 
@@ -508,63 +588,74 @@ export default function EditClass() {
                       </label>
 
                       {editClass.benefits &&
-                        editClass.benefits.map((benefit) => (
-                          <div
-                            key={benefit.id}
-                            className="flex p-1 items-center gap-3"
-                          >
-                            <input
-                              className={`bg-gray-50 border border-gray-300 md:text-sm text-xs mb-1 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 ${
-                                removeBenefits.includes(benefit.id)
-                                  ? "line-through text-alert-danger"
-                                  : "text-gray-900"
-                              }`}
-                              value={benefit.description}
-                            />
-                            <span
-                              className="pb-1"
-                              onClick={() =>
-                                handleRemoveBenefitById(benefit.id)
-                              }
+                        editClass.benefits
+                          .sort((a, b) => a.no - b.no)
+                          .map((benefit) => (
+                            <div
+                              key={benefit.id}
+                              className="flex p-1 items-center gap-3"
                             >
-                              {!removeBenefits.includes(benefit.id) && (
-                                <Tooltip content="Hapus" placement="left">
-                                  <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                    strokeWidth={1.5}
-                                    className="w-6 h-6 stroke-alert-danger hover:stroke-2 cursor-pointer"
-                                  >
-                                    <path
-                                      strokeLinecap="round"
-                                      strokeLinejoin="round"
-                                      d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0"
-                                    />
-                                  </svg>
-                                </Tooltip>
-                              )}
+                              <span>{benefit.no}</span>
+                              <input
+                                name="benefit"
+                                className={`bg-gray-50 border border-gray-300 md:text-sm text-xs mb-1 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 ${
+                                  removeBenefits.includes(benefit.id)
+                                    ? "line-through text-alert-danger bg-slate-100"
+                                    : "text-gray-900"
+                                }`}
+                                value={benefit.description}
+                                onChange={(e) =>
+                                  handleChangeBenefitValue(
+                                    benefit.id,
+                                    e.target.value
+                                  )
+                                }
+                                disabled={removeBenefits.includes(benefit.id)}
+                              />
+                              <span
+                                className="pb-1"
+                                onClick={() =>
+                                  handleRemoveBenefitById(benefit.id)
+                                }
+                              >
+                                {!removeBenefits.includes(benefit.id) && (
+                                  <Tooltip content="Hapus" placement="left">
+                                    <svg
+                                      xmlns="http://www.w3.org/2000/svg"
+                                      fill="none"
+                                      viewBox="0 0 24 24"
+                                      strokeWidth={1.5}
+                                      className="w-6 h-6 stroke-alert-danger hover:stroke-2 cursor-pointer"
+                                    >
+                                      <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0"
+                                      />
+                                    </svg>
+                                  </Tooltip>
+                                )}
 
-                              {removeBenefits.includes(benefit.id) && (
-                                <Tooltip content="Batal" placement="left">
-                                  <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                    strokeWidth={1.5}
-                                    className="w-6 h-6 stroke-gray-800 hover:stroke-2 cursor-pointer"
-                                  >
-                                    <path
-                                      strokeLinecap="round"
-                                      strokeLinejoin="round"
-                                      d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
-                                    />
-                                  </svg>
-                                </Tooltip>
-                              )}
-                            </span>
-                          </div>
-                        ))}
+                                {removeBenefits.includes(benefit.id) && (
+                                  <Tooltip content="Batal" placement="left">
+                                    <svg
+                                      xmlns="http://www.w3.org/2000/svg"
+                                      fill="none"
+                                      viewBox="0 0 24 24"
+                                      strokeWidth={1.5}
+                                      className="w-6 h-6 stroke-gray-800 hover:stroke-2 cursor-pointer"
+                                    >
+                                      <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                                      />
+                                    </svg>
+                                  </Tooltip>
+                                )}
+                              </span>
+                            </div>
+                          ))}
                       {removeBenefits.length > 0 && (
                         <p className="font-semibold text-gray-600 text-xs pl-2 italic">
                           <span className="text-red-500">*</span> Keuntungan
