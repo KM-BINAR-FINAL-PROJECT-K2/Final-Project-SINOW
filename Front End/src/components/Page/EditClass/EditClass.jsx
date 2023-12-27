@@ -18,6 +18,9 @@ export default function EditClass() {
   const [categories, setCategories] = useState([]);
   const [removeBenefits, setRemoveBenefits] = useState([]);
   const [benefitsValue, setBenefitsValue] = useState();
+  const [inputAddCategory, setInputAddCategory] = useState(false);
+  const [newCategoryValue, setNewCategoryValue] = useState();
+  const [random, setRandom] = useState(0);
   const [form, setForm] = useState({
     name: "",
     level: "",
@@ -46,7 +49,7 @@ export default function EditClass() {
     } catch (error) {
       console.error(error.response.data.message);
     }
-  }, [id]);
+  }, [id, random]);
 
   const handleSubmit = (e) => {
     try {
@@ -178,7 +181,7 @@ export default function EditClass() {
                 if (removeBenefits.length > 0) {
                   for (let i = 0; i < removeBenefits.length; i++) {
                     await axios.delete(
-                      `http://localhost:3000/api/v1/benefits/${removeBenefits[i]}`,
+                      `https://sinow-production.up.railway.app/api/v1/benefits/${removeBenefits[i]}`,
                       {
                         headers: {
                           "Content-Type": "application/json",
@@ -224,7 +227,7 @@ export default function EditClass() {
                 if (benefitChangeId.length > 0) {
                   for (let i = 0; i < benefitChangeId.length; i++) {
                     await axios.put(
-                      `http://localhost:3000/api/v1/benefits/${benefitChangeId[i].id}`,
+                      `https://sinow-production.up.railway.app/api/v1/benefits/${benefitChangeId[i].id}`,
                       {
                         no: i + 1,
                         description: benefitChangeId[i].description,
@@ -348,6 +351,73 @@ export default function EditClass() {
       );
       return { ...prev, benefits: updatedBenefits };
     });
+  };
+
+  const handleChangeNewBenefitValue = (newValue) => {
+    setNewCategoryValue(newValue);
+  };
+
+  const handleAddBenefit = () => {
+    setInputAddCategory(!inputAddCategory);
+  };
+
+  const handleSaveBenefit = () => {
+    const description = newCategoryValue;
+    const no = editClass.benefits.length + 1;
+    const courseId = editClass.id;
+    const newBenefit = {
+      description,
+      no,
+      courseId,
+    };
+
+    if (newBenefit.description) {
+      try {
+        const addNewBenefit = async () => {
+          setIsLoading(true);
+          const res = await axios.post(
+            "https://sinow-production.up.railway.app/api/v1/benefits",
+            newBenefit,
+            {
+              headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+              },
+            }
+          );
+          handleAddBenefit();
+          if (res.data.status === "Success") {
+            Swal.fire({
+              position: "center",
+              icon: "success",
+              title: "Benefit berhasil ditambahkan",
+              showConfirmButton: false,
+              timer: 1500,
+            });
+            setRandom(Math.random);
+          } else {
+            Swal.fire({
+              position: "center",
+              icon: "success",
+              title: res.data.message,
+              showConfirmButton: false,
+              timer: 1500,
+            });
+          }
+        };
+        addNewBenefit();
+      } catch (error) {
+        Swal.fire({
+          position: "center",
+          icon: "success",
+          title: error.message,
+          showConfirmButton: false,
+          timer: 1500,
+        });
+      } finally {
+        setIsLoading(false);
+      }
+    }
   };
 
   return (
@@ -658,8 +728,71 @@ export default function EditClass() {
                               </span>
                             </div>
                           ))}
+                      {inputAddCategory && (
+                        <div className="flex items-center gap-4 mt-1">
+                          <span className="">
+                            {editClass.benefits.length + 1}
+                          </span>
+
+                          <input
+                            className="block p-2.5 w-full md:text-sm text-xs mb-1 text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 "
+                            placeholder="Mulai mengetik...."
+                            name="newCategory"
+                            onChange={(e) =>
+                              handleChangeNewBenefitValue(e.target.value)
+                            }
+                          />
+
+                          <Tooltip content="Batal" placement="left">
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              strokeWidth={1.5}
+                              className="w-6 h-6 stroke-gray-800 hover:stroke-2 cursor-pointer"
+                              onClick={handleAddBenefit}
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                              />
+                            </svg>
+                          </Tooltip>
+                          <Tooltip content="Simpan" placement="left">
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              strokeWidth={1.5}
+                              className="w-6 h-6 stroke-gray-800 hover:stroke-2 cursor-pointer"
+                              onClick={handleSaveBenefit}
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                d="m4.5 12.75 6 6 9-13.5"
+                              />
+                            </svg>
+                          </Tooltip>
+                        </div>
+                      )}
+                      {!inputAddCategory && (
+                        <div className="flex items-center gap-4 mt-1">
+                          <span className="invisible">+</span>
+                          <p
+                            className="block p-2.5 w-full md:text-sm text-xs mb-1 text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 text-center cursor-pointer"
+                            onClick={handleAddBenefit}
+                          >
+                            Tambah Kategori
+                          </p>
+
+                          <span className="pb-1 w-6 h-6 invisible">+</span>
+                        </div>
+                      )}
+
                       {removeBenefits.length > 0 && (
-                        <p className="font-semibold text-gray-600 text-xs pl-2 italic">
+                        <p className="font-semibold text-gray-600 text-xs ml-6 italic">
                           <span className="text-red-500">*</span> Keuntungan
                           yang dicoret akan terhapus apabila perubahan disimpan.
                         </p>
