@@ -215,7 +215,7 @@ export default function InfoClass({ id }) {
                 </p>
                 <div className="mb-[15px]">
                   <p className="font-semibold text-[13px] text-gray-600 indent-6 mb-2">
-                    Benefit yang didapat di kelas ini adalah:
+                    Keuntungan yang didapat di kelas ini adalah:
                   </p>
                   <div className="font-normal text-[13px] text-gray-600 ml-4">
                     <ol className="list-decimal">
