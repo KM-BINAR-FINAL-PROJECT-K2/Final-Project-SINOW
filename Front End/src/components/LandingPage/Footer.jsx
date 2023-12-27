@@ -9,15 +9,19 @@ export default function Footer() {
   const sosmed = [
     {
       icon: Instagram,
+      link: "https://www.instagram.com/ ",
     },
     {
       icon: Facebook,
+      link: "https://id-id.facebook.com/login/device-based/regular/login/?login_attempt=1",
     },
     {
       icon: X,
+      link: "https://twitter.com/?lang=id",
     },
     {
       icon: Youtube,
+      link: "https://www.youtube.com/",
     },
   ];
   return (
@@ -36,11 +40,11 @@ export default function Footer() {
             </div>
             <div className=" flex justify-between">
               {sosmed.map((item) => (
-                <a href="#" className="">
+                <a href={item.link} className="">
                   <img
                     src={item.icon}
                     alt="logo"
-                    className="h-10 p-1 bg-white rounded-full md:p-1 md:bg-white md:rounded-full lg:p-1 lg:bg-white lg:rounded-full"
+                    className="h-8 p-1 bg-white rounded-full md:p-1 md:bg-white md:rounded-full lg:p-1 lg:bg-white lg:rounded-full"
                   />
                 </a>
               ))}
