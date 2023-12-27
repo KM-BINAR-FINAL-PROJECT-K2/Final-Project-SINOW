@@ -205,13 +205,13 @@ export default function EditClass() {
 
                 for (let i = 0; i < benefitsValue.length; i++) {
                   const benefitData = benefitsValue[i];
-                  let shouldPush = true; // Flag to determine whether to push benefitData or not
+                  let shouldPush = true;
 
                   if (filteredBenefitData.length > 0) {
                     for (let j = 0; j < filteredBenefitData.length; j++) {
                       if (filteredBenefitData[j].id === benefitData.id) {
                         shouldPush = false;
-                        break; // No need to continue checking if a match is found
+                        break;
                       }
                     }
                   }
