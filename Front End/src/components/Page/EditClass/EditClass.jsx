@@ -133,14 +133,14 @@ export default function EditClass() {
         ];
 
         if (
-          form.image.size < 0 &&
+          form.image.size > 0 &&
           !allowedImageTypes.includes(form.image.type)
         ) {
           throw new Error("Tipe gambar harus .jpeg/.jpg/.png/.svg");
         }
 
         if (
-          form.video.size < 0 &&
+          form.video.size > 0 &&
           !allowedVideoTypes.includes(form.video.type)
         ) {
           throw new Error("Tipe video harus .mp4/.ogg/.webm/.avi/.mpeg/.mov");
