@@ -219,9 +219,11 @@ export default function InfoClass({ id }) {
                   </p>
                   <div className="font-normal text-[13px] text-gray-600 ml-4">
                     <ol className="list-decimal">
-                      {details.benefits.map((benefit) => (
-                        <li key={benefit.id}>{benefit.description}</li>
-                      ))}
+                      {details.benefits
+                        .sort((a, b) => a.no - b.no)
+                        .map((benefit) => (
+                          <li key={benefit.id}>{benefit.description}</li>
+                        ))}
                     </ol>
                   </div>
                 </div>
