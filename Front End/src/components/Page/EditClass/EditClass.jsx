@@ -38,7 +38,7 @@ export default function EditClass() {
     try {
       const getClass = async () => {
         const res = await axios.get(
-          `http://localhost:3000/api/v1/courses/${id}`
+          `https://sinow-production.up.railway.app/api/v1/courses/${id}`
         );
         setEditClass(res.data.data);
       };
@@ -243,7 +243,7 @@ export default function EditClass() {
               }
 
               await axios.put(
-                `http://localhost:3000/api/v1/courses/${id}`,
+                `https://sinow-production.up.railway.app/api/v1/courses/${id}`,
                 form,
                 {
                   headers: {
@@ -318,7 +318,9 @@ export default function EditClass() {
   useEffect(() => {
     try {
       const getCategory = async () => {
-        const res = await axios.get("http://localhost:3000/api/v1/category");
+        const res = await axios.get(
+          "https://sinow-production.up.railway.app/api/v1/category"
+        );
         setCategories(res.data.data);
       };
       getCategory();

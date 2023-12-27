@@ -53,7 +53,9 @@ export default function CRUD() {
         setIsLoading(true);
         setIsError("");
 
-        const res = await axios.get(`http://localhost:3000/api/v1/courses`);
+        const res = await axios.get(
+          `https://sinow-production.up.railway.app/api/v1/courses`
+        );
         setInformationCard({
           users: 0,
           courses: res.data.data.length,
@@ -80,7 +82,7 @@ export default function CRUD() {
         setIsError("");
 
         const res = await axios.get(
-          `http://localhost:3000/api/v1/courses?search=${searchValue}${
+          `https://sinow-production.up.railway.app/api/v1/courses?search=${searchValue}${
             filterClass ? `&type=${filterClass}` : ""
           }`
         );

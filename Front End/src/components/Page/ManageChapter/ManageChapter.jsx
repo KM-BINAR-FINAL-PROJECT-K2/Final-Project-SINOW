@@ -115,12 +115,16 @@ export default function ManageChapter() {
           if (result.isConfirmed) {
             try {
               setIsLoading(true);
-              await axios.post(`http://localhost:3000/api/v1/chapters/`, form, {
-                headers: {
-                  "Content-Type": "application/json",
-                  Authorization: `Bearer ${localStorage.getItem("token")}`,
-                },
-              });
+              await axios.post(
+                `https://sinow-production.up.railway.app/api/v1/chapters/`,
+                form,
+                {
+                  headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${localStorage.getItem("token")}`,
+                  },
+                }
+              );
               setRandom(Math.random());
             } catch (error) {
               if (error.response.status !== 200) {
@@ -185,7 +189,7 @@ export default function ManageChapter() {
               setIsLoading(true);
               console.log(selectedKey.id);
               await axios.put(
-                `http://localhost:3000/api/v1/chapters/${selectedKey.id}`,
+                `https://sinow-production.up.railway.app/api/v1/chapters/${selectedKey.id}`,
                 editForm,
                 {
                   headers: {
@@ -261,7 +265,7 @@ export default function ManageChapter() {
             try {
               setIsLoading(true);
               await axios.post(
-                `http://localhost:3000/api/v1/modules/`,
+                `https://sinow-production.up.railway.app/api/v1/modules/`,
                 moduleForm,
                 {
                   headers: {
@@ -334,7 +338,7 @@ export default function ManageChapter() {
             try {
               setIsLoading(true);
               await axios.put(
-                `http://localhost:3000/api/v1/modules/${selectedKey.moduleId}`,
+                `https://sinow-production.up.railway.app/api/v1/modules/${selectedKey.moduleId}`,
                 editModuleForm,
                 {
                   headers: {
@@ -389,7 +393,9 @@ export default function ManageChapter() {
     const getChapters = async () => {
       try {
         setIsLoading(true);
-        const res = await axios.get(`http://localhost:3000/api/v1/chapters/`);
+        const res = await axios.get(
+          `https://sinow-production.up.railway.app/api/v1/chapters/`
+        );
 
         const filteredResponse = await res.data.data.filter(
           (chapter) => chapter.courseId == id
@@ -410,7 +416,7 @@ export default function ManageChapter() {
       try {
         setIsLoading(true);
         const res = await axios.get(
-          `http://localhost:3000/api/v1/courses/${id}`
+          `https://sinow-production.up.railway.app/api/v1/courses/${id}`
         );
         setClassData(res.data.data);
       } catch (error) {
@@ -429,7 +435,9 @@ export default function ManageChapter() {
     const getAllClass = async () => {
       try {
         setIsLoading(true);
-        const res = await axios.get(`http://localhost:3000/api/v1/courses/`);
+        const res = await axios.get(
+          `https://sinow-production.up.railway.app/api/v1/courses/`
+        );
         setClassSinow(res.data.data);
       } catch (error) {
         if (error.response.status === 404) {
@@ -452,7 +460,7 @@ export default function ManageChapter() {
       const getChapterById = async () => {
         setIsLoading(true);
         const res = await axios.get(
-          `http://localhost:3000/api/v1/chapters/${selectedKey.id}`
+          `https://sinow-production.up.railway.app/api/v1/chapters/${selectedKey.id}`
         );
         console.log(res.data.data);
         setEditChapter(res.data.data);
@@ -529,12 +537,15 @@ export default function ManageChapter() {
           if (result.isConfirmed) {
             try {
               setIsLoading(true);
-              await axios.delete(`http://localhost:3000/api/v1/modules/${id}`, {
-                headers: {
-                  "Content-Type": "application/json",
-                  Authorization: `Bearer ${localStorage.getItem("token")}`,
-                },
-              });
+              await axios.delete(
+                `https://sinow-production.up.railway.app/api/v1/modules/${id}`,
+                {
+                  headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${localStorage.getItem("token")}`,
+                  },
+                }
+              );
 
               while (random === Math.random()) {
                 setRandom(Math.random());
@@ -605,7 +616,7 @@ export default function ManageChapter() {
             try {
               setIsLoading(true);
               await axios.delete(
-                `http://localhost:3000/api/v1/chapters/${id}`,
+                `https://sinow-production.up.railway.app/api/v1/chapters/${id}`,
                 {
                   headers: {
                     "Content-Type": "application/json",

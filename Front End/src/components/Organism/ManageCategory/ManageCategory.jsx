@@ -35,7 +35,7 @@ export default function ManageCategory() {
       const getCategories = async () => {
         setIsLoading(true);
         const response = await axios.get(
-          "http://localhost:3000/api/v1/category"
+          "https://sinow-production.up.railway.app/api/v1/category"
         );
         setCategories(response.data.data);
       };
@@ -81,7 +81,7 @@ export default function ManageCategory() {
         await Promise.all(
           updatedCategories.map(async (category) => {
             await axios.put(
-              `http://localhost:3000/api/v1/category/${category.id}`,
+              `https://sinow-production.up.railway.app/${category.id}`,
               { name: category.name },
               {
                 headers: {
@@ -131,7 +131,7 @@ export default function ManageCategory() {
       setIsLoading(true);
       setIsError("");
       const response = await axios.post(
-        "http://localhost:3000/api/v1/category",
+        "https://sinow-production.up.railway.app/api/v1/category",
         data,
         {
           headers: {
@@ -198,7 +198,7 @@ export default function ManageCategory() {
         setIsLoading(true);
         setIsError("");
         await axios.delete(
-          `http://localhost:3000/api/v1/category/${categoryId}`,
+          `https://sinow-production.up.railway.app/api/v1/category/${categoryId}`,
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("token")}`,

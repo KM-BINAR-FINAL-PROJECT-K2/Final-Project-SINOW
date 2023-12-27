@@ -125,12 +125,16 @@ export default function AddClass() {
           if (result.isConfirmed) {
             try {
               setIsLoading(true);
-              await axios.post(`http://localhost:3000/api/v1/courses`, form, {
-                headers: {
-                  "Content-Type": "multipart/form-data",
-                  Authorization: `Bearer ${localStorage.getItem("token")}`,
-                },
-              });
+              await axios.post(
+                `https://sinow-production.up.railway.app/api/v1/courses`,
+                form,
+                {
+                  headers: {
+                    "Content-Type": "multipart/form-data",
+                    Authorization: `Bearer ${localStorage.getItem("token")}`,
+                  },
+                }
+              );
             } catch (error) {
               if (error.response.status !== 200) {
                 const err =
@@ -191,7 +195,9 @@ export default function AddClass() {
   useEffect(() => {
     try {
       const getCategory = async () => {
-        const res = await axios.get("http://localhost:3000/api/v1/category");
+        const res = await axios.get(
+          "https://sinow-production.up.railway.app/api/v1/category"
+        );
         setCategories(res.data.data);
       };
       getCategory();
