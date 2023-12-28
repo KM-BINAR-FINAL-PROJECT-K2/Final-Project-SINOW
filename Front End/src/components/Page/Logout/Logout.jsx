@@ -1,11 +1,6 @@
-/* eslint-disable react/prop-types */
 import MaskotLogout from "/images/logo-n-maskot/forgot_pass_aset.png";
 import Swal from "sweetalert2";
-export default function ButtonLogout({}) {
-  // const handleLogout = () => {
-  //   localStorage.clear();
-  // };
-
+export default function ButtonLogout() {
   const handleLogout = () => {
     Swal.fire({
       title: "Keluar dari akun?",

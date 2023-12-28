@@ -9,7 +9,6 @@ import { ImSearch } from "react-icons/im";
 import { ErrorContext } from "../../../store/Error";
 import { SearchValueContext } from "../../../store/SearchValue";
 import FilterKelolaDashboard from "../../Molecule/Filter/FilterKelolaDashboard";
-import { QueryContext } from "../../../store/QuerySearch";
 import { FilterClassContext } from "../../../store/FilterClass";
 export default function DashboadAdmin() {
   const [showSearchInput, setShowSearchInput] = useState(false);
@@ -18,8 +17,8 @@ export default function DashboadAdmin() {
   const { setIsError } = useContext(ErrorContext);
   const { isError } = useContext(ErrorContext);
   const { searchValue, setSearchValue } = useContext(SearchValueContext);
-  const { filterClass, setFilterClass } = useContext(FilterClassContext);
-  const [error, setError] = useState("");
+  const { filterClass } = useContext(FilterClassContext);
+  const [setError] = useState("");
   const [paymentDetail, setPaymentDetail] = useState([]);
   const [informationCard, setInformationCard] = useState({
     users: 0,
@@ -52,6 +51,7 @@ export default function DashboadAdmin() {
     };
 
     getClassesInformation();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -80,6 +80,7 @@ export default function DashboadAdmin() {
     };
 
     getpaymentDetail();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleShowSearchInput = () => {

@@ -2,17 +2,9 @@ import { useState } from "react";
 import ButtonLogout from "../../Page/Logout/Logout";
 export default function SmallSidebar() {
   const [showNav, setShowNav] = useState(false);
-  const [showLogout, setShowLogout] = useState(false);
   const toggleNav = () => {
     setShowNav(!showNav);
   };
-
-  const toggleShowLogout = () => {
-    setShowLogout(!showLogout);
-  };
-  // const handleLogout = () => {
-  //   localStorage.clear();
-  // };
 
   return (
     <>

@@ -5,6 +5,7 @@ import {
   AccordionBody,
 } from "@material-tailwind/react";
 
+// eslint-disable-next-line react/prop-types
 function Icon({ id, open }) {
   return (
     <svg

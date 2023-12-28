@@ -1,10 +1,4 @@
-import { useState } from "react";
-import { Dialog } from "@headlessui/react";
-import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
-
 export default function HeaderLandingPage() {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
   return (
     <div className="bg-white">
       <header className="z-50 fixed -top-1 lg:top-0 left-0 right-0 bg-white shadow-lg w-full">

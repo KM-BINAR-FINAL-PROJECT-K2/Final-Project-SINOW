@@ -1,5 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable react/prop-types */
 import axios from "axios";
 import Swal from "sweetalert2";
 import { Tooltip } from "flowbite-react";
@@ -316,6 +314,7 @@ export default function EditClass() {
     } finally {
       setIsLoading(false);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [form]);
 
   useEffect(() => {

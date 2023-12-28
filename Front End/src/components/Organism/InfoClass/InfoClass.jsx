@@ -1,5 +1,4 @@
-/* eslint-disable react/prop-types */
-import { useContext, useRef } from "react";
+import { useContext } from "react";
 import { rupiah } from "../../../utils/formatCurrency";
 import { convertSeconds } from "../../../utils/formatHour";
 import "./rating.css";
@@ -8,6 +7,7 @@ import { InfoClassContext } from "../../../store/InfoClassUI";
 import YoutubeEmbed from "../../Molecule/YoutubeEmbed/YoutubeEmbed";
 import youtubeVideoId from "../../../utils/youtubeVideoId";
 import "./skills.css";
+// eslint-disable-next-line react/prop-types
 export default function InfoClass({ id }) {
   const { classSinow } = useContext(ClassContext);
   const { toggleShowInfo } = useContext(InfoClassContext);

@@ -21,8 +21,8 @@ export default function CampusPartner() {
     <div className="bg-white m-4 pt-8 pb-4 lg:py-14  text-center text-2xl font-bold">
       <p className="lg:py-6 mb-10">Campus Partner</p>
       <div className=" gap-2 h-auto grid grid-cols-2 md:grid md:grid-cols-4 md:mx-24 md:pb-8 lg:mx-56 lg:grid lg:grid-cols-4 place-items-center">
-        {campus.map((item) => (
-          <div className=" m-5 h-24 md:h-24 lg:h-28">
+        {campus.map((item, index) => (
+          <div key={index} className=" m-5 h-24 md:h-24 lg:h-28">
             <a href="#">
               <img
                 src={item.image}

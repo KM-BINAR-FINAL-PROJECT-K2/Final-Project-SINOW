@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 import { useContext, useRef, useState } from "react";
 import { AddClassContext } from "../../../store/AddClassUI";
 export default function AddClass() {

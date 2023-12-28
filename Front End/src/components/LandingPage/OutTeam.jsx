@@ -67,8 +67,11 @@ export default function OurTeam() {
       <h1 className="py-4 text-2xl font-bold text-center sm:py-2"> Our Team</h1>
       <div className="overflow-auto">
         <div className=" py-4 grid sm:py-2 sm:grid sm:grid-cols-3 lg:grid lg:grid-cols-5 place-items-center ">
-          {navigation.map((item) => (
-            <div className="bg-white shadow-sm h-[300px] w-[250px] my-10 mx-5 sm:h-[300px] sm:w-[230px] rounded-xl border lg:h-[250px] lg:w-[200px]">
+          {navigation.map((item, index) => (
+            <div
+              key={index}
+              className="bg-white shadow-sm h-[300px] w-[250px] my-10 mx-5 sm:h-[300px] sm:w-[230px] rounded-xl border lg:h-[250px] lg:w-[200px]"
+            >
               <div className="m-5  flex justify-center">
                 <img
                   src={item.image}

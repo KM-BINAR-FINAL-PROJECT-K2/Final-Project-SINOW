@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 import axios from "axios";
 
 import { useContext, useEffect, useRef, useState } from "react";
@@ -18,14 +17,13 @@ export default function ManageCategory() {
   );
   const { isLoading, setIsLoading } = useContext(LoaderContext);
   const { isError, setIsError } = useContext(ErrorContext);
-  const { randomNumber, setRandomNumber } = useContext(RandomNumberContext);
+  const { setRandomNumber } = useContext(RandomNumberContext);
 
   const [categories, setCategories] = useState();
   const [editedCategories, setEditedCategories] = useState({});
   const [editedValues, setEditedValues] = useState({});
   const [editedAddValues, setEditedAddValues] = useState("Tambah Kelas");
   const [isAlert, setIsAlert] = useState(false);
-  const [dataCategory, setDataCategory] = useState({});
   const [activeAddCategory, setActiveAddCategory] = useState(false);
 
   const inputRefs = useRef({});
@@ -45,6 +43,7 @@ export default function ManageCategory() {
     } finally {
       setIsLoading(false);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleCategoryContainer = () => {
@@ -167,10 +166,6 @@ export default function ManageCategory() {
       ...prevEditedValues,
       [categoryId]: value,
     }));
-  };
-
-  const handleAddInputChange = (value) => {
-    setEditedAddValues(value);
   };
 
   const handleDeleteCategory = async (e, categoryId) => {
