@@ -19,11 +19,10 @@ export default function Hero() {
           SELAMAT DATANG SOBAT <span className="text-sinow-05">SINOW!</span>
         </h1>
         <p className="text-[14px] lg:text-[18px] my-5 lg:pr-20 text-justify">
-          Sinow adalah platform kursus online yang mengkhususkan diri dalam
-          bidang teknologi, menyediakan beragam program pelatihan untuk membantu
-          individu dan profesional mengembangkan keterampilan mereka. Dengan
-          kurikulum yang terkini dan diajarkan oleh para ahli industri, Sinow
-          memungkinkan pesertanya untuk belajar secara fleksibel dan mandiri.
+          <b>SINOW</b> adalah Platform yang menyediakan konten pembelajaran
+          online berupa video. Platform ini akan menyediakan konten pembelajaran
+          yang dapat diakses secara gratis atau berlangganan, ditambah dengan
+          fitur-fitur yang mudah digunakan.
         </p>
         <div className="pt-5">
           <a
