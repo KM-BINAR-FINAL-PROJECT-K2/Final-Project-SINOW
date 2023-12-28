@@ -12,6 +12,7 @@ const User = require('./userRouter')
 const Chapter = require('./chapterRouter')
 const Benefit = require('./benefitRouter')
 const Transaction = require('./transactionRouter')
+const Dashboard = require('./dashboardDetailRouter')
 
 router.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument))
 router.use('/api/v1/auth', Auth)
@@ -23,5 +24,6 @@ router.use('/api/v1/category', Category)
 router.use('/api/v1/notifications', Notification)
 router.use('/api/v1/benefits', Benefit)
 router.use('/api/v1/transactions', Transaction)
+router.use('/api/v1/dashboard', Dashboard)
 
 module.exports = router
