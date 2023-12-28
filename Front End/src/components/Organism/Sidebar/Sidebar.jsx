@@ -8,8 +8,6 @@ export default function Sidebar() {
     kelolaKelas: false,
   });
 
-  const [showLogout, setShowLogout] = useState(false);
-
   useEffect(() => {
     if (location.pathname === "/dashboard") {
       setBackground({

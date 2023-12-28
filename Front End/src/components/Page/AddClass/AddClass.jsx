@@ -1,5 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable react/prop-types */
 import axios from "axios";
 import { useContext, useEffect, useState } from "react";
 import Navigation from "../../Template/Navigation/Navigation";
@@ -190,6 +188,7 @@ export default function AddClass() {
         confirmButtonColor: "#73CA5C",
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [form]);
 
   useEffect(() => {

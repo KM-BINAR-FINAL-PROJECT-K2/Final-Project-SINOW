@@ -1,4 +1,3 @@
-import Logo from "/images/logo-n-maskot/Logo-png.png";
 export default function ForgotPassword() {
   return (
     <div className="h-[729px] w-full flex justify-center items-center">

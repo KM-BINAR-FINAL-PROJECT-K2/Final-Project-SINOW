@@ -1,6 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable react/prop-types */
-// package
 import axios from "axios";
 
 // hooks
@@ -72,6 +69,7 @@ export default function CRUD() {
     };
 
     getClassesInformation();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -100,6 +98,7 @@ export default function CRUD() {
     return () => {
       setClassSinow([]);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchValue, filterClass, randomNumber]);
 
   const handleShowSearchInput = () => {

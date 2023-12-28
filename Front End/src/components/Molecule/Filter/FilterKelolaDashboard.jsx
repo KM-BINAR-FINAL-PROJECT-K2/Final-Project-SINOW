@@ -5,7 +5,7 @@ import { FilterClassContext } from "../../../store/FilterClass";
 
 export default function FilterKelolaDashboard() {
   const [selected, setSelected] = useState(null);
-  const { filterClass, setFilterClass } = useContext(FilterClassContext);
+  const { setFilterClass } = useContext(FilterClassContext);
 
   const solutions = [
     {
@@ -32,6 +32,7 @@ export default function FilterKelolaDashboard() {
       return setFilterClass("");
     }
     setFilterClass(temp);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selected]);
 
   return (
