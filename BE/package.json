@@ -27,7 +27,8 @@
     "test:chapter": "jest --setupFiles dotenv/config --coverage --colors --verbose --detectOpenHandles --forceExit --testTimeout=20000 --runTestsByPath test/Chapter.api.spec.js",
     "test:benefit": "jest --setupFiles dotenv/config --coverage --colors --verbose --detectOpenHandles --forceExit --testTimeout=20000 --runTestsByPath test/Benefit.api.spec.js",
     "test:category": "jest --setupFiles dotenv/config --coverage --colors --verbose --detectOpenHandles --forceExit --testTimeout=20000 --runTestsByPath test/Category.api.spec.js",
-    "test:transaction": "jest --setupFiles dotenv/config --coverage --colors --verbose --detectOpenHandles --forceExit --testTimeout=20000 --runTestsByPath test/Transaction.api.spec.js"
+    "test:transaction": "jest --setupFiles dotenv/config --coverage --colors --verbose --detectOpenHandles --forceExit --testTimeout=20000 --runTestsByPath test/Transaction.api.spec.js",
+    "test:dashboardDetail": "jest --setupFiles dotenv/config --coverage --colors --verbose --detectOpenHandles --forceExit --testTimeout=20000 --runTestsByPath test/DashboardDetail.api.spec.js"
   },
   "author": "",
   "license": "ISC",
