@@ -121,6 +121,7 @@ export default function Login() {
       }
     };
     login();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [form]);
 
   return (

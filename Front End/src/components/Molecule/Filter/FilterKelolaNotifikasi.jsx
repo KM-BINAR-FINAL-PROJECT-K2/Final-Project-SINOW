@@ -2,18 +2,22 @@ import { Fragment, useContext, useEffect, useState } from "react";
 import { Popover, Transition } from "@headlessui/react";
 import { MdFilterAlt } from "react-icons/md";
 import { FilterClassContext } from "../../../store/FilterClass";
-export default function FilterKelolaKelas() {
+export default function FilterKelolaNotifikasi() {
   const [selected, setSelected] = useState(null);
   const { setFilterClass } = useContext(FilterClassContext);
 
   const solutions = [
     {
-      name: "GRATIS",
-      value: "gratis",
+      name: "PROMOSI",
+      value: "promosi",
     },
     {
-      name: "PREMIUM",
-      value: "premium",
+      name: "PENGUMUMAN",
+      value: "pengumuman",
+    },
+    {
+      name: "NOTIFIKASI",
+      value: "notifikasi",
     },
   ];
 

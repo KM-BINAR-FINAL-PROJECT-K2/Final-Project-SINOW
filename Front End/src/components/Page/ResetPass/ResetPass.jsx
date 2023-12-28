@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { FiEye, FiEyeOff } from "react-icons/fi";
 import Logo from "/images/logo-n-maskot/Sticker-3.png";
 import Logo_2 from "/images/logo-n-maskot/Logo-png.png";
@@ -6,7 +6,6 @@ import Logo_2 from "/images/logo-n-maskot/Logo-png.png";
 export default function ResetPassword() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [password, setPassword] = useState("");
 
   const handleTogglePassword = () => {
     setShowPassword((prevShowPassword) => !prevShowPassword);

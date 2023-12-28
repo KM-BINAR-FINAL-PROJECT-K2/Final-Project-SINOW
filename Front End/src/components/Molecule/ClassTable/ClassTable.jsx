@@ -1,6 +1,4 @@
-/* eslint-disable react/prop-types */
-import axios from "axios";
-import { useContext, useEffect, useState } from "react";
+import { useContext } from "react";
 import { rupiah } from "../../../utils/formatCurrency";
 import { Tooltip } from "flowbite-react";
 import Loading from "../Loading/Loading";
@@ -12,50 +10,14 @@ import { ErrorContext } from "../../../store/Error";
 import { CategoryContainerContext } from "../../../store/CategoryUI";
 
 export default function ClassTable() {
-  const { isLoading, setIsLoading } = useContext(LoaderContext);
-  const { isError, setIsError } = useContext(ErrorContext);
+  const { isLoading } = useContext(LoaderContext);
+  const { isError } = useContext(ErrorContext);
   const { classSinow } = useContext(ClassContext);
   const { toggleShowInfo } = useContext(InfoClassContext);
   const { toggleShowWarning } = useContext(RemoveClassContext);
   const { showCategoryContainer, setShowCategoryContainer } = useContext(
     CategoryContainerContext
   );
-
-  const customTheme = {
-    dropdown: {
-      arrowIcon: "ml-2 h-4 w-4 text-black",
-      content: "p-1 focus:outline-none",
-      floating: {
-        animation: "transition-opacity",
-        arrow: {
-          base: "absolute z-10 h-2 w-2 rotate-45",
-          style: {
-            dark: "bg-black border border-black fill-black ",
-            light: "bg-black border border-black fill-black",
-            auto: "bg-black border border-black fill-black ",
-          },
-          placement: "-4px",
-        },
-        base: "z-10 w-fit rounded divide-y divide-gray-100 shadow focus:outline-none",
-        content: "py-1 text-sm text-white",
-        divider: "my-1 h-px bg-gray-100 ",
-        header: "block py-2 px-4 text-sm text-gray-700",
-        hidden: "invisible opacity-0",
-        item: {
-          container: "",
-          base: "flex items-center justify-start py-2 px-4 text-sm text-white cursor-default w-full bg-sinow-05 hover:bg-white hover:text-sinow-05 hover:stroke-sinow-05 focus:bg-gray-100 focus:outline-none",
-          icon: "mr-2 h-4 w-4",
-        },
-        style: {
-          dark: "bg-gray-900 text-sinow-05",
-          light: "bg-sinow-05 text-gray-900",
-          auto: "bg-sinow-05 text-gray-900 ",
-        },
-        target: "w-fit",
-      },
-      inlineWrapper: "flex items-center",
-    },
-  };
 
   const handleCategoryContainer = () => {
     console.log(showCategoryContainer);

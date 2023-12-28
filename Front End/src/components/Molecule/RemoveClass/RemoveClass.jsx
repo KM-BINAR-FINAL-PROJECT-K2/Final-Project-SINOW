@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 import Swal from "sweetalert2";
 import MaskotLogout from "/images/logo-n-maskot/forgot_pass_aset.png";
 import axios from "axios";

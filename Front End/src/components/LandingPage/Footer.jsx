@@ -39,8 +39,8 @@ export default function Footer() {
               <p className="">(021) 1234 5678 </p>
             </div>
             <div className=" flex justify-between">
-              {sosmed.map((item) => (
-                <a href={item.link} className="">
+              {sosmed.map((item, index) => (
+                <a key={index} href={item.link} className="">
                   <img
                     src={item.icon}
                     alt="logo"

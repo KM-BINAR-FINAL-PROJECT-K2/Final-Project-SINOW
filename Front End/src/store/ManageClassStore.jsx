@@ -4,7 +4,6 @@ import KeyContextProvider from "./ActiveKey";
 import RemoveClassContextProvider from "./RemoveClassUI";
 import InfoClassContextProvider from "./InfoClassUI";
 import RotateContextProvider from "./RotateAction";
-import FilterClassContextProvider from "./FilterClass";
 import SearchValueContextProvider from "./SearchValue";
 import CategoryContainerContextProvider from "./CategoryUI";
 
@@ -15,11 +14,9 @@ const ManageClassContextProvider = ({ children }) => (
         <InfoClassContextProvider>
           <RotateContextProvider>
             <SearchValueContextProvider>
-              <FilterClassContextProvider>
-                <CategoryContainerContextProvider>
-                  {children}
-                </CategoryContainerContextProvider>
-              </FilterClassContextProvider>
+              <CategoryContainerContextProvider>
+                {children}
+              </CategoryContainerContextProvider>
             </SearchValueContextProvider>
           </RotateContextProvider>
         </InfoClassContextProvider>

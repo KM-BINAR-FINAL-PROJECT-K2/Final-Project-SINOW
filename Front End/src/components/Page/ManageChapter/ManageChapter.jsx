@@ -1,12 +1,9 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable react/prop-types */
 import axios from "axios";
 import { Accordion, Flowbite } from "flowbite-react";
 import { useContext, useEffect, useState, useRef } from "react";
 import { useParams } from "react-router-dom";
 import Navigation from "../../Template/Navigation/Navigation";
 import Breadcrumb from "../../Organism/Breadcrumb/Breadcrumb";
-// import ImageUploader from "../../Molecule/ImageUploader/ImageUploader";
 import Swal from "sweetalert2";
 import { LoaderContext } from "../../../store/Loader";
 import LoadingScreen from "../../Molecule/Loading/LoadingScreen";
@@ -180,6 +177,7 @@ export default function ManageChapter() {
     } finally {
       setIsLoading(false);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [form]);
 
   useEffect(() => {
@@ -255,6 +253,7 @@ export default function ManageChapter() {
     } finally {
       setIsLoading(false);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [editForm]);
 
   useEffect(() => {
@@ -362,6 +361,7 @@ export default function ManageChapter() {
     } finally {
       setIsLoading(false);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [moduleForm]);
 
   useEffect(() => {
@@ -469,6 +469,7 @@ export default function ManageChapter() {
     } finally {
       setIsLoading(false);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [editModuleForm]);
 
   useEffect(() => {
@@ -491,6 +492,7 @@ export default function ManageChapter() {
       }
     };
     getChapters();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [random]);
 
   useEffect(() => {
@@ -511,6 +513,7 @@ export default function ManageChapter() {
       }
     };
     getClass();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -531,6 +534,7 @@ export default function ManageChapter() {
       }
     };
     getAllClass();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -552,6 +556,7 @@ export default function ManageChapter() {
     } finally {
       setIsLoading(false);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedKey]);
 
   const handleAddForm = () => {
