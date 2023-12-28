@@ -18,7 +18,8 @@ export default function DashboadAdmin() {
   const { isError } = useContext(ErrorContext);
   const { searchValue, setSearchValue } = useContext(SearchValueContext);
   const { filterClass } = useContext(FilterClassContext);
-  const [setError] = useState("");
+  // eslint-disable-next-line no-unused-vars
+  const [error, setError] = useState("");
   const [paymentDetail, setPaymentDetail] = useState([]);
   const [informationCard, setInformationCard] = useState({
     users: 0,
