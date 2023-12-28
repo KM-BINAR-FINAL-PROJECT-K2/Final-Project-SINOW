@@ -14,6 +14,7 @@ import { IoIosAddCircle } from "react-icons/io";
 import InfoNotification from "../../Organism/InfoNotification/InfoNotification.jsx";
 import { CategoryContainerContext } from "../../../store/CategoryUI.jsx";
 import { NotificationDataContext } from "../../../store/NotificationData.jsx";
+import { RandomNumberContext } from "../../../store/RandomNumber.jsx";
 
 export default function ManageNotification() {
   const { isLoading, setIsLoading } = useContext(LoaderContext);
@@ -26,13 +27,12 @@ export default function ManageNotification() {
   const [showSearchInput, setShowSearchInput] = useState(false);
   const [notifications, setNotification] = useState();
   const [idNotification, setIdNotification] = useState(false);
-  const { notificationData, setNotificationData } = useContext(
-    NotificationDataContext
-  );
+  const { setNotificationData } = useContext(NotificationDataContext);
+  const { randomNumber } = useContext(RandomNumberContext);
 
   useEffect(() => {
-    try {
-      const getNotification = async () => {
+    const getNotification = async () => {
+      try {
         setIsError("");
         setIsLoading(true);
         const response = await axios.get(
@@ -60,16 +60,15 @@ export default function ManageNotification() {
           setIdNotification(false);
         }
         setNotification(filteredNotifications);
-      };
-      getNotification().catch(() => {
+      } catch (error) {
         setIsError("Notifikasi tidak ditemukan");
-      });
-    } catch (error) {
-      setIsError(error.message);
-    } finally {
-      setIsLoading(false);
-    }
-  }, [searchValue, filterClass, idNotification]);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    getNotification();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchValue, filterClass, idNotification, randomNumber]);
 
   const handleShowSearchInput = () => {
     setSearchValue("");
@@ -228,9 +227,6 @@ export default function ManageNotification() {
                           {notification.content}
                         </td>
                         <td className="px-4 py-2 text-[12px] ">
-                          <button className="m-2 py-[5px] font-bold text-neutral-01 inline-block rounded-[4px] w-[50px] hover:bg-neutral-02 bg-alert-success text-center leading-[14px] shadow-md">
-                            Ubah
-                          </button>
                           <button className="m-2 py-[5px] font-bold text-neutral-01 inline-block rounded-[4px] hover:bg-neutral-02 bg-alert-danger w-[50px] text-center leading-[14px] shadow-md">
                             Hapus
                           </button>
