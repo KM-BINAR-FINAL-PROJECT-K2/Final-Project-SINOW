@@ -15,10 +15,6 @@ export default function FilterKelolaNotifikasi() {
       name: "PENGUMUMAN",
       value: "pengumuman",
     },
-    {
-      name: "NOTIFIKASI",
-      value: "notifikasi",
-    },
   ];
 
   const handleFilterClick = (item) => {

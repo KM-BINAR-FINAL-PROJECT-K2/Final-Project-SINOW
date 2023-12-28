@@ -7,18 +7,28 @@ import Breadcrumb from "../../Organism/Breadcrumb/Breadcrumb";
 import { LoaderContext } from "../../../store/Loader";
 import { ErrorContext } from "../../../store/Error";
 import Loading from "../../Molecule/Loading/Loading";
-import { formatTime } from "../../../utils/formatTime";
 import FilterKelolaNotifikasi from "../../Molecule/Filter/FilterKelolaNotifikasi";
 import { FilterClassContext } from "../../../store/FilterClass";
 import { ImSearch } from "react-icons/im";
+import { IoIosAddCircle } from "react-icons/io";
+import InfoNotification from "../../Organism/InfoNotification/InfoNotification.jsx";
+import { CategoryContainerContext } from "../../../store/CategoryUI.jsx";
+import { NotificationDataContext } from "../../../store/NotificationData.jsx";
 
 export default function ManageNotification() {
   const { isLoading, setIsLoading } = useContext(LoaderContext);
   const { isError, setIsError } = useContext(ErrorContext);
-  const { filterClass, setFilterClass } = useContext(FilterClassContext);
+  const { filterClass } = useContext(FilterClassContext);
+  const { showCategoryContainer, setShowCategoryContainer } = useContext(
+    CategoryContainerContext
+  );
   const [searchValue, setSearchValue] = useState("");
   const [showSearchInput, setShowSearchInput] = useState(false);
   const [notifications, setNotification] = useState();
+  const [idNotification, setIdNotification] = useState(false);
+  const { notificationData, setNotificationData } = useContext(
+    NotificationDataContext
+  );
 
   useEffect(() => {
     try {
@@ -37,11 +47,21 @@ export default function ManageNotification() {
           }
         );
         const filteredNotifications = response.data.data.filter(
-          (notification) => notification.type !== "Transaksi"
+          (notification) =>
+            notification.type !== "Transaksi" &&
+            notification.type !== "Notifikasi"
         );
+
+        if (idNotification) {
+          const filteredNotificationById = response.data.data.filter(
+            (notification) => notification.id === idNotification
+          );
+          setNotificationData(filteredNotificationById);
+          setIdNotification(false);
+        }
         setNotification(filteredNotifications);
       };
-      getNotification().catch((error) => {
+      getNotification().catch(() => {
         setIsError("Notifikasi tidak ditemukan");
       });
     } catch (error) {
@@ -49,7 +69,7 @@ export default function ManageNotification() {
     } finally {
       setIsLoading(false);
     }
-  }, [searchValue, filterClass]);
+  }, [searchValue, filterClass, idNotification]);
 
   const handleShowSearchInput = () => {
     setSearchValue("");
@@ -58,6 +78,11 @@ export default function ManageNotification() {
 
   const handleSearchButtonClick = (value) => {
     setSearchValue(value);
+  };
+
+  const handleShowInfoNotification = (idNotification) => {
+    setIdNotification(idNotification);
+    setShowCategoryContainer(!showCategoryContainer);
   };
 
   return (
@@ -77,6 +102,12 @@ export default function ManageNotification() {
               Kelola Notifikasi
             </h1>
             <div className="flex justify-end ">
+              <button className="bg-darkblue-05 hover:bg-white border hover:text-darkblue-05 inline-block rounded-[6px] py-[5px] px-[10px] w-[120px] h-[34px] mr-[16px] my-[10px] shadow-md text-white fill-white hover:border-darkblue-05">
+                <div className="flex gap-[7px] items-center justify-center">
+                  <IoIosAddCircle className=" h-[24px] w-[24px]" />
+                  <span className="text-[16px] font-semibold ">Tambah</span>
+                </div>
+              </button>
               <FilterKelolaNotifikasi />
               {showSearchInput && (
                 <div className="flex items-center">
@@ -203,7 +234,12 @@ export default function ManageNotification() {
                           <button className="m-2 py-[5px] font-bold text-neutral-01 inline-block rounded-[4px] hover:bg-neutral-02 bg-alert-danger w-[50px] text-center leading-[14px] shadow-md">
                             Hapus
                           </button>
-                          <button className="m-2 py-[5px] font-bold text-neutral-01 inline-block rounded-[4px] hover:bg-neutral-02 bg-sinow-03 w-[50px] text-center leading-[14px] shadow-md">
+                          <button
+                            className="m-2 py-[5px] font-bold text-neutral-01 inline-block rounded-[4px] hover:bg-neutral-02 bg-sinow-03 w-[50px] text-center leading-[14px] shadow-md"
+                            onClick={() =>
+                              handleShowInfoNotification(notification.id)
+                            }
+                          >
                             Info
                           </button>
                         </td>
@@ -214,6 +250,7 @@ export default function ManageNotification() {
           </section>
         </section>
       </Navigation>
+      {showCategoryContainer && <InfoNotification />}
     </>
   );
 }
