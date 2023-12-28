@@ -18,7 +18,8 @@ export default function Sidebar() {
       location.pathname === "/kelola-kelas" ||
       location.pathname.includes("/edit-kelas") ||
       location.pathname.includes("/tambah-kelas") ||
-      location.pathname.includes("/kelola-chapter")
+      location.pathname.includes("/kelola-chapter") ||
+      location.pathname.includes("/kelola-notifikasi")
     ) {
       setBackground({
         dashboard: false,
