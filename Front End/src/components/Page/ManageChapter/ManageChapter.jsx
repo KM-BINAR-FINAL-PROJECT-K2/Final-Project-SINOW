@@ -1070,11 +1070,6 @@ export default function ManageChapter() {
                                       <span>{chapter.no}</span>
                                       {". "}
                                       {chapter.name}
-
-                                      {" | "}
-                                      <span>
-                                        {convertSeconds(chapter.duration)}
-                                      </span>
                                     </p>
                                   </div>
                                 </div>
