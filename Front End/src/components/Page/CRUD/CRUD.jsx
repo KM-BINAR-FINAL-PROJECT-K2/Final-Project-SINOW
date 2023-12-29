@@ -38,11 +38,7 @@ export default function CRUD() {
   const { showCategoryContainer } = useContext(CategoryContainerContext);
   const { randomNumber } = useContext(RandomNumberContext);
   const [showSearchInput, setShowSearchInput] = useState(false);
-  const [informationCard, setInformationCard] = useState({
-    users: 0,
-    courses: 0,
-    premiumClass: 0,
-  });
+  const [informationCard, setInformationCard] = useState(false);
 
   useEffect(() => {
     const getClassesInformation = async () => {
@@ -50,15 +46,9 @@ export default function CRUD() {
         setIsLoading(true);
         setIsError("");
 
-        const res = await axios.get(
+        await axios.get(
           `https://sinow-production.up.railway.app/api/v1/courses`
         );
-        setInformationCard({
-          users: 0,
-          courses: res.data.data.length,
-          premiumClass: res.data.data.filter((item) => item.type === "premium")
-            .length,
-        });
       } catch (error) {
         setIsError(
           error.response ? error.response.data.message : "Kesalahan Jaringan"
@@ -69,6 +59,64 @@ export default function CRUD() {
     };
 
     getClassesInformation();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    const getDashboardInformation = async () => {
+      try {
+        setIsLoading(true);
+        setIsError("");
+
+        const totalCourse = await axios.get(
+          `https://sinow-production.up.railway.app/api/v1/dashboard/totalCourse`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        );
+
+        const totalPremiumCourse = await axios.get(
+          `https://sinow-production.up.railway.app/api/v1/dashboard/totalPremiumCourse`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        );
+
+        const totalActiveUser = await axios.get(
+          `https://sinow-production.up.railway.app/api/v1/dashboard/totalActiveUser`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        );
+
+        const users = totalActiveUser.data.data.totalActiveUsers;
+        const courses = totalCourse.data.data.totalCourses;
+        const premiumClass = totalPremiumCourse.data.data.totalPremiumCourses;
+
+        setInformationCard({
+          courses,
+          premiumClass,
+          users,
+        });
+      } catch (error) {
+        setIsError(
+          error.response ? error.response.data.message : "Kesalahan Jaringan"
+        );
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    getDashboardInformation();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -113,23 +161,25 @@ export default function CRUD() {
   return (
     <>
       <Navigation>
-        <section className="mx-8 lg:mx-16 flex justify-around gap-6 flex-wrap mb-[54px]">
-          <Card
-            color={"bg-darkblue-03"}
-            quantity={informationCard.users}
-            description={"Pengguna Aktif"}
-          />
-          <Card
-            color={"bg-alert-success"}
-            quantity={informationCard.courses}
-            description={"Kelas Terdaftar"}
-          />
-          <Card
-            color={"bg-darkblue-05"}
-            quantity={informationCard.premiumClass}
-            description={"Kelas Premium"}
-          />
-        </section>
+        {informationCard && (
+          <section className="mx-8 lg:mx-16 flex justify-around gap-6 flex-wrap mb-[54px]">
+            <Card
+              color={"bg-darkblue-03"}
+              quantity={informationCard.users}
+              description={"Pengguna Aktif"}
+            />
+            <Card
+              color={"bg-alert-success"}
+              quantity={informationCard.courses}
+              description={"Kelas Terdaftar"}
+            />
+            <Card
+              color={"bg-darkblue-05"}
+              quantity={informationCard.premiumClass}
+              description={"Kelas Premium"}
+            />
+          </section>
+        )}
 
         <section className="mx-4 lg:mx-16">
           <div className="py-[10px] flex flex-wrap">
