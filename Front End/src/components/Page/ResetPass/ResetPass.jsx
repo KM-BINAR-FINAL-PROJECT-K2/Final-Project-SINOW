@@ -1,4 +1,4 @@
-
+import axios from "axios";
 import { useContext, useEffect, useState } from "react";
 import Swal from "sweetalert2";
 import { FiEye, FiEyeOff } from "react-icons/fi";
@@ -9,10 +9,7 @@ import LoadingScreen from "../../Molecule/Loading/LoadingScreen";
 import { LoaderContext } from "../../../store/Loader";
 import { ErrorContext } from "../../../store/Error";
 
-export default function ResetPassword({ token }) {
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [resetSuccess, setResetSuccess] = useState(false);
+export default function ResetPassword() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [resetPassword, setResetPassword] = useState();
