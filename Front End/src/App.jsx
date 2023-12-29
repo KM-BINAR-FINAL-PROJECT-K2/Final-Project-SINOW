@@ -38,7 +38,7 @@ export default function App() {
         />
         <Route path="/" element={<LandingPage />} />
         <Route path="/admin" element={<Login />} />
-        <Route path="/reset-password" element={<ResetPassword />} />
+        <Route path="/reset-password/:token" element={<ResetPassword />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/edit-kelas/:id" element={<EditClass />} />
         <Route path="/kelola-notifikasi" element={<ManageNotification />} />
