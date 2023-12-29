@@ -199,11 +199,10 @@ module.exports = (token) => `
                                     color: #fff;
                                     border-radius: 4px;
                                     margin: 10px auto;
-                                    letter-spacing: 0.6px;
                                   "
                                 >
                                   <a
-                                    href="${process.env.CLIENT_URL}/reset-password/${token}"
+                                    href="${process.env.BASE_URL}/reset-password/${token}"
                                     style="
                                       text-align: center;
                                       text-decoration: none;

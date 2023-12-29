@@ -1,5 +1,7 @@
 const { Op } = require('sequelize')
-const { Module, Chapter, User } = require('../models')
+const {
+  Module, Chapter, User, UserCourse,
+} = require('../models')
 const ApiError = require('../utils/ApiError')
 
 const { uploadVideo } = require('../utils/imagekitUploader')
@@ -36,6 +38,23 @@ const createModule = async (req, res, next) => {
         ),
       )
     }
+
+    const checkUserCourse = await UserCourse.findOne({
+      where: {
+        courseId: checkChapter.courseId,
+        isFollowing: true,
+      },
+    })
+
+    if (checkUserCourse) {
+      return next(
+        new ApiError(
+          'Modul tidak dapat ditambahkan karena sudah ada user yang mengikuti course ini',
+          400,
+        ),
+      )
+    }
+
     const existingModule = await Module.findOne({
       where: {
         [Op.and]: [
@@ -254,6 +273,25 @@ const deleteModule = async (req, res, next) => {
 
     if (!module) {
       return next(new ApiError('Module tidak ditemukan', 404))
+    }
+
+    const checkChapter = await Chapter.findByPk(module.chapterId)
+    if (checkChapter) {
+      const checkUserCourse = await UserCourse.findOne({
+        where: {
+          courseId: checkChapter.courseId,
+          isFollowing: true,
+        },
+      })
+
+      if (checkUserCourse) {
+        return next(
+          new ApiError(
+            'Module ini tidak dapat di hapus karena sudah ada user yang mengikuti course ini',
+            400,
+          ),
+        )
+      }
     }
 
     await module.destroy()
