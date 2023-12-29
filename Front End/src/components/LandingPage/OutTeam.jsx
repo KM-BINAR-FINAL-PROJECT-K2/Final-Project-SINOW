@@ -18,7 +18,7 @@ export default function OurTeam() {
     },
     {
       image: Avatar2,
-      name: "Mohamad Fadhlan R.",
+      name: "Adella Desinta M",
       class: "Fullstack Web Course",
     },
     {
@@ -33,7 +33,7 @@ export default function OurTeam() {
     },
     {
       image: Avatar5,
-      name: "Adella Desinta M",
+      name: "Mohamad Fadhlan R.",
       class: "Fullstack Web Course",
     },
     {
