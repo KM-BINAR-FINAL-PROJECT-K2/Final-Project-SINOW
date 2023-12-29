@@ -12,6 +12,7 @@ import LandingPage from "./components/Page/LandingPage/LandingPage";
 import SearchValueContextProvider from "./store/SearchValue";
 import FilterClassContextProvider from "./store/FilterClass";
 import ManageNotification from "./components/Page/ManageNotification/ManageNotification";
+import PageNotFound from "./components/Page/PageNotFound/PageNotFound";
 
 export default function App() {
   return (
@@ -37,12 +38,13 @@ export default function App() {
         />
         <Route path="/" element={<LandingPage />} />
         <Route path="/admin" element={<Login />} />
-        <Route path="/reset-password" element={<ResetPassword />} />
+        <Route path="/reset-password/:token" element={<ResetPassword />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/edit-kelas/:id" element={<EditClass />} />
         <Route path="/kelola-notifikasi" element={<ManageNotification />} />
         <Route path="/tambah-kelas" element={<AddClass />} />
         <Route path="/kelola-chapter/:id" element={<ManageChapter />} />
+        <Route path="*" element={<PageNotFound />} />
       </Routes>
     </BrowserRouter>
   );

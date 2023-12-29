@@ -6,6 +6,9 @@ import QueryContextProvider from "./QuerySearch.jsx";
 import ClassContextProvider from "./ClassStore.jsx";
 import RandomNumberContextProvider from "./RandomNumber.jsx";
 import FilterClassContextProvider from "./FilterClass.jsx";
+import CategoryContainerContextProvider from "./CategoryUI.jsx";
+import NotificationDataContextProvider from "./NotificationData.jsx";
+import AddNotificationContextProvider from "./ShowAddNotification.jsx";
 
 const MainContextProvider = ({ children }) => (
   <LoaderContextProvider>
@@ -14,7 +17,13 @@ const MainContextProvider = ({ children }) => (
         <ClassContextProvider>
           <FilterClassContextProvider>
             <RandomNumberContextProvider>
-              {children}
+              <CategoryContainerContextProvider>
+                <NotificationDataContextProvider>
+                  <AddNotificationContextProvider>
+                    {children}
+                  </AddNotificationContextProvider>
+                </NotificationDataContextProvider>
+              </CategoryContainerContextProvider>
             </RandomNumberContextProvider>
           </FilterClassContextProvider>
         </ClassContextProvider>

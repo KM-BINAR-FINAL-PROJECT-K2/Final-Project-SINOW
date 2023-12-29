@@ -29,20 +29,21 @@ export default function ManageCategory() {
   const inputRefs = useRef({});
 
   useEffect(() => {
-    try {
-      const getCategories = async () => {
+    const getCategories = async () => {
+      try {
         setIsLoading(true);
         const response = await axios.get(
           "https://sinow-production.up.railway.app/api/v1/category"
         );
         setCategories(response.data.data);
-      };
-      getCategories();
-    } catch (error) {
-      setIsError(error.message);
-    } finally {
-      setIsLoading(false);
-    }
+      } catch (error) {
+        setIsError(error.message);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    getCategories();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
