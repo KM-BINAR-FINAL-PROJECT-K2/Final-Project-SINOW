@@ -8,9 +8,9 @@ export default function Hero() {
     >
       <div className=" lg:mx-20 md:mx-10 my-5  flex items-center justify-center md:w-2/5 lg:w-2/5">
         <img
-          src="/images/logo-n-maskot/Sticker-3.png"
+          src="/images/logo-n-maskot/app.png"
           alt=""
-          className=" h-64 md:h-56 lg:h-96"
+          className=" h-56 md:h-56 lg:h-80"
         />
       </div>
       <div></div>
@@ -19,11 +19,10 @@ export default function Hero() {
           SELAMAT DATANG SOBAT <span className="text-sinow-05">SINOW!</span>
         </h1>
         <p className="text-[14px] lg:text-[18px] my-5 lg:pr-20 text-justify">
-          Sinow adalah platform kursus online yang mengkhususkan diri dalam
-          bidang teknologi, menyediakan beragam program pelatihan untuk membantu
-          individu dan profesional mengembangkan keterampilan mereka. Dengan
-          kurikulum yang terkini dan diajarkan oleh para ahli industri, Sinow
-          memungkinkan pesertanya untuk belajar secara fleksibel dan mandiri.
+          <b>SINOW</b> adalah Platform yang menyediakan konten pembelajaran
+          online berupa video. Platform ini akan menyediakan konten pembelajaran
+          yang dapat diakses secara gratis atau berlangganan, ditambah dengan
+          fitur-fitur yang mudah digunakan.
         </p>
         <div className="pt-5">
           <a

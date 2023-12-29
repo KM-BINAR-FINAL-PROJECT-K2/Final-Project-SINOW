@@ -13,7 +13,7 @@ export default function OurTeam() {
   const navigation = [
     {
       image: Avatar1,
-      name: "Grace Natali S.",
+      name: "Michael Arselius P.",
       class: "Fullstack Web Course",
     },
     {
@@ -28,7 +28,7 @@ export default function OurTeam() {
     },
     {
       image: Avatar4,
-      name: "Michael Arselius P.",
+      name: "Grace Natali S.",
       class: "Fullstack Web Course",
     },
     {
@@ -38,7 +38,7 @@ export default function OurTeam() {
     },
     {
       image: Avatar6,
-      name: "Randika Akhdan Afghani",
+      name: "Ivanston Simbolon",
       class: "Android",
     },
     {
@@ -48,17 +48,17 @@ export default function OurTeam() {
     },
     {
       image: Avatar8,
-      name: "M. Farhan Al Anzhari",
+      name: "Dian Permata Kusuma",
       class: "Android",
     },
     {
       image: Avatar9,
-      name: "Ivanston Simbolon",
+      name: "M. Farhan Al Anzhari",
       class: "Android",
     },
     {
       image: Avatar10,
-      name: "Dian Permata Kusuma",
+      name: "Randika Akhdan Afghani",
       class: "Android",
     },
   ];
@@ -66,7 +66,7 @@ export default function OurTeam() {
     <div className=" m-4 pt-10 pb-4 sm:pt-10 lg:pb-14 bg-slate-100 rounded-lg">
       <h1 className="py-4 text-2xl font-bold text-center sm:py-2"> Our Team</h1>
       <div className="overflow-auto">
-        <div className=" py-4 grid sm:py-2 sm:grid sm:grid-cols-3 lg:grid lg:grid-cols-5 place-items-center ">
+        <div className=" py-4 grid  sm:py-2 sm:grid sm:grid-cols-3 lg:grid lg:grid-cols-5 place-items-center ">
           {navigation.map((item, index) => (
             <div
               key={index}

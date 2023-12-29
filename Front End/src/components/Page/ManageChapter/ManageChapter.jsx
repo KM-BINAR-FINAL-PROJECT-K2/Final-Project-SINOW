@@ -1100,7 +1100,7 @@ export default function ManageChapter() {
                                   </div>
                                 )}
 
-                                <div className="border py-[20px] grid  grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 justify-items-center">
+                                <div className=" py-[20px] grid  grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 justify-items-center">
                                   {chapter.modules &&
                                     chapter.modules
                                       .sort((a, b) => a.no - b.no)
@@ -1109,24 +1109,24 @@ export default function ManageChapter() {
                                           <>
                                             <div
                                               key={module.id}
-                                              className="w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow overflow-hidden"
+                                              className="w-full max-w-sm bg-white  -gray-200 rounded-lg shadow overflow-hidden"
                                             >
                                               <video
-                                                className="w-full border"
+                                                className="w-full "
                                                 controls={true}
                                                 src={module.videoUrl}
                                               ></video>
                                               <div className="px-5 pb-5">
-                                                <h5 className="border text-md font-bold tracking-tight text-gray-900 mt-4 mb-2">
+                                                <h5 className=" text-md font-bold tracking-tight text-gray-900 mt-4 mb-2">
                                                   {module.name}
                                                 </h5>
-                                                <span className="border text-sm font-normal text-gray-900 ">
+                                                <span className=" text-sm font-normal text-gray-900 ">
                                                   {module.createdAt.slice(
                                                     0,
                                                     10
                                                   )}
                                                 </span>
-                                                <hr className="my-3 border border-gray-300" />
+                                                <hr className="my-3  border-gray-300" />
                                                 <div className="flex items-center justify-end gap-3">
                                                   <button
                                                     className="text-white bg-darkblue-05 hover:bg-sky-500  focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-md text-sm px-4 py-1.5 text-center "

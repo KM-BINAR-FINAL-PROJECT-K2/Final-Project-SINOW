@@ -13,7 +13,7 @@ export default function WhyUs() {
             className="h-64 sm:h-72 lg:h-96 lg:w-[520px] rounded-3xl"
           />
         </div>
-        <div className="mx-2 my-10 sm:my-3 lg:my-0 lg:w-1/2 lg:flex-3 text-justify sm:flex-3">
+        <div className=" mx-2 my-10 sm:my-3 lg:my-0 lg:w-1/2 lg:flex-3 text-justify sm:flex-3">
           <div className=" flex lg:mb-4 gap-5">
             <div>
               <img src={Icon} alt="iconCheck" className="h-8 lg:h-10  sm:h-6" />
@@ -22,13 +22,13 @@ export default function WhyUs() {
               <h1 className="sm:text-md lg:text-2xl font-bold">
                 Kualitas Pembelajaran Unggul
               </h1>
-              <p className="text-sm sm:text-xs text-justify">
+              <p className="text-sm lg:text-[14px] sm:text-xs text-justify">
                 SINOW menawarkan pengalaman belajar online yang unggul dengan
                 kurikulum yang dirancang secara cermat.
               </p>
             </div>
           </div>
-          <div className=" flex lg:flex gap-5">
+          <div className=" flex lg:flex lg:mb-4 gap-5">
             <div className="my-2">
               <span>
                 <img
@@ -42,7 +42,7 @@ export default function WhyUs() {
               <h1 className="sm:text-md lg:text-2xl font-bold my-1">
                 Fleksibilitas Waktu dan Akses Anywhere
               </h1>
-              <p className="text-sm sm:text-xs ">
+              <p className="text-sm lg:text-[14px] sm:text-xs ">
                 SINOW memahami bahwa setiap individu memiliki jadwal yang
                 berbeda-beda, kami menyediakan fleksibilitas waktu dalam
                 mengakses materi pembelajaran.
@@ -63,7 +63,7 @@ export default function WhyUs() {
               <h1 className="sm:text-md lg:text-2xl font-bold my-1">
                 Komunitas Pembelajar yang Aktif
               </h1>
-              <p className="text-sm sm:text-xs ">
+              <p className="text-sm lg:text-[14px] sm:text-xs ">
                 Anda dapat berinteraksi dengan sesama peserta kursus, bertukar
                 pengalaman, dan memperluas jaringan profesional Anda.
               </p>
