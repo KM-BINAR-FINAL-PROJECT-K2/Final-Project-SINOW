@@ -1,4 +1,4 @@
-
+import axios from "axios";
 import { useContext, useEffect, useState } from "react";
 import Swal from "sweetalert2";
 import { FiEye, FiEyeOff } from "react-icons/fi";
@@ -7,19 +7,14 @@ import Logo_2 from "/images/logo-n-maskot/Logo-png.png";
 import { useParams } from "react-router-dom";
 import LoadingScreen from "../../Molecule/Loading/LoadingScreen";
 import { LoaderContext } from "../../../store/Loader";
-import { ErrorContext } from "../../../store/Error";
 
-export default function ResetPassword({ token }) {
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [resetSuccess, setResetSuccess] = useState(false);
+export default function ResetPassword() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [resetPassword, setResetPassword] = useState();
   const { token } = useParams();
 
   const { isLoading, setIsLoading } = useContext(LoaderContext);
-  const { isError, setIsError } = useContext(ErrorContext);
 
   useEffect(() => {
     const getUser = async () => {
@@ -84,7 +79,6 @@ export default function ResetPassword({ token }) {
         if (!resetPassword) {
           return;
         }
-        setIsError("");
         setIsLoading(true);
         console.log("Masuk??");
         const response = await axios.post(
@@ -162,6 +156,8 @@ export default function ResetPassword({ token }) {
             <div className="flex">
               <input
                 type={showPassword ? "text" : "password"}
+                // value={password}
+                // onChange={(e) => setPassword(e.target.value)}
                 name="password"
                 className="border sm:text-sm rounded-l-lg block w-full p-3 text-lightgrey-05 border-r-0"
                 placeholder="Min 8 karakter"
@@ -191,6 +187,8 @@ export default function ResetPassword({ token }) {
             <div className="flex">
               <input
                 type={showConfirmPassword ? "text" : "password"}
+                // value={password}
+                // onChange={(e) => setPassword(e.target.value)}
                 name="confirmPassword"
                 className="border sm:text-sm rounded-l-lg block w-full p-3 text-lightgrey-05 border-r-0"
                 placeholder="Min 8 Karakter"
