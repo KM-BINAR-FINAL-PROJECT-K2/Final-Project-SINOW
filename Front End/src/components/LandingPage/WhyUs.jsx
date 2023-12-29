@@ -5,15 +5,15 @@ export default function WhyUs() {
       <h1 className="text-center text-2xl my-10 font-bold lg:text-3xl f lg:mt-16 lg:mb-16">
         Mengapa harus memilih <span className="text-sinow-05">SINOW</span> ?
       </h1>
-      <div className="h-auto w-full flex-auto md:gap-4 lg:flex sm:flex ">
-        <div className=" mx-2 lg:w-1/2  lg:flex lg:justify-center">
+      <div className=" h-auto w-full flex-auto md:gap-4 lg:pl-24 lg:grid lg:grid-cols-2 sm:flex ">
+        <div className=" mx-2 lg:flex lg:justify-center">
           <img
             src="/images/Study_1.jpg"
             alt="image"
             className="h-64 sm:h-72 lg:h-96 lg:w-[520px] rounded-3xl"
           />
         </div>
-        <div className=" mx-2 my-10 sm:my-3 lg:my-0 lg:w-1/2 lg:flex-3 text-justify sm:flex-3">
+        <div className=" mx-2 my-10 sm:my-3 lg:my-0  lg:flex-3 text-justify sm:flex-3">
           <div className=" flex lg:mb-4 gap-5">
             <div>
               <img src={Icon} alt="iconCheck" className="h-8 lg:h-10  sm:h-6" />
