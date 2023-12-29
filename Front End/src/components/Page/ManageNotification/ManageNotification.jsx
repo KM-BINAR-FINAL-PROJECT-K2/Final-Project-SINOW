@@ -15,6 +15,8 @@ import InfoNotification from "../../Organism/InfoNotification/InfoNotification.j
 import { CategoryContainerContext } from "../../../store/CategoryUI.jsx";
 import { NotificationDataContext } from "../../../store/NotificationData.jsx";
 import { RandomNumberContext } from "../../../store/RandomNumber.jsx";
+import { AddNotificationContext } from "../../../store/ShowAddNotification.jsx";
+import AddNotification from "../../Organism/AddNotification/AddNotification.jsx";
 
 export default function ManageNotification() {
   const { isLoading, setIsLoading } = useContext(LoaderContext);
@@ -23,6 +25,10 @@ export default function ManageNotification() {
   const { showCategoryContainer, setShowCategoryContainer } = useContext(
     CategoryContainerContext
   );
+  const { showAddNotification, setShowAddNotification } = useContext(
+    AddNotificationContext
+  );
+
   const [searchValue, setSearchValue] = useState("");
   const [showSearchInput, setShowSearchInput] = useState(false);
   const [notifications, setNotification] = useState();
@@ -84,6 +90,10 @@ export default function ManageNotification() {
     setShowCategoryContainer(!showCategoryContainer);
   };
 
+  const handleShowAddNotification = () => {
+    setShowAddNotification(!showAddNotification);
+  };
+
   return (
     <>
       <Navigation>
@@ -101,7 +111,10 @@ export default function ManageNotification() {
               Kelola Notifikasi
             </h1>
             <div className="flex justify-end ">
-              <button className="bg-darkblue-05 hover:bg-white border hover:text-darkblue-05 inline-block rounded-[6px] py-[5px] px-[10px] w-[120px] h-[34px] mr-[16px] my-[10px] shadow-md text-white fill-white hover:border-darkblue-05">
+              <button
+                className="bg-darkblue-05 hover:bg-white border hover:text-darkblue-05 inline-block rounded-[6px] py-[5px] px-[10px] w-[120px] h-[34px] mr-[16px] my-[10px] shadow-md text-white fill-white hover:border-darkblue-05"
+                onClick={handleShowAddNotification}
+              >
                 <div className="flex gap-[7px] items-center justify-center">
                   <IoIosAddCircle className=" h-[24px] w-[24px]" />
                   <span className="text-[16px] font-semibold ">Tambah</span>
@@ -145,6 +158,9 @@ export default function ManageNotification() {
                 <tr className="bg-lightblue-05 text-left text-gray-800">
                   <th className="py-2 text-[12px] px-4 font-semibold w-1/7 ">
                     ID
+                  </th>
+                  <th className="py-2 text-[12px] px-4 font-semibold w-1/7 ">
+                    User ID
                   </th>
                   <th className="px-4 py-2 text-[12px] font-semibold w-1/7">
                     Tipe
@@ -215,6 +231,9 @@ export default function ManageNotification() {
                         <td className="py-2 px-4 text-[12px]  text-gray-600">
                           {notification.id}
                         </td>
+                        <td className="py-2 px-4 text-[12px]  text-gray-600">
+                          {notification.userId}
+                        </td>
                         <td className="px-4 py-2 text-[12px]  text-gray-600">
                           {notification.type}
                         </td>
@@ -247,6 +266,7 @@ export default function ManageNotification() {
         </section>
       </Navigation>
       {showCategoryContainer && <InfoNotification />}
+      {showAddNotification && <AddNotification />}
     </>
   );
 }

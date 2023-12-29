@@ -8,6 +8,7 @@ import RandomNumberContextProvider from "./RandomNumber.jsx";
 import FilterClassContextProvider from "./FilterClass.jsx";
 import CategoryContainerContextProvider from "./CategoryUI.jsx";
 import NotificationDataContextProvider from "./NotificationData.jsx";
+import AddNotificationContextProvider from "./ShowAddNotification.jsx";
 
 const MainContextProvider = ({ children }) => (
   <LoaderContextProvider>
@@ -18,7 +19,9 @@ const MainContextProvider = ({ children }) => (
             <RandomNumberContextProvider>
               <CategoryContainerContextProvider>
                 <NotificationDataContextProvider>
-                  {children}
+                  <AddNotificationContextProvider>
+                    {children}
+                  </AddNotificationContextProvider>
                 </NotificationDataContextProvider>
               </CategoryContainerContextProvider>
             </RandomNumberContextProvider>
