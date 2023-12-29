@@ -1,9 +1,13 @@
-import { useState } from "react";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
 import { FiEye, FiEyeOff } from "react-icons/fi";
 import Logo from "/images/logo-n-maskot/Sticker-3.png";
 import Logo_2 from "/images/logo-n-maskot/Logo-png.png";
 
-export default function ResetPassword() {
+export default function ResetPassword({ token }) {
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [resetSuccess, setResetSuccess] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
@@ -15,6 +19,45 @@ export default function ResetPassword() {
       (prevShowConfirmPassword) => !prevShowConfirmPassword
     );
   };
+
+  useEffect(() => {
+    const resetPassword = async () => {
+      try {
+        // Membuat request ke API untuk reset password
+        const res = await axios.post(
+          `http://localhost:3000/api/v1/auth/reset-password/${token}`,
+          {
+            password,
+            confirmPassword,
+          },
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        console.log(res);
+        // Jika request berhasil
+        if (res.status === 200) {
+          setResetSuccess(true);
+        } else {
+          // Handle error jika diperlukan
+          console.error("Gagal melakukan reset password");
+        }
+      } catch (error) {
+        // Handle error jika diperlukan
+        console.error("Terjadi kesalahan", error);
+      }
+    };
+
+    // Memanggil fungsi resetPassword saat useEffect dijalankan
+    resetPassword();
+  }, [token, password, confirmPassword]);
+
+  if (resetSuccess) {
+    return <div>Password berhasil direset!</div>;
+  }
 
   return (
     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 h-screen w-full">
