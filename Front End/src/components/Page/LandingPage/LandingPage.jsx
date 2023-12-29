@@ -4,6 +4,7 @@ import Footer from "../../LandingPage/Footer";
 import HeaderLandingPage from "../../LandingPage/HeaderLandingPage";
 import Hero from "../../LandingPage/Hero";
 import OurTeam from "../../LandingPage/OutTeam";
+import Point from "../../LandingPage/Point";
 import WhyUs from "../../LandingPage/WhyUs";
 
 export default function LandingPage() {
@@ -22,6 +23,9 @@ export default function LandingPage() {
       </div>
       <div>
         <WhyUs />
+      </div>
+      <div>
+        <Point />
       </div>
       <div>
         <CampusPartner />

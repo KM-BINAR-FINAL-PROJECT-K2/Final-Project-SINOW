@@ -8,9 +8,9 @@ export default function Hero() {
     >
       <div className=" lg:mx-20 md:mx-10 my-5  flex items-center justify-center md:w-2/5 lg:w-2/5">
         <img
-          src="/images/logo-n-maskot/Sticker-3.png"
+          src="/images/logo-n-maskot/app.png"
           alt=""
-          className=" h-64 md:h-56 lg:h-96"
+          className=" h-56 md:h-56 lg:h-80"
         />
       </div>
       <div></div>
