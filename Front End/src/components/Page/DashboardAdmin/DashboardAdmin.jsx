@@ -95,10 +95,10 @@ export default function DashboadAdmin() {
             },
           }
         );
-        // console.log(res.data.data);
+
         setPaymentDetail(res.data.data);
       } catch (error) {
-        setError(
+        setIsError(
           error.response ? error.response.data.message : "Network Error"
         );
       } finally {

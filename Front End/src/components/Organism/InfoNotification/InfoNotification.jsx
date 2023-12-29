@@ -29,8 +29,6 @@ export default function InfoNotification() {
   const [type, setType] = useState();
   const [notificationId, setNotificationId] = useState(false);
 
-  console.log(notificationData);
-
   useEffect(() => {
     if (notificationData && notificationData.length > 0) {
       notificationData.map((notification) => {
