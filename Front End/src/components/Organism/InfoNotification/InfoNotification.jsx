@@ -29,6 +29,8 @@ export default function InfoNotification() {
   const [type, setType] = useState();
   const [notificationId, setNotificationId] = useState(false);
 
+  console.log(notificationData);
+
   useEffect(() => {
     if (notificationData && notificationData.length > 0) {
       notificationData.map((notification) => {
@@ -109,7 +111,9 @@ export default function InfoNotification() {
 
   const handleCategoryContainer = () => {
     if (showCategoryContainer) {
-      setRandomNumber(Math.random());
+      if (form) {
+        setRandomNumber(Math.random());
+      }
     }
     setShowCategoryContainer(!showCategoryContainer);
   };
@@ -234,7 +238,11 @@ export default function InfoNotification() {
                   <div className="grid grid-cols-2 gap-x-2 gap-y-11 overflow-y-auto overflow-x-hidden m-3">
                     <div className="flex items-center justify-center sm:col-span-1 col-span-2 px-3">
                       <p className="font-bold text-gray-700 text-5xl">
-                        {notification.id}
+                        <img
+                          src="/images/logo-n-maskot/notify_null.svg"
+                          alt=""
+                          className="w-[150px]"
+                        />
                       </p>
                     </div>
                     <div className=" h-[100px] border-t-2 border-gray-600  flex items-center justify-center sm:col-span-1 col-span-2 px-3">
