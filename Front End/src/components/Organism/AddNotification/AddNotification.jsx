@@ -106,7 +106,7 @@ export default function AddNotification() {
       } catch (error) {
         Swal.fire({
           position: "center",
-          icon: "success",
+          icon: "error",
           title: error.response.data.message,
           showConfirmButton: true,
           confirmButtonText: "Ok",
