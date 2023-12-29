@@ -22,14 +22,19 @@ export default function InfoNotification() {
   const { notificationData } = useContext(NotificationDataContext);
   const [activeEdit, setActiveEdit] = useState(false);
   const [showTypeDropdown, setShowTypeDropdown] = useState(false);
+  const [form, setForm] = useState();
+
+  const [title, setTitle] = useState();
+  const [content, setContent] = useState();
   const [type, setType] = useState();
   const [notificationId, setNotificationId] = useState(false);
-  const [form, setForm] = useState();
 
   useEffect(() => {
     if (notificationData && notificationData.length > 0) {
       notificationData.map((notification) => {
         setType(notification.type);
+        setTitle(notification.title);
+        setContent(notification.content);
         setNotificationId(notification.id);
       });
     }
@@ -72,7 +77,10 @@ export default function InfoNotification() {
               },
             }
           );
+          setTitle(form.title);
+          setContent(form.content);
           setRandomNumber(Math.random());
+          handleActiveEdit();
 
           Swal.fire({
             position: "center",
@@ -96,6 +104,7 @@ export default function InfoNotification() {
       }
     };
     updateNotification();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [form]);
 
   const handleCategoryContainer = () => {
@@ -368,15 +377,13 @@ export default function InfoNotification() {
                         <input
                           id="titleId"
                           className="text-white mx-auto font-bold bg-sinow-05 w-full border-b border-gray-700 p-1"
-                          defaultValue={notification.title}
+                          defaultValue={title}
                           name="title"
                         />
                       )}
 
                       {!activeEdit && (
-                        <p className="text-white font-bold ">
-                          {notification.title}
-                        </p>
+                        <p className="text-white font-bold ">{title}</p>
                       )}
 
                       <div className="text-gray-700 font-normal">
@@ -385,11 +392,11 @@ export default function InfoNotification() {
                             type="text"
                             name="content"
                             className="mx-auto w-full bg-sinow-05 p-1 border-b border-gray-700 "
-                            defaultValue={notification.content}
+                            defaultValue={content}
                           />
                         )}
                         {!activeEdit && (
-                          <p className="text-center">{notification.content}</p>
+                          <p className="text-center">{content}</p>
                         )}
                         <p className="italic">
                           Terakhir diperbarui:{" "}
