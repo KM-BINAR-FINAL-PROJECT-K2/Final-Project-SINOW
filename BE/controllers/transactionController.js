@@ -201,7 +201,8 @@ const createTransaction = async (req, res, next) => {
                         moduleId: module.id,
                         chapterId: chapter.id,
                         status:
-                          module.no === 1
+                          (module.no === 1
+                            && (chapter.no === 1 || chapterIndex === 0))
                           || (moduleIndex === 0 && chapterIndex === 0)
                             ? 'terbuka'
                             : 'terkunci',
