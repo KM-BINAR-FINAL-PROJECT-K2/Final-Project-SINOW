@@ -118,6 +118,8 @@ export default function Login() {
         setPasswordLengthError(""); // Reset pesan kesalahan panjang password
         setPasswordError("Email atau Password salah. Silakan coba lagi."); // Pesan ID atau password salah
         return;
+      } finally {
+        setIsLoading(false);
       }
     };
     login();

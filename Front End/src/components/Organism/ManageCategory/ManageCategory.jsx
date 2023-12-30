@@ -81,7 +81,7 @@ export default function ManageCategory() {
         await Promise.all(
           updatedCategories.map(async (category) => {
             await axios.put(
-              `https://sinow-production.up.railway.app/${category.id}`,
+              `https://sinow-production.up.railway.app/api/v1/category/${category.id}`,
               { name: category.name },
               {
                 headers: {

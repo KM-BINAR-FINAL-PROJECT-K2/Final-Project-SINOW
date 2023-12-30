@@ -13,6 +13,9 @@ import SearchValueContextProvider from "./store/SearchValue";
 import FilterClassContextProvider from "./store/FilterClass";
 import ManageNotification from "./components/Page/ManageNotification/ManageNotification";
 import PageNotFound from "./components/Page/PageNotFound/PageNotFound";
+import InfoTransactionContextProvider from "./store/InfoTransaction";
+import PaymentDetailContextProvider from "./store/PaymentDetail";
+import KeyContextProvider from "./store/ActiveKey";
 
 export default function App() {
   return (
@@ -23,7 +26,13 @@ export default function App() {
           element={
             <SearchValueContextProvider>
               <FilterClassContextProvider>
-                <DashboadAdmin />
+                <InfoTransactionContextProvider>
+                  <PaymentDetailContextProvider>
+                    <KeyContextProvider>
+                      <DashboadAdmin />
+                    </KeyContextProvider>
+                  </PaymentDetailContextProvider>
+                </InfoTransactionContextProvider>
               </FilterClassContextProvider>
             </SearchValueContextProvider>
           }
