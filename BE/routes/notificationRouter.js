@@ -24,6 +24,13 @@ router.put(
   Notification.updateNotification,
 )
 
+router.put(
+  '/title/:titleParam',
+  authenticate,
+  checkRole('admin'),
+  Notification.updateNotificationByTitle,
+)
+
 router.delete(
   '/:id',
   authenticate,

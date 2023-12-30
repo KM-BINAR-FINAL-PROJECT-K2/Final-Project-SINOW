@@ -116,7 +116,6 @@ const updateNotification = async (req, res, next) => {
       where: {
         id,
       },
-      returning: true,
     })
 
     return res.status(200).json({
@@ -125,6 +124,50 @@ const updateNotification = async (req, res, next) => {
     })
   } catch (err) {
     return next(new ApiError(err.message, 500))
+  }
+}
+
+const updateNotificationByTitle = async (req, res, next) => {
+  try {
+    const { titleParam } = req.params
+    const { type, content, title } = req.body
+
+    const notification = await Notification.findOne({
+      where: {
+        title: titleParam,
+      },
+    })
+
+    if (!notification) {
+      return next(new ApiError('Notifikasi tidak ditemukan', 404))
+    }
+
+    const updateData = {}
+
+    if (type) {
+      updateData.type = type
+    }
+
+    if (content) {
+      updateData.content = content
+    }
+
+    if (title) {
+      updateData.title = title
+    }
+
+    await Notification.update(updateData, {
+      where: {
+        title: titleParam,
+      },
+    })
+
+    return res.status(200).json({
+      status: 'Success',
+      message: 'Notifikasi berhasil diperbarui',
+    })
+  } catch (error) {
+    return next(new ApiError(error.message, 500))
   }
 }
 
@@ -179,4 +222,5 @@ module.exports = {
   updateNotification,
   deleteNotificationById,
   deleteNotificationByTitle,
+  updateNotificationByTitle,
 }
