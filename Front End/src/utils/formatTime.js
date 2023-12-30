@@ -9,9 +9,9 @@ export const formatTime = (isoString) => {
   const menit = tanggalWaktu.getMinutes();
   const detik = tanggalWaktu.getSeconds();
 
-  const hasil = `${tahun}-${padZero(bulan)}-${padZero(
-    tanggal
-  )} pada pukul ${padZero(jam)}:${padZero(menit)}:${padZero(detik)}`;
+  const hasil = `${tahun}-${padZero(bulan)}-${padZero(tanggal)} - ${padZero(
+    jam
+  )}:${padZero(menit)}:${padZero(detik)}`;
 
   return hasil;
 };
