@@ -472,6 +472,10 @@ const openCourse = async (req, res, next) => {
           ],
         },
       ],
+      order: [
+        ['Course', 'chapters', 'no', 'ASC'],
+        ['Course', 'chapters', 'modules', 'no', 'ASC'],
+      ],
     })
 
     if (userCourseBuffer.Course.chapters.length > 0) {
@@ -487,7 +491,8 @@ const openCourse = async (req, res, next) => {
                     moduleId: module.id,
                     chapterId: chapter.id,
                     status:
-                      moduleIndex === 0 && chapterIndex === 0
+                      module.no === 1
+                      || (moduleIndex === 0 && chapterIndex === 0)
                         ? 'terbuka'
                         : 'terkunci',
                   })
