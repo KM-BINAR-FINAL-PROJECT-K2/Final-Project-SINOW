@@ -460,6 +460,46 @@ describe('API get all userCourses', () => {
     expect(response.statusCode).toBe(404)
     expect(response.body.status).toBe('Failed')
   })
+
+  it('failed get all user courses: category not valid', async () => {
+    const response = await request(app)
+      .get('/api/v1/user/my-courses?category=invalid')
+      .set({
+        Authorization: `Bearer ${token}`,
+      })
+    expect(response.statusCode).toBe(400)
+    expect(response.body.status).toBe('Failed')
+  })
+
+  it('failed get all user courses: level not valid', async () => {
+    const response = await request(app)
+      .get('/api/v1/user/my-courses?level=invalid')
+      .set({
+        Authorization: `Bearer ${token}`,
+      })
+    expect(response.statusCode).toBe(400)
+    expect(response.body.status).toBe('Failed')
+  })
+
+  it('failed get all user courses: type not valid', async () => {
+    const response = await request(app)
+      .get('/api/v1/user/my-courses?type=invalid')
+      .set({
+        Authorization: `Bearer ${token}`,
+      })
+    expect(response.statusCode).toBe(400)
+    expect(response.body.status).toBe('Failed')
+  })
+
+  it('failed get all user courses: type not valid', async () => {
+    const response = await request(app)
+      .get('/api/v1/user/my-courses?progress=invalid')
+      .set({
+        Authorization: `Bearer ${token}`,
+      })
+    expect(response.statusCode).toBe(400)
+    expect(response.body.status).toBe('Failed')
+  })
 })
 
 describe('API get userModule', () => {
