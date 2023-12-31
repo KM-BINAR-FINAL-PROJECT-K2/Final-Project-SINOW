@@ -195,21 +195,17 @@ const createTransaction = async (req, res, next) => {
               if (chapter.modules.length > 0) {
                 await Promise.all(
                   chapter.modules.map(async (module, moduleIndex) => {
-                    try {
-                      await UserModule.create({
-                        userId: user.id,
-                        moduleId: module.id,
-                        chapterId: chapter.id,
-                        status:
-                          (module.no === 1
-                            && (chapter.no === 1 || chapterIndex === 0))
-                          || (moduleIndex === 0 && chapterIndex === 0)
-                            ? 'terbuka'
-                            : 'terkunci',
-                      })
-                    } catch (error) {
-                      throw next(new ApiError(error.message, 500))
-                    }
+                    await UserModule.create({
+                      userId: user.id,
+                      moduleId: module.id,
+                      chapterId: chapter.id,
+                      status:
+                        (module.no === 1
+                          && (chapter.no === 1 || chapterIndex === 0))
+                        || (moduleIndex === 0 && chapterIndex === 0)
+                          ? 'terbuka'
+                          : 'terkunci',
+                    })
                   }),
                 )
               }

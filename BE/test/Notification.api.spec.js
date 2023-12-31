@@ -191,6 +191,40 @@ describe('API update notification', () => {
   })
 })
 
+describe('API update notification by title', () => {
+  it('success update notification', async () => {
+    const response = await request(app)
+      .put(
+        '/api/v1/notifications/title/Dapatkan%20potongan%2050%25%20untuk%20kategori%20UI%2FUX',
+      )
+      .set({
+        Authorization: `Bearer ${adminToken}`,
+      })
+      .send({
+        type: 'test',
+        title: 'test',
+        content: 'test',
+      })
+    expect(response.statusCode).toBe(200)
+    expect(response.body.status).toBe('Success')
+  })
+
+  it('failed update notification: notification not found', async () => {
+    const response = await request(app)
+      .put('/api/v1/notifications/title/notification-not-found')
+      .set({
+        Authorization: `Bearer ${adminToken}`,
+      })
+      .send({
+        type: 'test',
+        title: 'test',
+        content: 'test',
+      })
+    expect(response.statusCode).toBe(404)
+    expect(response.body.status).toBe('Failed')
+  })
+})
+
 describe('API delete notification by id', () => {
   it('success delete notification', async () => {
     const response = await request(app)
