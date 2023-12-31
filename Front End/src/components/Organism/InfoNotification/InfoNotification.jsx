@@ -27,6 +27,7 @@ export default function InfoNotification() {
   const [title, setTitle] = useState();
   const [content, setContent] = useState();
   const [type, setType] = useState();
+  // eslint-disable-next-line no-unused-vars
   const [notificationId, setNotificationId] = useState(false);
 
   useEffect(() => {
@@ -67,8 +68,10 @@ export default function InfoNotification() {
         if (result.isConfirmed) {
           setIsLoading(true);
           setIsError("");
+          const encodedTitle = encodeURIComponent(title);
           await axios.put(
-            `https://sinow-production.up.railway.app/api/v1/notifications/${notificationId}`,
+            `https://sinow-production.up.railway.app/api/v1/notifications/title/` +
+              encodedTitle,
             form,
             {
               headers: {
@@ -77,6 +80,7 @@ export default function InfoNotification() {
               },
             }
           );
+          setType(form.type);
           setTitle(form.title);
           setContent(form.content);
           setRandomNumber(Math.random());
