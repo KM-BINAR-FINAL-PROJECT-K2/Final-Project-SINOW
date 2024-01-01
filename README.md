@@ -148,6 +148,11 @@ Jalankan server
 Menjalankan Unit  Testing
 =========================
 
+Masuk ke direktori backend
+```bash
+  npm run .\BE\
+```
+
 Buat database testing
 
 ```bash
@@ -161,7 +166,7 @@ Migrate database testing
 
 Seed database testing
 ```bash
-  npm run dbLseed:test
+  npm run db:seed:test
 ```
 
 Jalankan unit test
