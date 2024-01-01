@@ -17,11 +17,6 @@ course apa saja yang akan disediakan. User dapat
 mengakses video pembelajaran setelah melakukan
 pembayaran.
 
-
-
-
-
-
 Tech Stack
 ==========
 
@@ -47,6 +42,7 @@ Features
 - Kelola notifikasi
 - Memfilter & mencari data
 - Reset password
+
 Project Links
 =============
 
@@ -69,6 +65,7 @@ Source Code Repositories
 API Documentation/Swagger
 -------------------------
 *   [API-Docs/Swagger](https://sinow-production.up.railway.app/api-docs)
+
 Menjalankan Projek di Lokal
 ====================================
 
@@ -147,8 +144,6 @@ Jalankan server
 ```bash
   npm run preview
 ```
-
-
 
 Menjalankan Unit  Testing
 =========================
