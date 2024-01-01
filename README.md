@@ -9,11 +9,6 @@ secara gratis atau berlangganan, ditambah dengan fitur-fitur yang mudah digunaka
 
 SINOW berasal dari "Sinau," artinya belajar dalam bahasa Jawa. Nama produk ini terbentuk dari Sinau + Now, yang artinya "Belajar Sekarang." Brand guideline Sinow mencakup warna utama biru, melambangkan keamanan layanan, profesionalisme, dan teknologi. Karakter "Sizi," kucing robot, simbol dari kecerdasan, kecanggihan, dan kebahagiaan. Nama "Sizi" berasal dari "Siji" dalam bahasa Jawa, yang artinya Satu, menunjukkan bahwa mengikuti kelas pembelajaran disini maka akan selalu menjadi nomor satu.
 
-Terdapat dua peran User yaitu berperan sebagai admin dan login sebagai user. Admin dapat menentukan
-course apa saja yang akan disediakan. User dapat
-mengakses video pembelajaran setelah melakukan
-pembayaran.
-
 # Tech Stack
 
 **Client:** React, Redux, TailwindCSS, Vite
