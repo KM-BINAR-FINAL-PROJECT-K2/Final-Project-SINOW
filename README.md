@@ -11,7 +11,7 @@ SINOW berasal dari "Sinau," artinya belajar dalam bahasa Jawa. Nama produk ini t
 
 # Tech Stack
 
-**Client:** React, Redux, TailwindCSS, Vite
+**Client:** React, TailwindCSS, Vite, Axios, Sweetalert2, Flowbite React
 
 **Server:** Node, Express, Nodemailer, Jest, Imagekit, Jsonwebtoken, Midtrans, Railway, Nodemon, Railway
 
@@ -30,6 +30,7 @@ SINOW berasal dari "Sinau," artinya belajar dalam bahasa Jawa. Nama produk ini t
 - Kelola notifikasi
 - Memfilter & mencari data
 - Reset password
+- Download/Cetak data transaksi
 
 # Project Links
 
