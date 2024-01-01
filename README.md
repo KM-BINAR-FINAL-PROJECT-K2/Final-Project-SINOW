@@ -22,7 +22,7 @@ pembayaran.
 
 # Database Diagram
 
-![database diagram](https://ik.imagekit.io/96gmelvyq/binar%20-%20final%20project_aqoXF3ksk.svg?updatedAt=1704016354815)
+![database diagram](https://ik.imagekit.io/96gmelvyq/SINOW%20-%20db%20diagram.svg?updatedAt=1704093336724)
 
 # Features
 
