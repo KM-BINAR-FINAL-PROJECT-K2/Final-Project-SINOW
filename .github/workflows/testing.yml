@@ -41,23 +41,23 @@ jobs:
           path: ~/.npm
           key: deps-node-modules-${{ hashFiles('**/package-lock.json') }}
       - name: Install dependencies
-        working-directory: ./BE
+        working-directory: ./backend
         run: npm install
       - name: drop existing DB
-        working-directory: ./BE
+        working-directory: ./backend
         run: npm run db:drop:test
       - name: Create DB
-        working-directory: ./BE
+        working-directory: ./backend
         run: npm run db:create:test
       - name: Migration database
-        working-directory: ./BE
+        working-directory: ./backend
         run: npm run db:migrate:test
       - name: Seed database
-        working-directory: ./BE
+        working-directory: ./backend
         run: npm run db:seed:test
       - name: Test code
         id: run-tests
-        working-directory: ./BE
+        working-directory: ./backend
         run: npm run test
   lint:
     needs: test
@@ -73,10 +73,10 @@ jobs:
           path: ~/.npm
           key: deps-node-modules-${{ hashFiles('**/package-lock.json') }}
       - name: Install dependencies
-        working-directory: ./BE
+        working-directory: ./backend
         run: npm install
       - name: Lint code
-        working-directory: ./BE
+        working-directory: ./backend
         run: npm run lint
   merge:
     needs: [test, lint]
@@ -91,7 +91,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Output information
-        working-directory: ./BE
+        working-directory: ./backend
         run: |
           echo "Something went wrong"
           echo "${{ toJSON(github) }}"

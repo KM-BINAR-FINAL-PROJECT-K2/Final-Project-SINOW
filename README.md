@@ -1,9 +1,6 @@
-
 ![Logo](https://ik.imagekit.io/96gmelvyq/sinow_logo_fsw.svg?updatedAt=1704019334801)
 
-
-Apa itu SINOW?
-==============
+# Apa itu SINOW?
 
 SINOW adalah Platform yang menyediakan konten
 pembelajaran online berupa video. Platform ini akan
@@ -17,21 +14,17 @@ course apa saja yang akan disediakan. User dapat
 mengakses video pembelajaran setelah melakukan
 pembayaran.
 
-Tech Stack
-==========
+# Tech Stack
 
 **Client:** React, Redux, TailwindCSS, Vite
 
-**Server:** Node, Express, Nodemailer, Jest, Imagekit, Jsonwebtoken, Midtrans, Railway, Nodemon, Railway 
+**Server:** Node, Express, Nodemailer, Jest, Imagekit, Jsonwebtoken, Midtrans, Railway, Nodemon, Railway
 
-
-Database Diagram
-================
+# Database Diagram
 
 ![database diagram](https://ik.imagekit.io/96gmelvyq/binar%20-%20final%20project_aqoXF3ksk.svg?updatedAt=1704016354815)
 
-Features
-========
+# Features
 
 - Login & Logout
 - Tabel pembayaran
@@ -43,34 +36,28 @@ Features
 - Memfilter & mencari data
 - Reset password
 
-Project Links
-=============
+# Project Links
 
-Design
-------
+## Design
 
-*   [UI/UX Design - Figma](https://www.figma.com/file/30q0s9eenpfof4eoLlxLJI/SINOW?type=design&node-id=0%3A1&mode=design&t=ywr7k0gJFZfqPhc6-1)
+- [UI/UX Design - Figma](https://www.figma.com/file/30q0s9eenpfof4eoLlxLJI/SINOW?type=design&node-id=0%3A1&mode=design&t=ywr7k0gJFZfqPhc6-1)
 
-Project Management
-------------------
+## Project Management
 
-*   [Trello Board](https://trello.com/b/dm7s6SKM/final-project-c7)
+- [Trello Board](https://trello.com/b/dm7s6SKM/final-project-c7)
 
-Source Code Repositories
-------------------------
+## Source Code Repositories
 
-*   Android App: [GitHub Repository - SiNow](https://github.com/Budiart18/SiNow)
-*   FSW (Full Stack Web): [GitHub Repository - KM-BINAR-FINAL-PROJECT-K2](https://github.com/KM-BINAR-FINAL-PROJECT-K2)
+- Android App: [GitHub Repository - SiNow](https://github.com/Budiart18/SiNow)
+- FSW (Full Stack Web): [GitHub Repository - KM-BINAR-FINAL-PROJECT-K2](https://github.com/KM-BINAR-FINAL-PROJECT-K2)
 
-API Documentation/Swagger
--------------------------
-*   [API-Docs/Swagger](https://sinow-production.up.railway.app/api-docs)
+## API Documentation/Swagger
 
-Menjalankan Projek Secara Lokal
-====================================
+- [API-Docs/Swagger](https://sinow-production.up.railway.app/api-docs)
 
-Menjalankan backend
--------------------
+# Menjalankan Projek Secara Lokal
+
+## Menjalankan backend
 
 Clone projek github
 
@@ -85,8 +72,9 @@ Buka direktori project
 ```
 
 masuk ke folder backend
+
 ```bash
-  cd .\BE\
+  cd .\backend\
 ```
 
 Install dependencies backend
@@ -119,8 +107,7 @@ Jalankan server
   npm run dev
 ```
 
-Menjalankan frontend
---------------------
+## Menjalankan frontend
 
 Masuk ke folder frontend
 
@@ -135,6 +122,7 @@ Install dependencies frontend
 ```
 
 Build Project
+
 ```bash
   npm run build
 ```
@@ -145,12 +133,12 @@ Jalankan server
   npm run preview
 ```
 
-Menjalankan Unit  Testing
-=========================
+# Menjalankan Unit Testing
 
 Masuk ke direktori backend
+
 ```bash
-  npm run .\BE\
+  npm run .\backend\
 ```
 
 Buat database testing
@@ -160,17 +148,19 @@ Buat database testing
 ```
 
 Migrate database testing
+
 ```bash
   npm run db:migrate:test
 ```
 
 Seed database testing
+
 ```bash
   npm run db:seed:test
 ```
 
 Jalankan unit test
+
 ```bash
   npm run test
 ```
-
