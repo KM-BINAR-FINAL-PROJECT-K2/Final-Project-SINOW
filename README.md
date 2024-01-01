@@ -66,7 +66,7 @@ API Documentation/Swagger
 -------------------------
 *   [API-Docs/Swagger](https://sinow-production.up.railway.app/api-docs)
 
-Menjalankan Projek di Lokal
+Menjalankan Projek Secara Lokal
 ====================================
 
 Menjalankan backend
