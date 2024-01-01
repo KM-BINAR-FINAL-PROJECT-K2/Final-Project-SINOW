@@ -138,7 +138,7 @@ Jalankan server
 Masuk ke direktori backend
 
 ```bash
-  npm run .\backend\
+  cd .\backend\
 ```
 
 Buat database testing
