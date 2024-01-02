@@ -44,8 +44,8 @@ SINOW berasal dari "Sinau," artinya belajar dalam bahasa Jawa. Nama produk ini t
 
 ## Source Code Repositories
 
-- Android App: [GitHub Repository - SiNow](https://github.com/Budiart18/SiNow)
-- FSW (Full Stack Web): [GitHub Repository - KM-BINAR-FINAL-PROJECT-K2](https://github.com/KM-BINAR-FINAL-PROJECT-K2)
+- Android App: [GitHub Repository - SINOW android app](https://github.com/Budiart18/SiNow)
+- FSW (Full Stack Web): [GitHub Repository - SINOW website & backend](https://github.com/KM-BINAR-FINAL-PROJECT-K2)
 
 ## API Documentation/Swagger
 
