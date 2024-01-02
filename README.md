@@ -105,6 +105,18 @@ Jalankan server
 
 ## Menjalankan frontend
 
+Clone projek github
+
+```bash
+  git clone https://github.com/KM-BINAR-FINAL-PROJECT-K2/Final-Project-SINOW.git
+```
+
+Buka direktori project
+
+```bash
+  cd .\KM-BINAR-FINAL-PROJECT-K2/Final-Project-SINOW\
+```
+
 Masuk ke folder frontend
 
 ```bash
@@ -130,6 +142,18 @@ Jalankan server
 ```
 
 # Menjalankan Unit Testing
+
+Clone projek github
+
+```bash
+  git clone https://github.com/KM-BINAR-FINAL-PROJECT-K2/Final-Project-SINOW.git
+```
+
+Buka direktori project
+
+```bash
+  cd .\KM-BINAR-FINAL-PROJECT-K2/Final-Project-SINOW\
+```
 
 Masuk ke direktori backend
 
