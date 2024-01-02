@@ -105,7 +105,7 @@ export default function ManageChapter() {
           imageWidth: 200,
           showDenyButton: true,
           confirmButtonText: "Tambah",
-          confirmButtonColor: "#6148FF",
+          confirmButtonColor: "#73CA5C",
           denyButtonColor: "#FF0000",
           denyButtonText: `Batalkan`,
         }).then(async (result) => {
