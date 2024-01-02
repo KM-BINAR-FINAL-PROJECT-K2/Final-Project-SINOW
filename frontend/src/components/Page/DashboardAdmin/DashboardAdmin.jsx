@@ -1,7 +1,7 @@
 import axios from "axios";
 import { usePDF } from "react-to-pdf";
 import { rupiah } from "../../../utils/formatCurrency";
-import { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Navigation from "../../Template/Navigation/Navigation";
 import Card from "../../Molecule/Card/Card";
 import Loading from "../../Molecule/Loading/Loading";
@@ -181,7 +181,7 @@ export default function DashboadAdmin() {
         <section className="mx-4 lg:mx-16">
           <div className="py-[10px] flex flex-wrap">
             <h2 className="my-[10px] font-semibold text-[20px] flex-wrap flex-1 min-w-[200px]">
-              Kelola Kelas
+              Riwayat Transaksi
             </h2>
             <div className="flex items-center">
               <button
