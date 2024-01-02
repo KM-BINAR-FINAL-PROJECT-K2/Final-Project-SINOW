@@ -108,7 +108,7 @@ Jalankan server
 Masuk ke folder frontend
 
 ```bash
-  cd '.\Front End\'
+  cd .\frontend\
 ```
 
 Install dependencies frontend
