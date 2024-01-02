@@ -26,7 +26,7 @@ export default function Hero() {
         </p>
         <div className="pt-5">
           <a
-            href="/#"
+            href="https://drive.google.com/file/d/17GJWm37HXdl6Vr51SqYq5NMX1bis7-gV/view?usp=sharing"
             className="px-6 py-2 rounded-md hover:bg-sinow-03 bg-sinow-05 text-white text-[16px] font-semibold "
           >
             Download Sekarang!

@@ -20,7 +20,7 @@ export default function HeaderLandingPage() {
 
           <div className=" hidden lg:flex ">
             <a
-              href="#"
+              href="https://drive.google.com/file/d/17GJWm37HXdl6Vr51SqYq5NMX1bis7-gV/view?usp=sharing"
               className="px-5 py-1 rounded-md hover:bg-sinow-03 bg-sinow-05 text-white text-[14px] font-semibold leading-6"
             >
               Download
